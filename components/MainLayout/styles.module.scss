@@ -1,0 +1,44 @@
+.container {
+  display: flex;
+  flex-flow: column nowrap;
+  max-width: 1080px;
+  margin: 0 auto;
+  margin-bottom: 10rem;
+
+  background-color: var(--color-overlay);
+  border-radius: var(--custom-border-radius-2);
+  padding: 0.5rem;
+}
+.header {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo {
+  width: 50%;
+  img {
+    width: 100%;
+  }
+  margin: auto;
+}
+.body {
+  display: flex;
+  flex-flow: column nowrap;
+  min-height: 50vh;
+  padding-top: 1rem;
+  margin-bottom: 4rem;
+}
+.footer {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  padding: 1rem;
+
+  & > div {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: start;
+    gap: 0.25rem;
+  }
+}

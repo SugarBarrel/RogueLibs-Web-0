@@ -1,0 +1,138 @@
+@font-face {
+  font-family: "Munro";
+  src: url("./Munro/Munro.eot");
+  font-weight: normal;
+  font-style: normal;
+  font-smooth: never;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: none;
+  text-rendering: optimizeSpeed;
+}
+
+@font-face {
+  font-family: "Munro";
+  src: url("./Munro/Munro.ttf") format("truetype"),
+    url("./Munro/Munro.svg#Munro") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  font-smooth: never;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: none;
+  text-rendering: optimizeSpeed;
+}
+
+$primary: #fbb946;
+
+html, body {
+  --color-primary-darkest: #dc8d05;
+  --color-primary-darker: #faa717;
+  --color-primary-dark: #faad27;
+  --color-primary: #{$primary};
+  --color-primary-light: #fcc565;
+  --color-primary-lighter: #fccb75;
+  --color-primary-lightest: #fddda4;
+  --color-primary-contrast: #503301;
+
+  --color-main: var(--color-gray-400);
+  --color-secondary: var(--color-gray-600);
+  --color-background: var(--color-gray-900);
+  --color-overlay: var(--color-overlay-1);
+  --color-overlay-1: #ffffff08;
+  --color-overlay-2: #ffffff10;
+  --color-overlay-3: #ffffff18;
+  --color-overlay-4: #ffffff20;
+  --color-overlay-5: #ffffff28;
+  --color-overlay-6: #ffffff30;
+  --color-overlay-7: #ffffff38;
+  --color-overlay-8: #ffffff40;
+
+  --color-primary-overlay: var(--color-primary-overlay-1);
+  --color-primary-overlay-1: #{$primary}10;
+  --color-primary-overlay-2: #{$primary}20;
+  --color-primary-overlay-3: #{$primary}30;
+  --color-primary-overlay-4: #{$primary}40;
+
+  --color-white: #ffffff;
+  --color-gray-100: #f5f6f7;
+  --color-gray-200: #ebedf0;
+  --color-gray-300: #dadde1;
+  --color-gray-400: #ccd0d5;
+  --color-gray-500: #bec3c9;
+  --color-gray-600: #8d949e;
+  --color-gray-700: #606770;
+  --color-gray-800: #444950;
+  --color-gray-900: #1c1e21;
+  --color-black: #000000;
+
+  // Copied from Docusaurus' stylesheet
+  --color-success-darkest: #007300;
+  --color-success-darker: #008b00;
+  --color-success-dark: #009400;
+  --color-success: #00a400;
+  --color-success-light: #26b226;
+  --color-success-lighter: #4dbf4d;
+  --color-success-lightest: #80d280;
+  --color-success-contrast: #003100;
+
+  --color-info-darkest: #3b8ba5;
+  --color-info-darker: #47a9c9;
+  --color-info-dark: #4cb3d4;
+  --color-info: #54c7ec;
+  --color-info-light: #6ecfef;
+  --color-info-lighter: #87d8f2;
+  --color-info-lightest: #aae3f6;
+  --color-info-contrast: #193c47;
+
+  --color-warning-darkest: #b38200;
+  --color-warning-darker: #d99e00;
+  --color-warning-dark: #e6a700;
+  --color-warning: #ffba00;
+  --color-warning-light: #ffc426;
+  --color-warning-lighter: #ffcf4d;
+  --color-warning-lightest: #ffdd80;
+  --color-warning-contrast: #4d3800;
+
+  --color-danger-darkest: #af272b;
+  --color-danger-darker: #d53035;
+  --color-danger-dark: #e13238;
+  --color-danger: #fa383e;
+  --color-danger-light: #fb565b;
+  --color-danger-lighter: #fb7478;
+  --color-danger-lightest: #fd9c9f;
+  --color-danger-contrast: #4b1113;
+  // Copied from Docusaurus' stylesheet
+
+  --custom-font: 'Munro', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  --custom-mono-font: Consolas, "Andale Mono WT", "Andale Mono",
+    "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono",
+    "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco,
+    "Courier New", Courier, monospace;
+
+  margin: 0;
+  padding: 0;
+  font-family: var(--custom-font);
+  font-size: 1rem;
+  color: var(--color-main);
+  background-color: var(--color-background);
+}
+
+* {
+  color: var(--color-main);
+  font-family: var(--custom-font);
+  font-size: 1rem;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  gap: 0;
+}
+
+label {
+  margin-left: 0.5rem;
+
+  font-size: 1.2rem;
+  color: var(--color-secondary);
+}

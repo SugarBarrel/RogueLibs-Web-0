@@ -1,0 +1,32 @@
+.button {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 0.5rem;
+
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-overlay-3);
+
+  cursor: pointer;
+  transition: all 0.1s ease;
+  background-color: var(--color-overlay);
+  &:hover {
+    background-color: var(--color-overlay-3);
+  }
+
+  &.small {
+    padding: 0.25rem 0.5rem;
+    gap: 0.25rem;
+    font-size: 1rem;
+  }
+  &.medium {
+    padding: 0.5rem 0.75rem;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+  }
+  &.large {
+    padding: 0.75rem 1rem;
+    gap: 0.75rem;
+    font-size: 1.2rem;
+  }
+}

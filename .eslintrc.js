@@ -33,6 +33,8 @@ module.exports = {
     "no-constant-binary-expression": "warn", // a + b ?? c
     "no-dupe-class-members": "off", // that's a TypeScript thing
     "no-unused-vars": "off", // reacts to overloads and types for some reason
+    "no-redeclare": "off", // I wanna combine namespaces with functions
+    "react-hooks/exhaustive-deps": "off", // the amount of extra dependencies is excessive
   },
   globals: {
     React: true,

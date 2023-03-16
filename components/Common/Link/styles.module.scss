@@ -1,0 +1,32 @@
+.link {
+  display: inline;
+  text-decoration: none;
+  cursor: pointer;
+
+  color: var(--color-primary-lighter);
+  transition: all 0.2s ease;
+  & > * {
+    color: var(--color-primary-lighter);
+    transition: all 0.2s ease;
+  }
+
+  &:hover {
+    color: var(--color-primary-dark);
+    & > * {
+      color: var(--color-primary-dark);
+    }
+  }
+
+  &.underline {
+    & > * {
+      border-bottom: 1px transparent solid;
+    }
+    &:hover > * {
+      border-bottom: 1px var(--color-primary) solid;
+    }
+  }
+
+  & span {
+    width: fit-content;
+  }
+}
