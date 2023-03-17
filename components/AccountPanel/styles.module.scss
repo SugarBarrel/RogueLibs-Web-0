@@ -3,13 +3,11 @@
   flex-flow: column nowrap;
 }
 .wrapper {
+  position: relative;
   display: flex;
   flex-flow: column nowrap;
   padding: 0.5rem;
   gap: 0.5rem;
-
-  min-width: 280px;
-  max-width: 400px;
   border-radius: 1rem;
   background-color: var(--color-overlay);
 }
@@ -17,21 +15,19 @@
 .account {
   display: flex;
   flex-flow: row nowrap;
-  gap: 0.5rem;
+  gap: 0.25rem;
 }
 
 .avatar {
-  height: 48px;
-  width: 48px;
+  height: 64px;
+  width: 64px;
   border-radius: 50%;
   outline: 2px solid var(--color-overlay);
-}
-.info {
-  flex-grow: 1;
-  display: flex;
-  flex-flow: column nowrap;
+  pointer-events: none;
 }
 
-.signOut {
-  align-self: flex-end;
+.sign-out-tooltip {
+  position: absolute;
+
+  right: 0;
 }

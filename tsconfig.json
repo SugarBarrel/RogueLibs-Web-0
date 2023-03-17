@@ -16,7 +16,12 @@
     "incremental": true,
     "useUnknownInCatchVariables": false,
     "plugins": [
-      { "name": "typescript-plugin-css-modules" },
+      {
+        "name": "typescript-plugin-css-modules",
+        "options": {
+          "classnameTransform": "camelCaseOnly"
+        }
+      },
     ],
     "baseUrl": ".",
     "paths": {

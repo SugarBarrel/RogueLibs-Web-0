@@ -1,6 +1,5 @@
 export type DbUser = {
-  id: number; // PK
-  uid: string; // FK: auth.users
+  id: string; // PK, FK: auth.users
   created_at: string; // = now()
   edited_at: string | null; // = null
   username: string;
