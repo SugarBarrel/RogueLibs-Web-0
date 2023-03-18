@@ -35,6 +35,7 @@ module.exports = {
     "no-unused-vars": "off", // reacts to overloads and types for some reason
     "no-redeclare": "off", // I wanna combine namespaces with functions
     "react-hooks/exhaustive-deps": "off", // the amount of extra dependencies is excessive
+    "no-empty": "off", // annoying
   },
   globals: {
     React: true,

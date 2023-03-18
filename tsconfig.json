@@ -25,13 +25,14 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@site/*": ["./*"],
       "@components/*": ["./components/*"],
       "@static/*": ["./public/*"],
       "@styles/*": ["./styles/*"],
       "@pages/*": ["./pages/*"],
-      "@lib/*": ["lib/*"],
-      "@ducks/*": ["lib/ducks/*"]
+      "@ducks/*": ["./lib/ducks/*"],
+      "@hooks/*": ["./lib/hooks/*"],
+      "@lib/*": ["./lib/*"],
+      "@site/*": ["./*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", ".eslintrc.js"],

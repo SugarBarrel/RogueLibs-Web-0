@@ -15,9 +15,6 @@
     &:hover {
       background-color: var(--color-overlay-3);
     }
-    &:active {
-      background-color: var(--color-overlay-8);
-    }
 
     &.small {
       padding: 0.25rem 0.5rem;
@@ -47,9 +44,6 @@
       outline: 1px solid var(--color-overlay-1);
       background-color: var(--color-overlay-2);
     }
-    &:active {
-      background-color: var(--color-overlay-8);
-    }
 
     &.small {
       padding: 0.1rem;
@@ -60,6 +54,14 @@
     &.large {
       padding: 0.5rem;
     }
+  }
+
+  &:active:not([disabled]) {
+    background-color: var(--color-overlay-8);
+  }
+  &[disabled] {
+    cursor: default;
+    opacity: 0.5;
   }
 
 }
