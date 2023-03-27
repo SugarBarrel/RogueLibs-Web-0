@@ -136,3 +136,10 @@ label {
   font-size: 1.2rem;
   color: var(--color-secondary);
 }
+
+pre {
+  overflow: auto;
+}
+code {
+  white-space: pre-wrap;
+}

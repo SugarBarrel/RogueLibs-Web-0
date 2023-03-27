@@ -1,50 +1,55 @@
-import { createEntityAdapter, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { DbRelease } from "@lib/Database";
-import { ApiArgs, AsyncEntity, RootState, useRootDispatch, useRootSelector } from ".";
-import { useApi } from "@lib/API";
-import { useEffect } from "react";
+import { DbRelease, DbReleaseAuthor } from "@lib/Database";
+import { RestReleaseWithMod } from "@lib/API";
+import { createAsyncEntityAdapter } from "@lib/AsyncEntityAdapter";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState, WithApi } from ".";
 
-export const releasesAdapter = createEntityAdapter<AsyncEntity<DbRelease>>();
+export type StoreRelease = DbRelease & { authors: DbReleaseAuthor[] };
+
+export const releasesAdapter = createAsyncEntityAdapter<StoreRelease>();
 
 export const {
-  selectById: selectReleaseById,
-  selectEntities: selectReleases,
   selectIds: selectReleaseIds,
-} = releasesAdapter.getSelectors<RootState>(s => s.releases);
+  selectEntities: selectReleaseEntities,
+  selectAll: selectReleases,
+  selectById: selectReleaseById,
+} = releasesAdapter.getSelectors((s: RootState) => s.releases);
 
-export const fetchReleaseById = createAsyncThunk("releases/fetchById", ([api, releaseId]: ApiArgs<number>) => {
-  return api.fetchReleaseById(releaseId);
-});
+export const fetchReleaseById = createAsyncThunk<RestReleaseWithMod, WithApi<{ release_id: number }>>(
+  "releases/fetchById",
+  ({ api, release_id }) => api.fetchReleaseById(release_id),
+  {
+    condition: ({ release_id }, { getState }): boolean => {
+      const state = getState() as RootState;
+      return selectReleaseById(state, release_id).status !== "pending";
+    },
+  },
+);
 
 export const releasesSlice = createSlice({
   name: "releases",
   initialState: releasesAdapter.getInitialState(),
-  reducers: {},
+  reducers: {
+    upsertOne(state, { payload }: PayloadAction<RestReleaseWithMod>) {
+      releasesAdapter.upsertOne(state, payload);
+    },
+    upsertMany(state, { payload }: PayloadAction<RestReleaseWithMod[]>) {
+      releasesAdapter.upsertMany(state, payload);
+    },
+  },
   extraReducers: builder =>
     builder
-      .addCase(fetchReleaseById.pending, (state, { meta }) => {
-        releasesAdapter.setOne(state, { id: meta.arg[1], status: "pending", data: null });
+      .addCase(fetchReleaseById.pending, (state, { meta: { arg } }) => {
+        releasesAdapter.setPendingOne(state, arg.release_id);
       })
-      .addCase(fetchReleaseById.fulfilled, (state, { meta, payload }) => {
-        releasesAdapter.setOne(state, { id: meta.arg[1], status: "success", data: payload });
+      .addCase(fetchReleaseById.rejected, (state, { meta: { arg }, error }) => {
+        releasesAdapter.setErrorOne(state, arg.release_id, error);
       })
-      .addCase(fetchReleaseById.rejected, (state, { meta, error }) => {
-        releasesAdapter.setOne(state, { id: meta.arg[1], status: "error", error });
+      .addCase(fetchReleaseById.fulfilled, (state, { payload }) => {
+        releasesAdapter.upsertOne(state, payload);
       }),
 });
 
+export const { upsertOne: upsertRelease, upsertMany: upsertReleases } = releasesSlice.actions;
+
 export default releasesSlice.reducer;
-
-export function useRelease(releaseId: number | null | undefined) {
-  const api = useApi()!;
-  const dispatch = useRootDispatch();
-  const data = useRootSelector(s => selectReleaseById(s, releaseId!)) || { id: releaseId!, status: "idle" };
-
-  useEffect(() => {
-    if (data.status === "idle" && releaseId) {
-      dispatch(fetchReleaseById([api, releaseId]));
-    }
-  }, [data]);
-
-  return [data.data ?? null, data.status, data.error ?? null] as const;
-}

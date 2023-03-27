@@ -1,28 +1,68 @@
-import { createEntityAdapter, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { DbMod } from "@lib/Database";
-import { ApiArgs, AsyncEntity } from ".";
+import { DbMod, DbModAuthor } from "@lib/Database";
+import { RestMod } from "@lib/API";
+import { createAsyncEntityAdapter } from "@lib/AsyncEntityAdapter";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { fetchReleaseById, RootState, WithApi } from ".";
+import { extract, extractAll } from "..";
+import { upsertRelease, upsertReleases } from "./releases";
 
-export const modsAdapter = createEntityAdapter<AsyncEntity<DbMod>>();
+export type StoreMod = DbMod & { authors: DbModAuthor[] };
 
-export const fetchModById = createAsyncThunk("mods/fetchById", ([api, modId]: ApiArgs<number>) => {
-  return api.fetchModById(modId);
-});
+export const modsAdapter = createAsyncEntityAdapter<StoreMod>();
+
+export const {
+  selectIds: selectModIds,
+  selectEntities: selectModEntities,
+  selectAll: selectMods,
+  selectById: selectModById,
+} = modsAdapter.getSelectors((s: RootState) => s.mods);
+
+export const fetchModById = createAsyncThunk<RestMod, WithApi<{ mod_id: number }>>(
+  "mods/fetchById",
+  ({ api, mod_id }) => api.fetchModById(mod_id),
+  {
+    condition: ({ mod_id }, { getState }): boolean => {
+      const state = getState() as RootState;
+      return selectModById(state, mod_id).status !== "pending";
+    },
+  },
+);
 
 export const modsSlice = createSlice({
   name: "mods",
   initialState: modsAdapter.getInitialState(),
-  reducers: {},
+  reducers: {
+    upsertOne(state, { payload }: PayloadAction<RestMod>) {
+      modsAdapter.upsertOne(state, payload);
+    },
+    upsertMany(state, { payload }: PayloadAction<RestMod[]>) {
+      modsAdapter.upsertMany(state, payload);
+    },
+  },
   extraReducers: builder =>
     builder
-      .addCase(fetchModById.pending, (state, { meta }) => {
-        modsAdapter.setOne(state, { id: meta.arg[1], status: "pending", data: null });
+      .addCase(fetchModById.pending, (state, { meta: { arg } }) => {
+        modsAdapter.setPendingOne(state, arg.mod_id);
       })
-      .addCase(fetchModById.fulfilled, (state, { meta, payload }) => {
-        modsAdapter.setOne(state, { id: meta.arg[1], status: "success", data: payload });
+      .addCase(fetchModById.rejected, (state, { meta: { arg }, error }) => {
+        modsAdapter.setErrorOne(state, arg.mod_id, error);
       })
-      .addCase(fetchModById.rejected, (state, { meta, error }) => {
-        modsAdapter.setOne(state, { id: meta.arg[1], status: "error", error });
+      .addCase(fetchModById.fulfilled, (state, { payload }) => {
+        modsAdapter.upsertOne(state, payload);
+      })
+
+      .addCase(upsertRelease, (state, { payload }) => {
+        modsAdapter.upsertOne(state, extract(payload, "mod"));
+      })
+      .addCase(upsertReleases, (state, { payload }) => {
+        modsAdapter.upsertMany(state, extractAll(payload, "mod"));
+      })
+
+      .addCase(fetchReleaseById.fulfilled, (state, { payload }) => {
+        modsAdapter.upsertOne(state, extract(payload, "mod"));
       }),
 });
+
+export const { upsertOne: upsertMod, upsertMany: upsertMods } = modsSlice.actions;
 
 export default modsSlice.reducer;

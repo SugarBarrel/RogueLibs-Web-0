@@ -1,10 +1,84 @@
-.card {
+.container {
+  position: relative;
   display: flex;
-  flex-flow: column nowrap;
-}
-.title {
+  flex-direction: column;
+  outline: solid 1px var(--color-gray-800);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  width: 200px; height: 145px;
 
+  &:hover {
+    outline: solid 1px var(--color-gray-600);
+    .window {
+      outline: solid 1px var(--color-gray-600);
+    }
+  }
+}
+
+.window {
+  position: relative;
+  width: 100%; height: 100px;
+  outline: solid 1px var(--color-gray-800);
+  transition: all 0.2s ease;
+  overflow: hidden;
+
+  &:hover {
+    & .banner {
+      filter: blur(2px) grayscale(0.5) brightness(0.5) saturate(0.5);
+    }
+    & .description, .quickbar, .authors {
+      opacity: 1;
+    }
+  }
+}
+.banner {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  transform: translateY(-50%);
+  transition: all 0.5s ease;
 }
 .description {
+  position: absolute;
+  margin: 0.5rem;
 
+  opacity: 0;
+  transition: all 0.5s ease;
+  font-size: 0.8rem;
+  line-height: 1rem;
+  pointer-events: none;
+}
+.quickbar {
+  position: absolute;
+  bottom: 0; right: 0;
+
+  opacity: 0;
+  transition: all 0.5s ease;
+  font-size: 0.8rem;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+.title {
+  padding-top: 0.25rem;
+  font-size: 1rem;
+  text-align: center;
+}
+.stats {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.15rem;
+  gap: 0.25rem;
+  left: 0; bottom: 0;
+}
+.stat {
+  display: flex;
+  flex-direction: row nowrap;
+  align-items: center;
 }

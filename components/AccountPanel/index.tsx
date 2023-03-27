@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "./styles.module.scss";
 import { Icon, Button } from "@components/Common";
 import { useSession as useSupabaseSession, useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useUser } from "@ducks/users";
+import { useUser } from "@lib/hooks";
 
 export default function AccountPanel() {
   const [authorizing, setAuthorizing] = useState(false);

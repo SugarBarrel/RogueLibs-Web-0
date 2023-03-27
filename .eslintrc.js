@@ -36,6 +36,7 @@ module.exports = {
     "no-redeclare": "off", // I wanna combine namespaces with functions
     "react-hooks/exhaustive-deps": "off", // the amount of extra dependencies is excessive
     "no-empty": "off", // annoying
+    "@next/next/no-img-element": "off", // not useful at the moment
   },
   globals: {
     React: true,

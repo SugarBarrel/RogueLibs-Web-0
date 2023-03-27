@@ -1,3 +1,13 @@
+export type Database = {
+  users: DbUser[];
+  mods: DbMod[];
+  releases: DbRelease[];
+  mod_authors: DbModAuthor[];
+  release_authors: DbReleaseAuthor[];
+  latest_releases: DbRelease[];
+};
+export default Database;
+
 export type DbUser = {
   id: string; // PK, FK: auth.users
   created_at: string; // = now()
