@@ -1,67 +1,35 @@
 .button {
-  display: flex;
+  display: inline-flex;
   flex-flow: row nowrap;
   align-items: center;
+  // justify-content: space-evenly;
+  text-align: center;
+
+  padding: 0.5rem 0.75rem;
   gap: 0.5rem;
+
+  background-color: var(--color-overlay);
+  outline: 1px solid var(--color-overlay-4);
+  border-radius: 0.5rem;
 
   cursor: pointer;
   transition: all 0.1s ease;
 
-  &.normal {
-    border-radius: 0.5rem;
-    outline: 1px solid var(--color-overlay-3);
-
-    background-color: var(--color-overlay);
-    &:hover {
-      background-color: var(--color-overlay-3);
-    }
-
-    &.small {
-      padding: 0.25rem 0.5rem;
-      gap: 0.25rem;
-      font-size: 1rem;
-    }
-    &.medium {
-      padding: 0.5rem 0.75rem;
-      gap: 0.5rem;
-      font-size: 1.1rem;
-    }
-    &.large {
-      padding: 0.75rem 1rem;
-      gap: 0.75rem;
-      font-size: 1.2rem;
-    }
+  &:hover {
+    background-color: var(--color-overlay-3);
   }
-  &.icon {
-    width: min-content;
-    height: min-content;
-
-    border-radius: 9999px;
-    outline: 1px solid transparent;
-
-    background-color: transparent;
-    &:hover {
-      outline: 1px solid var(--color-overlay-1);
-      background-color: var(--color-overlay-2);
-    }
-
-    &.small {
-      padding: 0.1rem;
-    }
-    &.medium {
-      padding: 0.25rem;
-    }
-    &.large {
-      padding: 0.5rem;
-    }
-  }
-
   &:active:not([disabled]) {
     background-color: var(--color-overlay-8);
   }
   &[disabled] {
     cursor: default;
     opacity: 0.5;
+    &:hover {
+      background-color: var(--color-overlay);
+    }
   }
+
+  // font-size: 0.8rem;
+  // overflow: hidden;
 
 }

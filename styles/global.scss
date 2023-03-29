@@ -121,7 +121,7 @@ html, body {
 * {
   color: var(--color-main);
   font-family: var(--custom-font);
-  font-size: 1rem;
+  // font-size: 1rem;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -133,13 +133,19 @@ html, body {
 label {
   margin-left: 0.5rem;
 
-  font-size: 1.2rem;
   color: var(--color-secondary);
+  text-transform: uppercase;
+  font-size: 1.2rem;
 }
 
-pre {
-  overflow: auto;
-}
-code {
+pre, code {
+  display: block;
+  margin: 0;
   white-space: pre-wrap;
+  font-family: var(--custom-mono-font);
+  // font-size: 0.8rem;
+}
+pre {
+  overflow-x: auto;
+  padding-bottom: 1rem;
 }

@@ -1,7 +1,7 @@
-import clsx from "clsx";
-import styles from "./styles.module.scss";
 import { Link } from "@components/Common";
 import AccountPanel from "@components/AccountPanel";
+import styles from "./styles.module.scss";
+import clsx from "clsx";
 
 export type MainLayoutProps = {
   className?: string;

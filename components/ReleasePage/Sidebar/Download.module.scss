@@ -1,0 +1,46 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.download {
+  & > button {
+    width: 100%;
+    display: flex;
+    justify-content: stretch;
+  }
+}
+.downloadMain {
+  font-size: 1.2rem !important;
+  color: var(--color-black);
+  background-color: var(--color-primary);
+
+  &:hover { background-color: var(--color-primary-darker); }
+  &:active { background-color: var(--color-primary-darkest); }
+}
+.downloadDocumentation {
+  font-size: 1.2rem !important;
+  color: var(--color-gray-200);
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  background-color: var(--color-info-dark);
+
+  &:hover { background-color: var(--color-info-darker); }
+  &:active { background-color: var(--color-info-darkest); }
+}
+.downloadText {
+  font-size: 1.2rem !important;
+  color: var(--color-black);
+  background-color: var(--color-gray-500);
+
+  &:hover { background-color: var(--color-gray-300); }
+  &:active { background-color: var(--color-gray-100); }
+}
+
+.tooltip {
+  outline: 1px solid gray;
+  border-radius: 0 0 0.5rem 0.5rem;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  margin-left: 0.75rem;
+  margin-right: 0.25rem;
+}

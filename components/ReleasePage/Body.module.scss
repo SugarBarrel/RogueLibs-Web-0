@@ -1,0 +1,10 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+.description {
+  & > p {
+    font-size: 20px;
+  }
+}

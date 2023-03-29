@@ -8,7 +8,8 @@ export type IconProps = Omit<SpriteProps, "src"> & {
 };
 export default function Icon({ className, spinning, type, ...props }: IconProps) {
   if (spinning == null && type === "loading") spinning = true;
-  return <Sprite className={clsx(spinning && styles.spinning, className)} src={"/icons/" + type + ".png"} {...props} />;
+  className = clsx(spinning && styles.spinning, className);
+  return <Sprite className={className} src={"/icons/" + type + ".png"} crisp {...props} />;
 }
 
 export function MakeIcon(type: IconType) {

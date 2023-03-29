@@ -1,18 +1,12 @@
 import { Icon, Link } from "@components/Common";
-import { useMod, useRelease } from "@lib/hooks";
+import { RestReleaseWithMod } from "@lib/API";
 import styles from "./styles.module.scss";
 
 export type ReleaseCardProps = {
-  id: number;
+  release: RestReleaseWithMod;
 };
-export default function ReleaseCard({ id }: ReleaseCardProps) {
-  const [release] = useRelease(id);
-  const [mod] = useMod(release?.mod_id);
-
-  if (!release || !mod) {
-    return <div className={styles.container} />;
-  }
-
+export default function ReleaseCard({ release }: ReleaseCardProps) {
+  const mod = release.mod;
   const modLink = `/mods/${mod.slug ?? mod.id}`;
   const releaseLink = `${modLink}/${release.slug ?? release.id}`;
 

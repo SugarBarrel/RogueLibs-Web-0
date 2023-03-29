@@ -3,7 +3,7 @@ import { SessionContextProvider as SupabaseProvider } from "@supabase/auth-helpe
 import { Session as SupabaseSession, SupabaseClient } from "@supabase/supabase-js";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 import { createContext, useContext, useMemo, useState } from "react";
-import { DbMod, DbModAuthor, DbRelease, DbReleaseAuthor, DbUser } from "./Database";
+import { DbMod, DbModAuthor, DbRelease, DbReleaseAuthor, DbReleaseFile, DbUser } from "./Database";
 
 const ApiContext = createContext<RogueLibsApi | null>(null);
 
@@ -27,15 +27,17 @@ export function useApi() {
 
 const selectUser = "*";
 const selectMod = "*, authors: mod_authors(*, user: users(*))";
-const selectRelease = "*, authors: release_authors(*, user: users(*)), release_files(*)";
+const selectRelease = "*, authors: release_authors(*, user: users(*)), files: release_files(*)";
 const selectReleaseWithMod = `${selectRelease}, mod: mods(${selectMod})`;
 
 export type RestUser = DbUser;
 export type RestMod = DbMod & { authors: RestModAuthor[] };
 export type RestModAuthor = DbModAuthor & { user: RestUser };
-export type RestRelease = DbRelease & { authors: RestReleaseAuthor[] };
+
+export type RestRelease = DbRelease & { authors: RestReleaseAuthor[]; files: RestReleaseFile[] };
 export type RestReleaseWithMod = RestRelease & { mod: RestMod };
 export type RestReleaseAuthor = DbReleaseAuthor & { user: RestUser };
+export type RestReleaseFile = DbReleaseFile;
 
 export class RogueLibsApi {
   public constructor(public readonly Supabase: SupabaseClient) {}
@@ -100,4 +102,28 @@ export class RogueLibsApi {
   public fetchLatestReleases(count: number): Promise<RestReleaseWithMod[]> {
     return this.selectMany<DbRelease, RestReleaseWithMod>("latest_releases", selectReleaseWithMod, b => b, count);
   }
+  public fetchReleasesByModId(mod_id: number) {
+    return this.selectMany<DbRelease, RestRelease>("releases", selectRelease, b => b.eq("mod_id", mod_id));
+  }
+
+  // public getReleaseFileDownloadUrl(filename: string) {
+  //   return this.Supabase.storage.from("release-files").getPublicUrl(filename).data.publicUrl;
+  // }
+  public async downloadReleaseFile(filename: string) {
+    const res = await this.Supabase.storage.from("public/release-files").download(filename);
+    return res.data;
+  }
+}
+
+export function triggerDownload(document: Document, data: Blob | string, filename: string) {
+  const url = typeof data === "string" ? data : URL.createObjectURL(data);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", filename);
+  link.target = "_blank";
+
+  document.body.appendChild(link);
+  link.click();
+  link.parentNode!.removeChild(link);
 }

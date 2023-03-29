@@ -1,10 +1,10 @@
-import { DbRelease, DbReleaseAuthor } from "@lib/Database";
-import { RestReleaseWithMod } from "@lib/API";
+import { DbRelease, DbReleaseAuthor, DbReleaseFile } from "@lib/Database";
+import { RestRelease, RestReleaseWithMod } from "@lib/API";
 import { createAsyncEntityAdapter } from "@lib/AsyncEntityAdapter";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState, WithApi } from ".";
 
-export type StoreRelease = DbRelease & { authors: DbReleaseAuthor[] };
+export type StoreRelease = DbRelease & { authors: DbReleaseAuthor[]; files: DbReleaseFile[] };
 
 export const releasesAdapter = createAsyncEntityAdapter<StoreRelease>();
 
@@ -30,10 +30,10 @@ export const releasesSlice = createSlice({
   name: "releases",
   initialState: releasesAdapter.getInitialState(),
   reducers: {
-    upsertOne(state, { payload }: PayloadAction<RestReleaseWithMod>) {
+    upsertOne(state, { payload }: PayloadAction<RestRelease>) {
       releasesAdapter.upsertOne(state, payload);
     },
-    upsertMany(state, { payload }: PayloadAction<RestReleaseWithMod[]>) {
+    upsertMany(state, { payload }: PayloadAction<RestRelease[]>) {
       releasesAdapter.upsertMany(state, payload);
     },
   },

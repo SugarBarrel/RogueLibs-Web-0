@@ -45,14 +45,14 @@ export default function AccountPanel() {
         <div className={styles.wrapper}>
           <div className={styles.account}>
             <img className={styles.avatar} src={user?.avatar_url ?? undefined} />
-            <Button type="icon" title="Sign out" onClick={signOut} disabled={authorizing}>
+            <Button title="Sign out" onClick={signOut} disabled={authorizing}>
               <Icon type={authorizing ? "loading" : "cross"} size={16} />
             </Button>
             {/* <span className={styles.signOutTooltip}>Sign Out</span> */}
           </div>
         </div>
       ) : (
-        <Button onClick={signIn} size="medium" disabled={authorizing}>
+        <Button onClick={signIn} disabled={authorizing}>
           <Icon type={authorizing ? "loading" : "discord"} size={24} />
           {"Sign In with Discord"}
         </Button>

@@ -1,0 +1,89 @@
+.breadcrumbs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  font-size: 1.2rem !important;
+}
+.breadcrumb {
+  font-size: 1.2rem !important;
+  outline: 1px solid var(--color-overlay-4);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+}
+.header {
+  position: relative;
+  overflow: hidden;
+  height: 300px;
+  outline: 1px solid var(--color-overlay-4);
+  border-radius: 1rem;
+
+  &:hover {
+    & > .banner {
+      filter: blur(0.25rem);
+    }
+    & > .title {
+      top: 0;
+    }
+  }
+}
+.banner {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  filter: none;
+  transition: all 0.5s ease;
+}
+.title {
+  padding: 1rem 2rem;
+  width: 100%;
+  position: absolute;
+  font-size: 2rem;
+  text-align: center;
+  top: -6rem;
+  left: 50%;
+  transform: translate(-50%, 0);
+  transition: all 0.5s ease;
+  background-color: #00000040;
+}
+.rightQuickbar {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  padding: 0.5rem;
+}
+
+.leftQuickbar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+}
+.guid {
+  margin: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  backdrop-filter: brightness(0.5) blur(0.25rem);
+
+  & > .guidLabel {
+    user-select: none;
+    font-weight: 800;
+  }
+  & > .guidValue {
+    margin: -0.25rem;
+    margin-right: -0.5rem;
+    padding: 0.25rem;
+    padding-right: 0.5rem;
+
+    transition: all 0.2s ease;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    &:hover { background-color: var(--color-overlay-2); }
+    &:active { background-color: var(--color-overlay-4); }
+  }
+}

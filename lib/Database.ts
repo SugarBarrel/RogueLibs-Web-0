@@ -30,7 +30,7 @@ export type DbMod = {
 };
 export type DbModAuthor = {
   mod_id: number; // FK: DbMod
-  user_id: number; // FK: DbUser
+  user_id: string; // FK: DbUser
   is_creator: boolean; // = false
   can_see: boolean; // = true
   can_edit: boolean; // = false
@@ -50,8 +50,19 @@ export type DbRelease = {
 };
 export type DbReleaseAuthor = {
   release_id: number; // FK: DbRelease
-  user_id: number; // FK: DbUser
+  user_id: string; // FK: DbUser
   is_creator: boolean; // = false
   can_see: boolean; // = true
   can_edit: boolean; // = false
 };
+export type DbReleaseFile = {
+  release_id: number; // PK, FK: DbRelease
+  filename: string; // PK
+  type: DbReleaseFileType; // = Unknown
+  order: number; // = 0
+  title: string; // = null
+  tooltip: string; // = null
+};
+export enum DbReleaseFileType {
+  Unknown,
+}

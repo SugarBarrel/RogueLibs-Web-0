@@ -1,5 +1,5 @@
 import { DbMod, DbModAuthor } from "@lib/Database";
-import { RestMod } from "@lib/API";
+import { RestMod, RestReleaseWithMod } from "@lib/API";
 import { createAsyncEntityAdapter } from "@lib/AsyncEntityAdapter";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { fetchReleaseById, RootState, WithApi } from ".";
@@ -52,10 +52,14 @@ export const modsSlice = createSlice({
       })
 
       .addCase(upsertRelease, (state, { payload }) => {
-        modsAdapter.upsertOne(state, extract(payload, "mod"));
+        if ("mod" in payload) {
+          modsAdapter.upsertOne(state, extract(payload as RestReleaseWithMod, "mod"));
+        }
       })
       .addCase(upsertReleases, (state, { payload }) => {
-        modsAdapter.upsertMany(state, extractAll(payload, "mod"));
+        if ("mod" in payload[0]) {
+          modsAdapter.upsertMany(state, extractAll(payload as RestReleaseWithMod[], "mod"));
+        }
       })
 
       .addCase(fetchReleaseById.fulfilled, (state, { payload }) => {
