@@ -1,9 +1,10 @@
-import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { createBrowserSupabaseClient, createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider as SupabaseProvider } from "@supabase/auth-helpers-react";
 import { Session as SupabaseSession, SupabaseClient } from "@supabase/supabase-js";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 import { createContext, useContext, useMemo, useState } from "react";
 import { DbMod, DbModAuthor, DbRelease, DbReleaseAuthor, DbReleaseFile, DbUser } from "./Database";
+import { GetServerSidePropsContext } from "next";
 
 const ApiContext = createContext<RogueLibsApi | null>(null);
 
@@ -23,6 +24,9 @@ export function ApiProvider({ initialSession, children }: React.PropsWithChildre
 
 export function useApi() {
   return useContext(ApiContext)!;
+}
+export function createServerApi(cxt: GetServerSidePropsContext) {
+  return new RogueLibsApi(createServerSupabaseClient(cxt));
 }
 
 const selectUser = "*";
@@ -71,6 +75,10 @@ export class RogueLibsApi {
     return builder.throwOnError().then(res => res.data) as Promise<Return[]>;
   }
 
+  public async getSupabaseSession() {
+    return (await this.Supabase.auth.getSession()).data.session;
+  }
+
   public fetchUserById(id: string) {
     return this.selectOne<DbUser, RestUser>("users", selectUser, b => b.eq("id", id));
   }
@@ -89,12 +97,9 @@ export class RogueLibsApi {
     return this.selectOne<DbRelease, RestRelease>("releases", select, b => b.eq("id", id));
   }
 
-  public fetchReleaseBySlug(mod_slug: string, slug: string, withMod: boolean): Promise<RestRelease>;
-  public fetchReleaseBySlug(mod_slug: string, slug: string, withMod?: true): Promise<RestReleaseWithMod>;
-  public fetchReleaseBySlug(mod_slug: string, slug: string, withMod = true) {
-    if (!Number.isNaN(+slug)) return this.fetchReleaseById(+slug, withMod);
-    const select = withMod ? selectReleaseWithMod : selectRelease;
-    return this.selectOne<DbRelease, RestRelease>("releases", select, b => {
+  public fetchReleaseBySlug(mod_slug: string, slug: string) {
+    if (!Number.isNaN(+slug)) return this.fetchReleaseById(+slug, true);
+    return this.selectOne<DbRelease, RestReleaseWithMod>("releases", selectReleaseWithMod, b => {
       return b.eq(Number.isNaN(+mod_slug) ? "mod.slug" : "mod_id", mod_slug).eq("slug", slug);
     });
   }

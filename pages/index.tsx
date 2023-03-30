@@ -1,10 +1,8 @@
 import ReleaseCard from "@components/ReleaseCard";
-import { RestReleaseWithMod, RogueLibsApi } from "@lib/API";
-import { PageProps } from "@lib/index";
+import { createServerApi, RestReleaseWithMod } from "@lib/API";
+import { GSSPC, GSSPR, PageProps } from "@lib/index";
 import { Head } from "@site/components/Common";
 import MainLayout from "@site/components/MainLayout";
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { GetServerSideProps } from "next";
 
 export interface HomePageProps extends PageProps {
   latestReleases: RestReleaseWithMod[];
@@ -23,20 +21,18 @@ export default function HomePage({ latestReleases }: HomePageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<HomePageProps> = async cxt => {
-  const supabase = createServerSupabaseClient(cxt);
-  const api = new RogueLibsApi(supabase);
+export async function getServerSideProps(cxt: GSSPC): Promise<GSSPR<HomePageProps>> {
+  const api = createServerApi(cxt);
 
-  const initialSession = (await supabase.auth.getSession()).data.session;
-  const latestReleases = await api.fetchLatestReleases(20);
+  const [session, latestReleases] = await Promise.all([api.getSupabaseSession(), api.fetchLatestReleases(20)]);
 
   return {
     props: {
-      initialSession,
       latestReleases,
       initialState: {
+        session,
         releases: latestReleases,
       },
     },
   };
-};
+}

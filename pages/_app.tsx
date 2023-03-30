@@ -19,7 +19,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <ReduxStoreProvider store={store}>
-      <ApiProvider initialSession={pageProps.initialSession}>
+      <ApiProvider initialSession={pageProps.initialSession ?? pageProps.initialState?.session}>
         <Component {...pageProps} />
       </ApiProvider>
     </ReduxStoreProvider>
