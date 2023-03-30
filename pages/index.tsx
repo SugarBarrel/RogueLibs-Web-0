@@ -1,24 +1,15 @@
 import ReleaseCard from "@components/ReleaseCard";
-import { useRootDispatch } from "@ducks/index";
-import { upsertReleases } from "@ducks/releases";
 import { RestReleaseWithMod, RogueLibsApi } from "@lib/API";
 import { PageProps } from "@lib/index";
 import { Head } from "@site/components/Common";
 import MainLayout from "@site/components/MainLayout";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { GetServerSideProps } from "next";
-import { useEffect } from "react";
 
 export interface HomePageProps extends PageProps {
   latestReleases: RestReleaseWithMod[];
 }
 export default function HomePage({ latestReleases }: HomePageProps) {
-  const dispatch = useRootDispatch();
-
-  useEffect(() => {
-    dispatch(upsertReleases(latestReleases));
-  }, [latestReleases]);
-
   return (
     <MainLayout>
       <Head path="/" title="RogueLibs Web" description="The mod-sharing platform." />
@@ -43,6 +34,9 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async cxt =
     props: {
       initialSession,
       latestReleases,
+      initialState: {
+        releases: latestReleases,
+      },
     },
   };
 };

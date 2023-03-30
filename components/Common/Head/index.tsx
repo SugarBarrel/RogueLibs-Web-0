@@ -5,7 +5,7 @@ export type HeadProps = {
   type?: "website" | "article" | "profile";
   title: string;
   description: string;
-  image?: string;
+  image?: string | null;
   noindex?: boolean;
 };
 export default function Head({ path, type, title, description, image, noindex, children }: React.PropsWithChildren<HeadProps>) {

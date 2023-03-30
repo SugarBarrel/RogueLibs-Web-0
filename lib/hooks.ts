@@ -18,6 +18,7 @@ export function useDispatchEntity<T>(
 
   useEffect(() => {
     if (entity.status === "idle") {
+      // TODO: remove timeout?
       const timeout = setTimeout(() => {
         const action = actionCreator(api);
         if (action) dispatch(action);

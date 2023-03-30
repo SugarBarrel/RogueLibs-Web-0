@@ -105,6 +105,10 @@ export class RogueLibsApi {
   public fetchReleasesByModId(mod_id: number) {
     return this.selectMany<DbRelease, RestRelease>("releases", selectRelease, b => b.eq("mod_id", mod_id));
   }
+  public fetchReleasesByModSlug(mod_slug: string) {
+    if (!Number.isNaN(+mod_slug)) return this.fetchReleasesByModId(+mod_slug);
+    return this.selectMany<DbRelease, RestRelease>("releases", selectReleaseWithMod, b => b.eq("mods.slug", mod_slug));
+  }
 
   // public getReleaseFileDownloadUrl(filename: string) {
   //   return this.Supabase.storage.from("release-files").getPublicUrl(filename).data.publicUrl;
