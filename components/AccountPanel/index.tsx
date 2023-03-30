@@ -3,6 +3,7 @@ import styles from "./styles.module.scss";
 import { Icon, Button } from "@components/Common";
 import { useSession as useSupabaseSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useUser } from "@lib/hooks";
+import { Tooltip } from "react-tooltip";
 
 export default function AccountPanel() {
   const [authorizing, setAuthorizing] = useState(false);
@@ -45,10 +46,10 @@ export default function AccountPanel() {
         <div className={styles.wrapper}>
           <div className={styles.account}>
             <img className={styles.avatar} src={user?.avatar_url ?? undefined} />
-            <Button title="Sign out" onClick={signOut} disabled={authorizing}>
+            <Button data-tooltip-id="sign-out" onClick={signOut} disabled={authorizing}>
               <Icon type={authorizing ? "loading" : "cross"} size={16} />
             </Button>
-            {/* <span className={styles.signOutTooltip}>Sign Out</span> */}
+            <Tooltip id="sign-out">Sign out</Tooltip>
           </div>
         </div>
       ) : (

@@ -1,5 +1,6 @@
 import { Link } from "@components/Common";
 import { useMod } from "@lib/hooks";
+import { Tooltip } from "react-tooltip";
 import { useReleasePageContext } from ".";
 import styles from "./Header.module.scss";
 
@@ -29,11 +30,16 @@ export default function ReleasePageHeader() {
           {mod.guid && (
             <pre className={styles.guid}>
               <span className={styles.guidLabel}>{"GUID: "}</span>
-              <span className={styles.guidValue} onClick={e => navigator.clipboard.writeText(mod.guid!)}>
+              <span
+                data-tooltip-id="mod-guid"
+                className={styles.guidValue}
+                onClick={() => navigator.clipboard.writeText(mod.guid!)}
+              >
                 {mod.guid}
               </span>
             </pre>
           )}
+          <Tooltip id="mod-guid" place="right" openOnClick={true} content="Copied!" delayHide={3000} />
         </div>
         <div className={styles.rightQuickbar}>{"Nuggets"}</div>
       </div>
