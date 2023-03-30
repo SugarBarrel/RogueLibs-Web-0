@@ -8,6 +8,10 @@ begin
 
   if found then
 
+    if not is_mod_visible(_release.mod_id) then -- can't see the release's mod
+      return false;
+    end if;
+
     if _release.is_public then -- the release is public
       return true;
     end if;

@@ -28,7 +28,7 @@ export function useApi() {
 const selectUser = "*";
 const selectMod = "*, authors: mod_authors(*, user: users(*))";
 const selectRelease = "*, authors: release_authors(*, user: users(*)), files: release_files(*)";
-const selectReleaseWithMod = `${selectRelease}, mod: mods(${selectMod})`;
+const selectReleaseWithMod = `${selectRelease}, mod: mods!inner(${selectMod})`;
 
 export type RestUser = DbUser;
 export type RestMod = DbMod & { authors: RestModAuthor[] };
@@ -95,7 +95,7 @@ export class RogueLibsApi {
     if (!Number.isNaN(+slug)) return this.fetchReleaseById(+slug, withMod);
     const select = withMod ? selectReleaseWithMod : selectRelease;
     return this.selectOne<DbRelease, RestRelease>("releases", select, b => {
-      return b.eq(Number.isNaN(+mod_slug) ? "mods.slug" : "mod_id", mod_slug).eq("slug", slug);
+      return b.eq(Number.isNaN(+mod_slug) ? "mod.slug" : "mod_id", mod_slug).eq("slug", slug);
     });
   }
 
@@ -107,7 +107,7 @@ export class RogueLibsApi {
   }
   public fetchReleasesByModSlug(mod_slug: string) {
     if (!Number.isNaN(+mod_slug)) return this.fetchReleasesByModId(+mod_slug);
-    return this.selectMany<DbRelease, RestRelease>("releases", selectReleaseWithMod, b => b.eq("mods.slug", mod_slug));
+    return this.selectMany<DbRelease, RestRelease>("releases", selectReleaseWithMod, b => b.eq("mod.slug", mod_slug));
   }
 
   // public getReleaseFileDownloadUrl(filename: string) {
