@@ -14,7 +14,7 @@ export default function ReleaseCard({ release }: ReleaseCardProps) {
     <div className={styles.container}>
       <Link href={modLink}>
         <div className={styles.window}>
-          <img className={styles.banner} src={release.banner_url ?? "/placeholder_10.png"} alt="" />
+          <img className={styles.banner} src={release.banner_url ?? "/placeholder-10.png"} alt="" />
           <div className={styles.description}>{release.description}</div>
           <div className={styles.quickbar}>{"Download"}</div>
         </div>

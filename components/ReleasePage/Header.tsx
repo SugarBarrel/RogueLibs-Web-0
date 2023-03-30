@@ -11,20 +11,20 @@ export default function ReleasePageHeader() {
   return (
     <>
       <div className={styles.breadcrumbs}>
-        <Link className={styles.breadcrumb} href={`/mods`}>
+        <Link className={styles.breadcrumb} href={`/`}>
           Mods
         </Link>
         <span>{" > "}</span>
-        <Link className={styles.breadcrumb} href={`/mods/${mod.slug}`}>
+        <Link className={styles.breadcrumb} href={`/mods/${mod.slug ?? mod.id}`}>
           {release.title}
         </Link>
         <span>{" > "}</span>
-        <Link className={styles.breadcrumb} href={`/mods/${mod.slug}/${release.slug}`}>
-          {release.version ? "v" + release.version : release.slug}
+        <Link className={styles.breadcrumb} href={`/mods/${mod.slug ?? mod.id}/${release.slug ?? release.id}`}>
+          {release.version ? "v" + release.version : release.slug ?? release.id}
         </Link>
       </div>
       <div className={styles.header}>
-        <img className={styles.banner} src={release.banner_url ?? "/Placeholder.png"} />
+        <img className={styles.banner} src={release.banner_url ?? "/placeholder.png"} />
         <div className={styles.title}>{release.title}</div>
         <div className={styles.leftQuickbar}>
           {mod.guid && (

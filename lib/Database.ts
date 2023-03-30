@@ -9,7 +9,8 @@ export type Database = {
 export default Database;
 
 export type DbUser = {
-  id: string; // PK, FK: auth.users
+  id: string; // PK
+  uid: string; // FK: auth.users
   created_at: string; // = now()
   edited_at: string | null; // = null
   username: string;
@@ -34,6 +35,7 @@ export type DbModAuthor = {
   is_creator: boolean; // = false
   can_see: boolean; // = true
   can_edit: boolean; // = false
+  order: number; // = 0
 };
 
 export type DbRelease = {
@@ -54,6 +56,7 @@ export type DbReleaseAuthor = {
   is_creator: boolean; // = false
   can_see: boolean; // = true
   can_edit: boolean; // = false
+  order: number; // = 0
 };
 export type DbReleaseFile = {
   release_id: number; // PK, FK: DbRelease

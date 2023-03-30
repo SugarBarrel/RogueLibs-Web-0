@@ -5,8 +5,8 @@ as
 $$
 begin
 
-  insert into public.users (id, username, avatar_url)
-  values (new.id, new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'avatar_url');
+  insert into public.users (id, uid, username, avatar_url)
+  values (new.id, new.id, new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'avatar_url');
 
   return new;
 

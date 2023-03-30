@@ -3,6 +3,7 @@ import { createServerApi, RestReleaseWithMod } from "@lib/API";
 import { GSSPC, GSSPR, PageProps } from "@lib/index";
 import { Head } from "@site/components/Common";
 import MainLayout from "@site/components/MainLayout";
+import styles from "./index.module.scss";
 
 export interface HomePageProps extends PageProps {
   latestReleases: RestReleaseWithMod[];
@@ -12,7 +13,7 @@ export default function HomePage({ latestReleases }: HomePageProps) {
     <MainLayout>
       <Head path="/" title="RogueLibs Web" description="The mod-sharing platform." />
       <div>RogueLibs website works!</div>
-      <div style={{ display: "flex" }}>
+      <div className={styles.wrapper}>
         {latestReleases.map(release => {
           return <ReleaseCard release={release} key={release.id} />;
         })}

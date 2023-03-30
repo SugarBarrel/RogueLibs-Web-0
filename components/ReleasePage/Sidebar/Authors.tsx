@@ -5,7 +5,7 @@ import styles from "./Authors.module.scss";
 
 export default function ReleasePageAuthors() {
   const { release } = useReleasePageContext();
-  const authors = release.authors.slice(); //.sort((a, b) => a.order - b.order);
+  const authors = release.authors.slice().sort((a, b) => a.order - b.order);
 
   return (
     <div className={styles.authors}>
