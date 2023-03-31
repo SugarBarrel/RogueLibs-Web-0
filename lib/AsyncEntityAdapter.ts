@@ -5,6 +5,7 @@ export interface Dictionary<T> {
   [id: EntityId]: T | undefined;
 }
 export type IdSelector<T> = (entity: T) => EntityId;
+export type Update<T> = Partial<T> | ((entity: T) => void);
 
 export type AsyncEntity<T> =
   | { status: "idle"; data?: undefined; error?: undefined }
@@ -28,6 +29,9 @@ export interface AsyncEntityState<T> {
 export interface AsyncEntityAdapter<T> {
   upsertOne(state: AsyncEntityState<T>, entity: T): void;
   upsertMany(state: AsyncEntityState<T>, entities: readonly T[]): void;
+
+  updateOne(state: AsyncEntityState<T>, key: EntityId, update: Update<T>): void;
+  updateMany(state: AsyncEntityState<T>, keys: readonly EntityId[], update: Update<T>): void;
 
   setPendingOne(state: AsyncEntityState<T>, key: EntityId): void;
   setPendingMany(state: AsyncEntityState<T>, keys: readonly EntityId[]): void;
@@ -92,6 +96,36 @@ export function createAsyncEntityAdapter<T>(options?: AsyncEntityAdapterOptions<
       state.entities[key] = { status: "success", data: entity };
     }
     if (didAppendIds) {
+      resortIds(state);
+    }
+  }
+  function updateOne(state: AsyncEntityState<T>, key: EntityId, update: Update<T>) {
+    if (key in state.entities) {
+      const entity = state.entities[key]!;
+      if (entity.status === "success") {
+        typeof update === "function" ? update(entity.data) : Object.assign(entity, update);
+      }
+    }
+  }
+  function updateMany(state: AsyncEntityState<T>, keys: readonly EntityId[], update: Update<T>) {
+    let didMutateIds = false;
+
+    for (const key of keys) {
+      if (key in state.entities) {
+        const entity = state.entities[key]!;
+        if (entity.status === "success") {
+          typeof update === "function" ? update(entity.data) : Object.assign(entity.data!, update);
+          const newKey = selectId(entity.data);
+          if (key !== newKey) {
+            didMutateIds = true;
+            delete state.entities[key];
+            state.entities[newKey] = entity;
+          }
+        }
+      }
+    }
+    if (didMutateIds) {
+      refilterIds(state);
       resortIds(state);
     }
   }
@@ -183,6 +217,9 @@ export function createAsyncEntityAdapter<T>(options?: AsyncEntityAdapterOptions<
   return {
     upsertOne,
     upsertMany,
+
+    updateOne,
+    updateMany,
 
     setPendingOne,
     setPendingMany,

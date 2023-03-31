@@ -28,6 +28,7 @@ export type DbMod = {
   is_verified: boolean; // = false
   title: string;
   description: string;
+  nugget_count: number;
 };
 export type DbModAuthor = {
   mod_id: number; // FK: DbMod

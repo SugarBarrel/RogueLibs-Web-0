@@ -8,7 +8,7 @@ import { makeStore, RootStore } from "@ducks/index";
 import { useState, useMemo, useEffect } from "react";
 import { PageProps } from "@lib/index";
 import { upsertMods } from "@ducks/mods";
-import { upsertUsers } from "@ducks/users";
+import { setCurrentUser, upsertUsers } from "@ducks/users";
 import { upsertReleases } from "@ducks/releases";
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -47,6 +47,7 @@ function initializeStore(store: RootStore, props: PageProps, immediate?: boolean
     console.info("HYDRATE", clone(state), Boolean(immediate));
     const dispatch = store.dispatch;
 
+    dispatch(setCurrentUser(initialState.session?.user.id ?? null));
     state.users && dispatch(upsertUsers(state.users));
     state.mods && dispatch(upsertMods(state.mods));
     state.releases && dispatch(upsertReleases(state.releases));

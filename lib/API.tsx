@@ -29,12 +29,12 @@ export function createServerApi(cxt: GetServerSidePropsContext) {
   return new RogueLibsApi(createServerSupabaseClient(cxt));
 }
 
-const selectUser = "*";
-const selectMod = "*, authors: mod_authors(*, user: users(*))";
-const selectRelease = "*, authors: release_authors(*, user: users(*)), files: release_files(*)";
+const selectUser = "*, nuggets: mod_nuggets(mod_id)";
+const selectMod = `*, authors: mod_authors(*, user: users(${selectUser}))`;
+const selectRelease = `*, authors: release_authors(*, user: users(${selectUser})), files: release_files(*)`;
 const selectReleaseWithMod = `${selectRelease}, mod: mods!inner(${selectMod})`;
 
-export type RestUser = DbUser;
+export type RestUser = DbUser & { nuggets: { mod_id: number }[] };
 export type RestMod = DbMod & { authors: RestModAuthor[] };
 export type RestModAuthor = DbModAuthor & { user: RestUser };
 
@@ -74,6 +74,11 @@ export class RogueLibsApi {
     }
     return builder.throwOnError().then(res => res.data) as Promise<Return[]>;
   }
+  private rpc<Return>(functionName: string, args: object) {
+    return this.Supabase.rpc(functionName, args)
+      .throwOnError()
+      .then(res => res.data) as Promise<Return>;
+  }
 
   public async getSupabaseSession() {
     return (await this.Supabase.auth.getSession()).data.session;
@@ -88,6 +93,10 @@ export class RogueLibsApi {
   public fetchModBySlug(slug: string) {
     if (!Number.isNaN(+slug)) return this.fetchModById(+slug);
     return this.selectOne<DbMod, RestMod>("mods", selectMod, b => b.eq("slug", slug));
+  }
+
+  public setNugget(mod_id: number, nugget: boolean) {
+    return this.rpc<number>("set_mod_nugget", { _mod_id: mod_id, _nugget: nugget });
   }
 
   public fetchReleaseById(id: number, withMod: boolean): Promise<RestRelease>;

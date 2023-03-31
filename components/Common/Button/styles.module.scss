@@ -18,10 +18,10 @@
   &:hover {
     background-color: var(--color-overlay-3);
   }
-  &:active:not([disabled]) {
+  &:active {
     background-color: var(--color-overlay-8);
   }
-  &[disabled] {
+  &[disabled]:not(:active) {
     cursor: default;
     opacity: 0.5;
     &:hover {

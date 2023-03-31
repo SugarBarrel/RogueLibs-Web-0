@@ -119,15 +119,19 @@ html, body {
 }
 
 * {
-  color: var(--color-main);
+  // color: var(--color-main);
   font-family: var(--custom-font);
   // font-size: 1rem;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  border: none;
   border-radius: 0;
   gap: 0;
+}
+
+button {
+  color: var(--color-main);
+  border: none;
 }
 
 label {
@@ -148,4 +152,27 @@ pre, code {
 pre {
   overflow-x: auto;
   padding-bottom: 1rem;
+}
+
+.react-tooltip {
+  border: 1px solid var(--color-primary);
+  .react-tooltip-arrow {
+    border: 1px solid transparent;
+  }
+  &.react-tooltip__place-left .react-tooltip-arrow {
+    border-right: 1px solid var(--color-primary);
+    border-top: 1px solid var(--color-primary);
+  }
+  &.react-tooltip__place-right .react-tooltip-arrow {
+    border-left: 1px solid var(--color-primary);
+    border-bottom: 1px solid var(--color-primary);
+  }
+  &.react-tooltip__place-top .react-tooltip-arrow {
+    border-right: 1px solid var(--color-primary);
+    border-bottom: 1px solid var(--color-primary);
+  }
+  &.react-tooltip__place-bottom .react-tooltip-arrow {
+    border-left: 1px solid var(--color-primary);
+    border-top: 1px solid var(--color-primary);
+  }
 }

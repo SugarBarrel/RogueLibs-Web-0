@@ -4,10 +4,10 @@ import { createAsyncEntityAdapter } from "@lib/AsyncEntityAdapter";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { fetchModById, fetchReleaseById, RootState, WithApi } from ".";
 import { extractAll } from "..";
-import { upsertMod, upsertMods } from "./mods";
+import { setModNugget, upsertMod, upsertMods } from "./mods";
 import { upsertRelease, upsertReleases } from "./releases";
 
-export type StoreUser = DbUser;
+export type StoreUser = DbUser & { nuggets?: { mod_id: number }[] };
 
 export const usersAdapter = createAsyncEntityAdapter<StoreUser>();
 
@@ -31,13 +31,18 @@ export const fetchUserById = createAsyncThunk<RestUser, WithApi<{ user_id: strin
 
 export const usersSlice = createSlice({
   name: "users",
-  initialState: usersAdapter.getInitialState(),
+  initialState: usersAdapter.getInitialState({
+    current_user_id: null as string | null,
+  }),
   reducers: {
     upsertOne(state, { payload }: PayloadAction<RestUser>) {
       usersAdapter.upsertOne(state, payload);
     },
     upsertMany(state, { payload }: PayloadAction<RestUser[]>) {
       usersAdapter.upsertMany(state, payload);
+    },
+    setCurrentUser(state, { payload }: PayloadAction<string | null>) {
+      state.current_user_id = payload;
     },
   },
   extraReducers: builder =>
@@ -72,9 +77,16 @@ export const usersSlice = createSlice({
       })
       .addCase(fetchReleaseById.fulfilled, (state, { payload }) => {
         usersAdapter.upsertMany(state, extractAll(payload.authors, "user"));
+      })
+
+      .addCase(setModNugget.fulfilled, (state, { meta: { arg } }) => {
+        usersAdapter.updateOne(state, state.current_user_id!, user => {
+          user.nuggets = user.nuggets?.filter(n => n.mod_id !== arg.mod_id) ?? [];
+          if (arg.nugget) user.nuggets.push({ mod_id: arg.mod_id });
+        });
       }),
 });
 
-export const { upsertOne: upsertUser, upsertMany: upsertUsers } = usersSlice.actions;
+export const { upsertOne: upsertUser, upsertMany: upsertUsers, setCurrentUser } = usersSlice.actions;
 
 export default usersSlice.reducer;

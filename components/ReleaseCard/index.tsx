@@ -27,11 +27,7 @@ export default function ReleaseCard({ release }: ReleaseCardProps) {
       <div className={styles.stats}>
         <div className={styles.stat}>
           <Icon type="nugget" size={16} />
-          {2}
-        </div>
-        <div className={styles.stat}>
-          <Icon type="eye" size={16} />
-          {2}
+          {mod.nugget_count}
         </div>
       </div>
     </div>

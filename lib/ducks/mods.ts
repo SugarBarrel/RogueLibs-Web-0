@@ -27,6 +27,10 @@ export const fetchModById = createAsyncThunk<RestMod, WithApi<{ mod_id: number }
     },
   },
 );
+export const setModNugget = createAsyncThunk<number, WithApi<{ mod_id: number; nugget: boolean }>>(
+  "mods/setNugget",
+  ({ api, mod_id, nugget }) => api.setNugget(mod_id, nugget),
+);
 
 export const modsSlice = createSlice({
   name: "mods",
@@ -64,6 +68,10 @@ export const modsSlice = createSlice({
 
       .addCase(fetchReleaseById.fulfilled, (state, { payload }) => {
         modsAdapter.upsertOne(state, extract(payload, "mod"));
+      })
+
+      .addCase(setModNugget.fulfilled, (state, { meta: { arg }, payload }) => {
+        modsAdapter.updateOne(state, arg.mod_id, m => (m.nugget_count = payload));
       }),
 });
 
