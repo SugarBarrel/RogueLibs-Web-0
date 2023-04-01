@@ -1,50 +1,108 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Button, Icon } from "@components/Common";
 import { triggerDownload, useApi } from "@lib/API";
 import { useReleasePageContext } from "..";
+import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from "@hello-pangea/dnd";
 import styles from "./Download.module.scss";
+import { DbReleaseFile } from "@lib/Database";
+import { reorder } from "@lib/index";
 
 export default function ReleasePageDownload() {
-  const { release } = useReleasePageContext();
-  const api = useApi();
-
-  const [loadingFile, setLoadingFile] = useState<string | null>(null);
-
-  const files = release.files.slice().sort((a, b) => a.order - b.order);
-
-  async function download(filename: string) {
-    setLoadingFile(filename);
-    const blob = await api.downloadReleaseFile(`${release.mod_id}.${release.id}.${filename}`);
-    triggerDownload(document, blob!, filename);
-    setTimeout(() => setLoadingFile(null), 500);
-  }
+  const { release, isEditing } = useReleasePageContext();
 
   return (
     <div className={styles.container}>
-      <label>{files.length === 1 ? "Download" : "Downloads"}</label>
-      {files.map(f => {
-        const loading = loadingFile == f.filename;
-        let title = f.title || f.filename;
-
-        const className =
-          f.type === 0
-            ? styles.downloadMain
-            : f.type === 1
-            ? styles.downloadDocumentation
-            : f.type === 2
-            ? styles.downloadText
-            : "";
-
-        return (
-          <div key={f.filename} className={styles.download}>
-            <Button className={className} onClick={() => download(f.filename)}>
-              <Icon type={loading ? "loading" : "download"} size={24} />
-              {title}
-            </Button>
-            {f.tooltip && <div className={styles.tooltip}>{f.tooltip}</div>}
-          </div>
-        );
-      })}
+      <label>{release.files.length === 1 ? "Download" : "Downloads"}</label>
+      <DownloadList canEdit={isEditing} />
     </div>
+  );
+}
+
+export interface DownloadListProps {
+  canEdit: boolean;
+}
+export function DownloadList({ canEdit }: DownloadListProps) {
+  const { release, mutateRelease } = useReleasePageContext();
+  const [loadingFile, setLoadingFile] = useState<string | null>(null);
+  const api = useApi();
+
+  const files = useMemo(() => {
+    return release.files.slice().sort((a, b) => a.order - b.order);
+  }, [release.files]);
+
+  async function download(file: DbReleaseFile) {
+    setLoadingFile(file.filename);
+    const blob = await api.downloadReleaseFile(`${release.mod_id}.${release.id}.${file.filename}`);
+    triggerDownload(document, blob!, file.filename);
+    setTimeout(() => setLoadingFile(null), 500);
+  }
+
+  const onDragEnd = useCallback<OnDragEndResponder>(
+    e => mutateRelease(r => (r.files = reorder(e, files, "order"))),
+    [files],
+  );
+
+  return (
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="downloads-list">
+        {provided => (
+          <div ref={provided.innerRef} {...provided.droppableProps} className={styles.downloadList}>
+            {files.map((f, i) => (
+              <Download
+                file={f}
+                index={i}
+                key={f.filename}
+                onDownload={download}
+                canDrag={canEdit}
+                isLoading={loadingFile == f.filename}
+              />
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
+  );
+}
+
+export interface DownloadProps {
+  file: DbReleaseFile;
+  index: number;
+  canDrag: boolean;
+  onDownload: (file: DbReleaseFile) => void;
+  isLoading: boolean;
+}
+export function Download({ file, index, canDrag, onDownload, isLoading }: DownloadProps) {
+  const className =
+    {
+      0: null,
+      1: styles.downloadMain,
+      2: styles.downloadMain,
+      // 0: styles.downloadDocumentation,
+      3: styles.downloadText,
+    }[file.type] ?? "";
+
+  return (
+    <Draggable
+      draggableId={"file-" + file.filename}
+      index={index}
+      disableInteractiveElementBlocking
+      isDragDisabled={!canDrag}
+    >
+      {provided => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          className={styles.download}
+        >
+          <Button className={className} onClick={() => onDownload(file)}>
+            <Icon type={isLoading ? "loading" : "download"} size={24} />
+            {file.title || file.filename}
+          </Button>
+          {file.tooltip && <div className={styles.tooltip}>{file.tooltip}</div>}
+        </div>
+      )}
+    </Draggable>
   );
 }

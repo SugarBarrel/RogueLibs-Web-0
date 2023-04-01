@@ -2,10 +2,11 @@ import { fetchModById, selectModById } from "@ducks/mods";
 import { fetchReleaseById, selectReleaseById } from "@ducks/releases";
 import { fetchUserById, selectUserById } from "@ducks/users";
 import { Selector } from "@reduxjs/toolkit";
-import { DependencyList, useEffect } from "react";
+import { DependencyList, useCallback, useEffect, useState } from "react";
 import { RogueLibsApi, useApi } from "./API";
 import { AsyncEntity, AsyncEntityArr } from "./AsyncEntityAdapter";
 import { RootState, useRootDispatch, useRootSelector } from "./ducks";
+import { produce, Draft } from "immer";
 
 export function useDispatchEntity<T>(
   selector: Selector<RootState, AsyncEntity<T>>,
@@ -50,4 +51,15 @@ export function useRelease(release_id: number | null | undefined) {
     api => release_id && fetchReleaseById({ api, release_id }),
     [release_id],
   );
+}
+
+export type ImmerStateSetter<T> = (recipe: (draft: Draft<T>) => void) => void;
+export function useImmerState<T>(defaultState: T | (() => T)) {
+  const [state, setState] = useState<T>(defaultState);
+
+  const mutateState = useCallback((recipe: (draft: Draft<T>) => void) => {
+    setState(current => produce(current, draft => void recipe(draft)));
+  }, []);
+
+  return [state, mutateState] as [T, ImmerStateSetter<T>];
 }

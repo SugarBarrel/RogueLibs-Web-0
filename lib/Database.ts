@@ -69,4 +69,7 @@ export type DbReleaseFile = {
 };
 export enum DbReleaseFileType {
   Unknown,
+  Plugin,
+  Patcher,
+  Extra,
 }

@@ -57,6 +57,18 @@
   transition: all 0.5s ease;
   font-size: 0.8rem;
 }
+.quick-download {
+  padding: 0.2rem 0.3rem;
+  background-color: var(--color-background);
+  &:hover {
+    background-color: var(--color-gray-800);
+    svg { opacity: 0.5; }
+  }
+  &:active {
+    background-color: var(--color-gray-700);
+    svg { scale: 1.25; }
+  }
+}
 
 .details {
   display: flex;

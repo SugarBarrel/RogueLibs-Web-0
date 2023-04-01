@@ -3,7 +3,14 @@
   flex-direction: column;
   gap: 0.5rem;
 }
+
+.download-list {
+  display: flex;
+  flex-direction: column;
+}
+
 .download {
+  margin-bottom: 0.5rem;
   & > button {
     width: 100%;
     display: flex;
@@ -38,6 +45,7 @@
 
 .tooltip {
   outline: 1px solid gray;
+  background-color: var(--color-background);
   border-radius: 0 0 0.5rem 0.5rem;
   font-size: 0.8rem;
   padding: 0.25rem 0.5rem;
