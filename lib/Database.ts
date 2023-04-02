@@ -82,7 +82,8 @@ export type DbReleaseFile = {
 export enum DbReleaseFileType {
   Unknown,
   Plugin,
-  Patcher,
+  PatcherPlugin,
+  CorePlugin,
   SpritePack,
   Documentation,
   Extra,

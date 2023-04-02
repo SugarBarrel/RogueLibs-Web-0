@@ -81,7 +81,8 @@ export function Download({ file, index, canDrag, onDownload, isLoading }: Downlo
   const className = {
     [DbReleaseFileType.Unknown]: undefined,
     [DbReleaseFileType.Plugin]: styles.downloadMain,
-    [DbReleaseFileType.Patcher]: styles.downloadMain,
+    [DbReleaseFileType.PatcherPlugin]: styles.downloadMain,
+    [DbReleaseFileType.CorePlugin]: styles.downloadMain,
     [DbReleaseFileType.SpritePack]: styles.downloadMain,
     [DbReleaseFileType.Documentation]: styles.downloadDocumentation,
     [DbReleaseFileType.Extra]: styles.downloadText,
