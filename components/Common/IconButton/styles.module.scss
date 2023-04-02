@@ -1,0 +1,21 @@
+.icon-button {
+  display: inline-flex;
+  padding: 0.25rem;
+
+  background-color: transparent;
+  border-radius: 9999px;
+
+  cursor: pointer;
+  transition: all 0.1s ease;
+
+  &:hover {
+    background-color: var(--color-overlay-3);
+    > svg > image {
+      opacity: 1 !important;
+    }
+  }
+  &:active {
+    background-color: var(--color-overlay-8);
+    outline: 1px solid var(--color-overlay-4);
+  }
+}

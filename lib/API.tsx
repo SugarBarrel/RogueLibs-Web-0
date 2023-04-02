@@ -3,7 +3,7 @@ import { SessionContextProvider as SupabaseProvider } from "@supabase/auth-helpe
 import { Session as SupabaseSession, SupabaseClient } from "@supabase/supabase-js";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 import { createContext, useContext, useMemo, useState } from "react";
-import { DbMod, DbModAuthor, DbRelease, DbReleaseAuthor, DbReleaseFile, DbUser } from "./Database";
+import { DbMod, DbModAuthor, DbRelease, DbReleaseAuthor, DbReleaseDependency, DbReleaseFile, DbUser } from "./Database";
 import { GetServerSidePropsContext } from "next";
 
 const ApiContext = createContext<RogueLibsApi | null>(null);
@@ -29,19 +29,38 @@ export function createServerApi(cxt: GetServerSidePropsContext) {
   return new RogueLibsApi(createServerSupabaseClient(cxt));
 }
 
-const selectUser = "*, nuggets: mod_nuggets(mod_id)";
-const selectMod = `*, authors: mod_authors(*, user: users(${selectUser}))`;
-const selectRelease = `*, authors: release_authors(*, user: users(${selectUser})), files: release_files(*)`;
-const selectReleaseWithMod = `${selectRelease}, mod: mods!releases_mod_id_fkey!inner(${selectMod})`;
+const selectUser = `
+  *,
+  nuggets: mod_nuggets(mod_id)
+`;
+const selectMod = `
+  *,
+  authors: mod_authors(*, user: users(${selectUser}))
+`;
+const selectRelease = `
+  *,
+  authors: release_authors(*, user: users(${selectUser})),
+  files: release_files(*),
+  dependencies: release_dependencies(*, mod: mods(*))
+`;
+const selectReleaseWithMod = `
+  ${selectRelease},
+  mod: mods!releases_mod_id_fkey!inner(${selectMod})
+`;
 
 export type RestUser = DbUser & { nuggets: { mod_id: number }[] };
 export type RestMod = DbMod & { authors: RestModAuthor[] };
 export type RestModAuthor = DbModAuthor & { user: RestUser };
 
-export type RestRelease = DbRelease & { authors: RestReleaseAuthor[]; files: RestReleaseFile[] };
+export type RestRelease = DbRelease & {
+  authors: RestReleaseAuthor[];
+  files: RestReleaseFile[];
+  dependencies: RestReleaseDependency[];
+};
 export type RestReleaseWithMod = RestRelease & { mod: RestMod };
 export type RestReleaseAuthor = DbReleaseAuthor & { user: RestUser };
 export type RestReleaseFile = DbReleaseFile;
+export type RestReleaseDependency = DbReleaseDependency;
 
 export class RogueLibsApi {
   public constructor(public readonly Supabase: SupabaseClient) {}

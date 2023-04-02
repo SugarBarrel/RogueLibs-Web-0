@@ -16,6 +16,7 @@ const hashOnlyIdent = (context, _, exportName) => {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+
   webpack: (config, { dev }) => {
     const rules = config.module.rules.find(rule => typeof rule.oneOf === "object").oneOf.filter(rule => Array.isArray(rule.use));
 

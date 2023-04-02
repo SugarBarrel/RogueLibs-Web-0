@@ -38,6 +38,15 @@ export async function getServerSideProps(
     api.fetchReleaseBySlug(mod_slug, release_slug),
   ]);
 
+  if ((release.mod.slug && !Number.isNaN(+mod_slug)) || (release.slug && !Number.isNaN(+release_slug))) {
+    return {
+      redirect: {
+        destination: `/mods/${release.mod.slug ?? release.mod_id}/${release.slug ?? release.id}`,
+        permanent: false,
+      },
+    };
+  }
+
   return {
     props: {
       release,

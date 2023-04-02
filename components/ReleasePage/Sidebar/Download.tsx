@@ -4,7 +4,7 @@ import { triggerDownload, useApi } from "@lib/API";
 import { useReleasePageContext } from "..";
 import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from "@hello-pangea/dnd";
 import styles from "./Download.module.scss";
-import { DbReleaseFile } from "@lib/Database";
+import { DbReleaseFile, DbReleaseFileType } from "@lib/Database";
 import { reorder } from "@lib/index";
 
 export default function ReleasePageDownload() {
@@ -31,10 +31,15 @@ export function DownloadList({ canEdit }: DownloadListProps) {
   }, [release.files]);
 
   async function download(file: DbReleaseFile) {
-    setLoadingFile(file.filename);
-    const blob = await api.downloadReleaseFile(`${release.mod_id}.${release.id}.${file.filename}`);
-    triggerDownload(document, blob!, file.filename);
-    setTimeout(() => setLoadingFile(null), 500);
+    try {
+      setLoadingFile(file.filename);
+      const blob = await api.downloadReleaseFile(`${release.mod_id}.${release.id}.${file.filename}`);
+      triggerDownload(document, blob!, file.filename);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setTimeout(() => setLoadingFile(null), 500);
+    }
   }
 
   const onDragEnd = useCallback<OnDragEndResponder>(
@@ -73,14 +78,14 @@ export interface DownloadProps {
   isLoading: boolean;
 }
 export function Download({ file, index, canDrag, onDownload, isLoading }: DownloadProps) {
-  const className =
-    {
-      0: null,
-      1: styles.downloadMain,
-      2: styles.downloadMain,
-      // 0: styles.downloadDocumentation,
-      3: styles.downloadText,
-    }[file.type] ?? "";
+  const className = {
+    [DbReleaseFileType.Unknown]: undefined,
+    [DbReleaseFileType.Plugin]: styles.downloadMain,
+    [DbReleaseFileType.Patcher]: styles.downloadMain,
+    [DbReleaseFileType.SpritePack]: styles.downloadMain,
+    [DbReleaseFileType.Documentation]: styles.downloadDocumentation,
+    [DbReleaseFileType.Extra]: styles.downloadText,
+  }[file.type];
 
   return (
     <Draggable

@@ -1,18 +1,23 @@
-import { Button, Icon, Link } from "@components/Common";
+import { Button, Icon, IconButton, Link } from "@components/Common";
 import { useRootDispatch } from "@ducks/index";
 import { setModNugget } from "@ducks/mods";
 import { useApi } from "@lib/API";
-import { useMod, useUser } from "@lib/hooks";
+import { useUser } from "@lib/hooks";
 import { orderInsensitiveEqual } from "@lib/index";
 import { useSession as useSupabaseSession } from "@supabase/auth-helpers-react";
-import clsx from "clsx";
 import { useMemo, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import { useReleasePageContext } from ".";
 import styles from "./Header.module.scss";
+import clsx from "clsx";
 
 export default function ReleasePageHeader() {
   const { release } = useReleasePageContext();
+
+  function copyPermanentLink() {
+    const permanentLink = `${location.origin}/mods/${release.mod_id}/${release.id}`;
+    navigator.clipboard.writeText(permanentLink);
+  }
 
   return (
     <>
@@ -22,7 +27,27 @@ export default function ReleasePageHeader() {
       </div>
       <div className={styles.header}>
         <img className={styles.banner} src={release.banner_url ?? "/placeholder.png"} />
-        <div className={styles.title}>{release.title}</div>
+        <div className={styles.headerOverlay}>
+          <span className={styles.title}>{release.title}</span>
+          <div className={styles.titleButtons}>
+            <IconButton data-tooltip-id="mod-link" onClick={copyPermanentLink}>
+              <Icon type="link" size={32} alpha={0.5} />
+            </IconButton>
+            <Tooltip
+              id="mod-link"
+              place="bottom"
+              offset={5}
+              openOnClick
+              clickable
+              delayHide={3000}
+              render={() => (
+                <div>
+                  <span>{"Copied permanent link!"}</span>
+                </div>
+              )}
+            />
+          </div>
+        </div>
         <LeftQuickBar />
         <RightQuickBar />
       </div>
@@ -31,8 +56,7 @@ export default function ReleasePageHeader() {
 }
 
 export function Breadcrumbs() {
-  const { release } = useReleasePageContext();
-  const mod = useMod(release?.mod_id)[0];
+  const { release, mod } = useReleasePageContext();
 
   const homeLink = "/";
   const modLink = `/mods/${mod?.slug ?? release.mod_id}`;
@@ -90,8 +114,7 @@ export function AuthoringControls() {
 }
 
 export function LeftQuickBar() {
-  const { release } = useReleasePageContext();
-  const mod = useMod(release?.mod_id)[0];
+  const { mod } = useReleasePageContext();
 
   return (
     <div className={styles.leftQuickbar}>
@@ -136,8 +159,7 @@ export function LeftQuickBar() {
   );
 }
 export function RightQuickBar() {
-  const { release } = useReleasePageContext();
-  const mod = useMod(release?.mod_id)[0];
+  const { release, mod } = useReleasePageContext();
 
   const api = useApi();
   const dispatch = useRootDispatch();

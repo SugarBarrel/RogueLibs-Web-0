@@ -40,6 +40,7 @@ export const AllIconTypes = [
   "copy",
   "edit",
   "save",
+  "link",
 ] as const;
 
 export type IconType = (typeof AllIconTypes)[number];
@@ -57,3 +58,4 @@ export const DiscordIcon = MakeIcon("discord");
 export const CopyIcon = MakeIcon("copy");
 export const EditIcon = MakeIcon("edit");
 export const SaveIcon = MakeIcon("save");
+export const LinkIcon = MakeIcon("link");

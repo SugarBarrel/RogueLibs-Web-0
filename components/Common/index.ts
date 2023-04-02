@@ -1,4 +1,5 @@
 export { default as Button, type ButtonProps } from "./Button";
+export { default as IconButton, type IconButtonProps } from "./IconButton";
 export { default as Icon, type IconProps } from "./Icon";
 export { default as Link, type LinkProps } from "./Link";
 export { default as Sprite, type SpriteProps } from "./Sprite";

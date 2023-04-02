@@ -74,7 +74,7 @@ export type DbReleaseAuthor = {
 export type DbReleaseFile = {
   release_id: number; // PK, FK: DbRelease
   filename: string; // PK
-  type: DbReleaseFileType; // = Unknown
+  type: DbReleaseFileType; // = 0 = Unknown
   order: number; // = 0
   title: string | null; // = null
   tooltip: string | null; // = null
@@ -83,6 +83,8 @@ export enum DbReleaseFileType {
   Unknown,
   Plugin,
   Patcher,
+  SpritePack,
+  Documentation,
   Extra,
 }
 export type DbReleaseDependency = {

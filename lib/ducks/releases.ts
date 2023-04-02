@@ -1,10 +1,14 @@
-import { DbRelease, DbReleaseAuthor, DbReleaseFile } from "@lib/Database";
+import { DbRelease, DbReleaseAuthor, DbReleaseDependency, DbReleaseFile } from "@lib/Database";
 import { RestRelease, RestReleaseWithMod } from "@lib/API";
 import { createAsyncEntityAdapter } from "@lib/AsyncEntityAdapter";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState, WithApi } from ".";
 
-export type StoreRelease = DbRelease & { authors: DbReleaseAuthor[]; files: DbReleaseFile[] };
+export type StoreRelease = DbRelease & {
+  authors: DbReleaseAuthor[];
+  files: DbReleaseFile[];
+  dependencies: DbReleaseDependency[];
+};
 
 export const releasesAdapter = createAsyncEntityAdapter<StoreRelease>();
 
