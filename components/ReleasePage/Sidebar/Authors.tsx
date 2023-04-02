@@ -1,44 +1,88 @@
 import { useUser } from "@lib/hooks";
 import { useReleasePageContext } from "..";
+import { useCallback, useMemo } from "react";
+import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from "@hello-pangea/dnd";
+import { DbModAuthor, DbReleaseAuthor } from "@lib/Database";
+import { reorder } from "@lib/index";
 import styles from "./Authors.module.scss";
 import clsx from "clsx";
 
 export default function ReleasePageAuthors() {
   const { release } = useReleasePageContext();
-  const authors = release.authors.slice().sort((a, b) => a.order - b.order);
 
   return (
-    <div className={styles.authors}>
-      <label>{"Authors"}</label>
-      {authors.map(author => (
-        <Author user_id={author.user_id} credit={author.credit} key={author.user_id} />
-      ))}
+    <div className={styles.container}>
+      <label>{release.authors.length === 1 ? "Author" : "Authors"}</label>
+      <AuthorList />
     </div>
   );
 }
 
-export type AuthorProps = {
-  user_id: string | null | undefined;
-  credit?: string | null;
-  size?: number | null;
-};
-export function Author({ user_id, credit, size }: AuthorProps) {
-  if (size == null) size = 48;
-  const user = useUser(user_id)[0];
+export function AuthorList() {
+  const { release, mutateRelease, isEditing } = useReleasePageContext();
+
+  const authors = useMemo(() => {
+    return release.authors.slice().sort((a, b) => a.order - b.order);
+  }, [release.authors]);
+
+  const onDragEnd = useCallback<OnDragEndResponder>(
+    e => mutateRelease(r => (r.authors = reorder(e, authors, "order"))),
+    [authors],
+  );
 
   return (
-    <div className={styles.author}>
-      <img className={styles.avatar} width={size} height={size} src={user?.avatar_url ?? undefined} />
-      <div className={clsx(styles.userInfo, credit && styles.withCredits)}>
-        <span className={styles.username}>{user?.username ?? "..."}</span>
-        {credit && (
-          <div className={styles.credits}>
-            {credit.split("\n").map((line, i) => (
-              <p key={i}>{line}</p>
-            ))}
-          </div>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="authors-list">
+        {provided => (
+          <>
+            <div ref={provided.innerRef} {...provided.droppableProps} className={styles.authorList}>
+              {authors.map((author, i) => (
+                <Author author={author} index={i} key={author.user_id} canDrag={isEditing} />
+              ))}
+              {provided.placeholder}
+            </div>
+          </>
         )}
-      </div>
-    </div>
+      </Droppable>
+    </DragDropContext>
+  );
+}
+
+export type AuthorProps = {
+  author: DbReleaseAuthor | DbModAuthor;
+  index: number;
+  canDrag: boolean;
+};
+export function Author({ author, canDrag, index }: AuthorProps) {
+  const user = useUser(author.user_id)[0];
+
+  return (
+    <Draggable
+      draggableId={"author-" + author.user_id}
+      index={index}
+      disableInteractiveElementBlocking
+      isDragDisabled={!canDrag}
+    >
+      {provided => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          className={styles.author}
+        >
+          <img className={styles.avatar} width={48} height={48} src={user?.avatar_url ?? undefined} />
+          <div className={clsx(styles.userInfo, author.credit && styles.withCredits)}>
+            <span className={styles.username}>{user?.username ?? "..."}</span>
+            {author.credit && (
+              <div className={styles.credits}>
+                {author.credit.split("\n").map((line, i) => (
+                  <p key={i}>{line}</p>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </Draggable>
   );
 }

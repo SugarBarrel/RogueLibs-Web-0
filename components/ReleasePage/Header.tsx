@@ -98,6 +98,17 @@ export function AuthoringControls() {
         original.files,
         file => file.filename,
         (a, b) => a.order === b.order && a.title === b.title && a.tooltip === b.tooltip && a.type === b.type,
+      ) ||
+      !orderInsensitiveEqual(
+        release.authors,
+        original.authors,
+        author => author.user_id,
+        (a, b) =>
+          a.order === b.order &&
+          a.credit === b.credit &&
+          a.can_see === b.can_see &&
+          a.can_edit === b.can_edit &&
+          a.is_creator === b.is_creator,
       )
     );
   }, [release, original]);

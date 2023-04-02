@@ -1,9 +1,11 @@
 import { Head } from "@components/Common";
 import MainLayout from "@components/MainLayout";
-import { Author } from "@components/ReleasePage/Sidebar/Authors";
 import { createServerApi } from "@lib/API";
+import { useUser } from "@lib/hooks";
 import { GSSPC, GSSPR, PageProps } from "@lib/index";
 import styles from "./about.module.scss";
+import clsx from "clsx";
+import authorStyles from "@components/ReleasePage/Sidebar/Authors.module.scss";
 
 export default function AboutPage() {
   return (
@@ -32,16 +34,8 @@ export default function AboutPage() {
 
       <div className={styles.header}>{"Contributors"}</div>
       <div className={styles.credits}>
-        <Author
-          size={64}
-          user_id="4ce33253-ca26-4924-bfdc-8ed3ed9bd6e1"
-          credit={"Developer of the library and the site."}
-        />
-        <Author
-          size={64}
-          user_id="4788ae9f-448f-4326-87f0-78244b56376d"
-          credit={"RogueLibs logo and website icon design."}
-        />
+        <Author user_id="4ce33253-ca26-4924-bfdc-8ed3ed9bd6e1" credit={"Developer of the library and the site."} />
+        <Author user_id="4788ae9f-448f-4326-87f0-78244b56376d" credit={"RogueLibs logo and website icon design."} />
       </div>
     </MainLayout>
   );
@@ -56,4 +50,28 @@ export async function getServerSideProps(cxt: GSSPC): Promise<GSSPR<PageProps>> 
       initialState: { session },
     },
   };
+}
+
+export type AuthorProps = {
+  user_id: string;
+  credit: string;
+};
+export function Author({ user_id, credit }: AuthorProps) {
+  const user = useUser(user_id)[0];
+
+  return (
+    <div className={authorStyles.author}>
+      <img className={authorStyles.avatar} width={64} height={64} src={user?.avatar_url ?? undefined} />
+      <div className={clsx(authorStyles.userInfo, credit && authorStyles.withCredits)}>
+        <span className={authorStyles.username}>{user?.username ?? "..."}</span>
+        {credit && (
+          <div className={authorStyles.credits}>
+            {credit.split("\n").map((line, i) => (
+              <p key={i}>{line}</p>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }

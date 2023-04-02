@@ -17,7 +17,7 @@ export function extractAll<T extends object, Prop extends keyof T>(subjects: rea
 export function reorder<T>(dnd: DropResult, container: T[], orderProp?: keyof T): T[];
 export function reorder<T>(dnd: DropResult, containers: Record<string, T[]>, orderProp?: keyof T): Record<string, T[]>;
 export function reorder<T>(dnd: DropResult, containers: T[] | Record<string, T[]>, orderProp?: keyof T) {
-  if (!dnd.destination) return;
+  if (!dnd.destination) return containers;
 
   if (Array.isArray(containers)) {
     let copy = containers.slice();

@@ -8,21 +8,18 @@ import { DbReleaseFile, DbReleaseFileType } from "@lib/Database";
 import { reorder } from "@lib/index";
 
 export default function ReleasePageDownload() {
-  const { release, isEditing } = useReleasePageContext();
+  const { release } = useReleasePageContext();
 
   return (
     <div className={styles.container}>
       <label>{release.files.length === 1 ? "Download" : "Downloads"}</label>
-      <DownloadList canEdit={isEditing} />
+      <DownloadList />
     </div>
   );
 }
 
-export interface DownloadListProps {
-  canEdit: boolean;
-}
-export function DownloadList({ canEdit }: DownloadListProps) {
-  const { release, mutateRelease } = useReleasePageContext();
+export function DownloadList() {
+  const { release, mutateRelease, isEditing } = useReleasePageContext();
   const [loadingFile, setLoadingFile] = useState<string | null>(null);
   const api = useApi();
 
@@ -58,7 +55,7 @@ export function DownloadList({ canEdit }: DownloadListProps) {
                 index={i}
                 key={f.filename}
                 onDownload={download}
-                canDrag={canEdit}
+                canDrag={isEditing}
                 isLoading={loadingFile == f.filename}
               />
             ))}

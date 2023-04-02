@@ -1,20 +1,27 @@
-.authors {
+.container {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.author-list {
+  display: flex;
+  flex-direction: column;
 }
 .author {
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-bottom: 0.5rem;
 
   outline: 1px solid var(--color-overlay-4);
   border-radius: 32px;
   width: auto;
 
-  transition: all 0.2s ease;
+  background-color: var(--color-background);
+  transition: background-color 0.2s ease;
   &:hover {
-    background-color: #FFFFFF20;
+    background-color: var(--color-gray-850);
   }
 }
 .user-info {
