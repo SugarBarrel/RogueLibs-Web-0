@@ -1,9 +1,14 @@
 export type Database = {
+  // Tables
   users: DbUser[];
   mods: DbMod[];
   releases: DbRelease[];
   mod_authors: DbModAuthor[];
+  mod_nuggets: DbModNugget[];
   release_authors: DbReleaseAuthor[];
+  release_files: DbReleaseFile[];
+
+  // Views
   latest_releases: DbRelease[];
 };
 export default Database;
@@ -28,15 +33,20 @@ export type DbMod = {
   is_verified: boolean; // = false
   title: string;
   description: string;
-  nugget_count: number;
+  nugget_count: number; // = 0
 };
 export type DbModAuthor = {
-  mod_id: number; // FK: DbMod
-  user_id: string; // FK: DbUser
+  mod_id: number; // PK, FK: DbMod
+  user_id: string; // PK, FK: DbUser
   is_creator: boolean; // = false
   can_see: boolean; // = true
   can_edit: boolean; // = false
+  credit: string | null; // = null
   order: number; // = 0
+};
+export type DbModNugget = {
+  mod_id: number; // PK, FK: DbMod
+  user_id: number; // PK, FK: DbUser
 };
 
 export type DbRelease = {
@@ -52,11 +62,12 @@ export type DbRelease = {
   banner_url: string | null; // = null
 };
 export type DbReleaseAuthor = {
-  release_id: number; // FK: DbRelease
-  user_id: string; // FK: DbUser
+  release_id: number; // PK, FK: DbRelease
+  user_id: string; // PK, FK: DbUser
   is_creator: boolean; // = false
   can_see: boolean; // = true
   can_edit: boolean; // = false
+  credit: string | null; // = null
   order: number; // = 0
 };
 export type DbReleaseFile = {
@@ -64,8 +75,8 @@ export type DbReleaseFile = {
   filename: string; // PK
   type: DbReleaseFileType; // = Unknown
   order: number; // = 0
-  title: string; // = null
-  tooltip: string; // = null
+  title: string | null; // = null
+  tooltip: string | null; // = null
 };
 export enum DbReleaseFileType {
   Unknown,

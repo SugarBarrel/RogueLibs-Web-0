@@ -32,8 +32,16 @@ export default function AboutPage() {
 
       <div className={styles.header}>{"Contributors"}</div>
       <div className={styles.credits}>
-        <Author user_id="4ce33253-ca26-4924-bfdc-8ed3ed9bd6e1" />
-        <Author user_id="4788ae9f-448f-4326-87f0-78244b56376d" />
+        <Author
+          size={64}
+          user_id="4ce33253-ca26-4924-bfdc-8ed3ed9bd6e1"
+          credit={"Developer of the library and the site."}
+        />
+        <Author
+          size={64}
+          user_id="4788ae9f-448f-4326-87f0-78244b56376d"
+          credit={"RogueLibs logo and website icon design."}
+        />
       </div>
     </MainLayout>
   );
