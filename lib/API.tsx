@@ -32,7 +32,7 @@ export function createServerApi(cxt: GetServerSidePropsContext) {
 const selectUser = "*, nuggets: mod_nuggets(mod_id)";
 const selectMod = `*, authors: mod_authors(*, user: users(${selectUser}))`;
 const selectRelease = `*, authors: release_authors(*, user: users(${selectUser})), files: release_files(*)`;
-const selectReleaseWithMod = `${selectRelease}, mod: mods!inner(${selectMod})`;
+const selectReleaseWithMod = `${selectRelease}, mod: mods!releases_mod_id_fkey!inner(${selectMod})`;
 
 export type RestUser = DbUser & { nuggets: { mod_id: number }[] };
 export type RestMod = DbMod & { authors: RestModAuthor[] };

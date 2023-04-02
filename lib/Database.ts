@@ -7,6 +7,7 @@ export type Database = {
   mod_nuggets: DbModNugget[];
   release_authors: DbReleaseAuthor[];
   release_files: DbReleaseFile[];
+  release_dependencies: DbReleaseDependency[];
 
   // Views
   latest_releases: DbRelease[];
@@ -84,3 +85,8 @@ export enum DbReleaseFileType {
   Patcher,
   Extra,
 }
+export type DbReleaseDependency = {
+  release_id: number; // PK, FK: DbRelease
+  dependency_id: number; // PK, FK: DbMod
+  version: string | null; // = null
+};
