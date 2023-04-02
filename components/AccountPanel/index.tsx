@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "./styles.module.scss";
-import { Icon, Button } from "@components/Common";
+import { Button, Icon, IconButton } from "@components/Common";
 import { useSession as useSupabaseSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useUser } from "@lib/hooks";
 import { Tooltip } from "react-tooltip";
@@ -46,10 +46,14 @@ export default function AccountPanel() {
         <div className={styles.wrapper}>
           <div className={styles.account}>
             <img className={styles.avatar} src={user?.avatar_url ?? undefined} />
-            <Button data-tooltip-id="sign-out" onClick={signOut} disabled={authorizing}>
-              <Icon type={authorizing ? "loading" : "cross"} size={16} />
-            </Button>
-            <Tooltip id="sign-out">Sign out</Tooltip>
+            <div className={styles.buttons}>
+              <IconButton data-tooltip-id="sign-out" onClick={signOut} disabled={authorizing}>
+                <Icon type={authorizing ? "loading" : "cross"} size={16} />
+              </IconButton>
+              <Tooltip id="sign-out" place="left">
+                {"Sign out"}
+              </Tooltip>
+            </div>
           </div>
         </div>
       ) : (

@@ -1,6 +1,8 @@
 .icon-button {
   display: inline-flex;
   padding: 0.25rem;
+  width: min-content;
+  height: min-content;
 
   background-color: transparent;
   border-radius: 9999px;
