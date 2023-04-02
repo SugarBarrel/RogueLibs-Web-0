@@ -23,6 +23,8 @@ export default function MainLayout({ className, style, children }: React.PropsWi
       <div className={styles.footer}>
         <div>
           <label>{"Other stuff"}</label>
+          <Link href="/about">{"About RogueLibs"}</Link>
+          <Link href="https://github.com/SugarBarrel/RogueLibs-Web">{"The source code"}</Link>
         </div>
         <div>
           <label>{"Guides and Information"}</label>
