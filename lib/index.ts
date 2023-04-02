@@ -81,4 +81,4 @@ export type GSSPC<
   Preview extends PreviewData = PreviewData,
 > = GetServerSidePropsContext<Params, Preview>;
 
-export type GSSPR<Props extends { [key: string]: any }> = GetServerSidePropsResult<Props>;
+export type GSSPR<Props extends { [key: string]: any } = {}> = GetServerSidePropsResult<Props>;

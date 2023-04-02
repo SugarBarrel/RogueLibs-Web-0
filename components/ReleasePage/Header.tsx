@@ -10,13 +10,16 @@ import { Tooltip } from "react-tooltip";
 import { useReleasePageContext } from ".";
 import styles from "./Header.module.scss";
 import clsx from "clsx";
+import { useRouter } from "next/router";
 
 export default function ReleasePageHeader() {
   const { release } = useReleasePageContext();
+  const router = useRouter();
 
   function copyPermanentLink() {
-    const permanentLink = `${location.origin}/mods/${release.mod_id}/${release.id}`;
-    navigator.clipboard.writeText(permanentLink);
+    const isReleasePage = router.pathname.includes("[release_slug]");
+    const permanentPath = isReleasePage ? `r/${release.id}` : `m/${release.mod_id}`;
+    navigator.clipboard.writeText(`${location.origin}/${permanentPath}`);
   }
 
   return (
