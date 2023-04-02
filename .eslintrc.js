@@ -40,5 +40,6 @@ module.exports = {
   },
   globals: {
     React: true,
+    NodeJS: true,
   },
 };

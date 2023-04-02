@@ -54,7 +54,7 @@ export default function AccountPanel() {
         </div>
       ) : (
         <Button onClick={signIn} disabled={authorizing}>
-          <Icon type={authorizing ? "loading" : "discord"} size={24} />
+          <Icon type={authorizing ? "loading" : "discord"} />
           {"Sign In with Discord"}
         </Button>
       )}

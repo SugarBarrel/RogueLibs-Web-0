@@ -80,9 +80,9 @@ export function AuthoringControls() {
 
   return (
     <div className={styles.authoringControls}>
-      <Button onClick={() => setIsEditing(!isEditing)}>
-        <Icon type="eye" />
-        {"Edit"}
+      <Button onClick={() => setIsEditing(v => !v)}>
+        <Icon type={isEditing ? "save" : "edit"} />
+        {isEditing ? "Save" : "Edit"}
       </Button>
       {hasChanges && (
         <div className={styles.unsavedChanges}>There are unsaved changes!</div>

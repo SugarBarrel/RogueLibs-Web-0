@@ -2,7 +2,7 @@ import styles from "./index.module.scss";
 import ReleasePageHeader from "./Header";
 import ReleasePageBody from "./Body";
 import ReleasePageSidebar from "./Sidebar";
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, Dispatch, SetStateAction, useContext, useMemo, useState } from "react";
 import { StoreRelease } from "@ducks/releases";
 import { ImmerStateSetter, useImmerState } from "@lib/hooks";
 
@@ -14,7 +14,7 @@ export type ReleasePageContext = {
   original: StoreRelease;
   mutateRelease: ImmerStateSetter<StoreRelease>;
   isEditing: boolean;
-  setIsEditing: (isEditing: boolean) => void;
+  setIsEditing: Dispatch<SetStateAction<boolean>>;
 };
 const ReleasePageContext = createContext<ReleasePageContext>(null!);
 export function useReleasePageContext() {

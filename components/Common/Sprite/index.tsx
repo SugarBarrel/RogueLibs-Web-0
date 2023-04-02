@@ -1,4 +1,4 @@
-import { MouseEventHandler, useId } from "react";
+import { MouseEventHandler, useEffect, useId, useState } from "react";
 import styles from "./styles.module.scss";
 import clsx from "clsx";
 
@@ -46,4 +46,26 @@ export default function Sprite({ src, color, width, height, size, crisp, alpha, 
       />
     </svg>
   );
+}
+
+export type AnimatedSpriteProps = Omit<SpriteProps, "src"> & {
+  src: string[];
+  interval: number;
+};
+export function AnimatedSprite({ src, interval, ...props }: AnimatedSpriteProps) {
+  const [ticks, setTicks] = useState(0);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+
+    function increment() {
+      setTicks(cur => cur + 1);
+      timeout = setTimeout(increment, interval);
+    }
+    increment();
+
+    return () => clearTimeout(timeout);
+  }, [interval]);
+
+  return <Sprite src={src[ticks % src.length]} {...props} />;
 }
