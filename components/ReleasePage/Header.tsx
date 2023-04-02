@@ -84,9 +84,7 @@ export function AuthoringControls() {
         <Icon type={isEditing ? "save" : "edit"} />
         {isEditing ? "Save" : "Edit"}
       </Button>
-      {hasChanges && (
-        <div className={styles.unsavedChanges}>There are unsaved changes!</div>
-      )}
+      {hasChanges && <div className={styles.unsavedChanges}>There are unsaved changes!</div>}
     </div>
   );
 }
@@ -98,18 +96,42 @@ export function LeftQuickBar() {
   return (
     <div className={styles.leftQuickbar}>
       {mod?.guid && (
-        <pre className={styles.guid}>
-          <span className={styles.guidLabel}>{"GUID: "}</span>
-          <span
-            data-tooltip-id="mod-guid"
-            className={styles.guidValue}
-            onClick={() => navigator.clipboard.writeText(mod.guid!)}
-          >
-            {mod.guid}
-          </span>
-        </pre>
+        <>
+          <pre className={styles.guid}>
+            <span className={styles.guidLabel}>{"GUID: "}</span>
+            <span
+              data-tooltip-id="mod-guid"
+              className={styles.guidValue}
+              onClick={() => navigator.clipboard.writeText(mod.guid!)}
+            >
+              {mod.guid}
+              <Icon type="copy" size={16} alpha={0.75} />
+            </span>
+          </pre>
+          <Tooltip
+            id="mod-guid"
+            place="right"
+            openOnClick={true}
+            clickable={true}
+            render={() => {
+              const csharpString = `"${mod.guid}"`;
+              const dependencyAttr = `[BepInDependency("${mod.guid}")]`;
+              return (
+                <div className={styles.copyGuidTooltip}>
+                  <span>{"Copied!"}</span>
+                  <Button data-tooltip-id="mod-guid-2" onClick={() => navigator.clipboard.writeText(csharpString)}>
+                    {"Copy as C# string"}
+                  </Button>
+                  <Button data-tooltip-id="mod-guid-2" onClick={() => navigator.clipboard.writeText(dependencyAttr)}>
+                    {"Copy as BepInDependency attribute"}
+                  </Button>
+                  <Tooltip id="mod-guid-2" place="right" openOnClick={true} content="Copied!" delayHide={3000} />
+                </div>
+              );
+            }}
+          />
+        </>
       )}
-      <Tooltip id="mod-guid" place="right" openOnClick={true} content="Copied!" delayHide={3000} />
     </div>
   );
 }
