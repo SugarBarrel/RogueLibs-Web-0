@@ -22,8 +22,8 @@ export default function ReleaseCard({ release }: ReleaseCardProps) {
     setTimeout(() => setDownloading(false), 500);
   }
 
-  const singleImportantFile = release.files.filter(f => f.type < 3).length === 1;
-  const mainFile = singleImportantFile && release.files.find(f => f.type < 3);
+  const singleImportantFile = release.files.filter(f => f.type <= 3).length === 1;
+  const mainFile = singleImportantFile && release.files.find(f => f.type <= 3);
 
   return (
     <div className={styles.container}>
