@@ -2,7 +2,6 @@ import { DropResult } from "@hello-pangea/dnd";
 import { Session as SupabaseSession } from "@supabase/supabase-js";
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult, PreviewData } from "next";
 import { ParsedUrlQuery } from "querystring";
-import { useEffect, useState } from "react";
 import { RestMod, RestRelease, RestUser } from "./API";
 
 export function extract<T extends object, Prop extends keyof T>(subject: T, prop: Prop): T[Prop] {

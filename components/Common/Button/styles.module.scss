@@ -8,24 +8,24 @@
   padding: 0.5rem 0.75rem;
   gap: 0.5rem;
 
-  background-color: var(--color-overlay);
-  outline: 1px solid var(--color-overlay-4);
+  background-color: var(--color-background);
+  outline: 1px solid var(--color-background-lighter);
   border-radius: 0.5rem;
 
   cursor: pointer;
   transition: all 0.1s ease;
 
   &:hover {
-    background-color: var(--color-overlay-3);
+    background-color: var(--color-background-light);
   }
   &:active {
-    background-color: var(--color-overlay-8);
+    background-color: var(--color-secondary-dark);
   }
   &[disabled]:not(:active) {
     cursor: default;
     opacity: 0.5;
     &:hover {
-      background-color: var(--color-overlay);
+      background-color: var(--color-background-lighter);
     }
   }
 

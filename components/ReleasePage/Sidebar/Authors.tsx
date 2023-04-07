@@ -70,7 +70,7 @@ export function Author({ author, canDrag, index }: AuthorProps) {
           {...provided.dragHandleProps}
           className={styles.author}
         >
-          <img className={styles.avatar} width={48} height={48} src={user?.avatar_url ?? undefined} />
+          <img className={styles.avatar} src={user?.avatar_url ?? undefined} alt={`Avatar of ${user?.username}.`} />
           <div className={clsx(styles.userInfo, author.credit && styles.withCredits)}>
             <span className={styles.username}>{user?.username ?? "..."}</span>
             {author.credit && (

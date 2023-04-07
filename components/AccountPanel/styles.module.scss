@@ -9,7 +9,7 @@
   padding: 0.5rem;
   gap: 0.5rem;
   border-radius: 1rem;
-  background-color: var(--color-overlay);
+  background-color: var(--color-background);
 }
 
 .account {
@@ -22,7 +22,7 @@
   height: 64px;
   width: 64px;
   border-radius: 50%;
-  outline: 2px solid var(--color-overlay);
+  outline: 2px solid var(--color-background-dark);
   pointer-events: none;
 }
 .buttons {

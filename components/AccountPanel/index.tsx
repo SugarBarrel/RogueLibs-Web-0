@@ -45,7 +45,7 @@ export default function AccountPanel() {
       {session ? (
         <div className={styles.wrapper}>
           <div className={styles.account}>
-            <img className={styles.avatar} src={user?.avatar_url ?? undefined} />
+            <img className={styles.avatar} src={user?.avatar_url ?? undefined} alt={`Avatar of ${user?.username}.`} />
             <div className={styles.buttons}>
               <IconButton data-tooltip-id="sign-out" onClick={signOut} disabled={authorizing}>
                 <Icon type={authorizing ? "loading" : "cross"} size={16} />

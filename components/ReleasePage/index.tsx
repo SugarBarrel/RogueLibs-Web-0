@@ -30,7 +30,7 @@ export default function ReleasePage({ release: original }: ReleasePageProps) {
 
   const context = useMemo(
     () => ({ original, release, mutateRelease, mod, isEditing, setIsEditing }),
-    [release, isEditing],
+    [release, mod, isEditing],
   );
 
   return (

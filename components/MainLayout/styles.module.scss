@@ -4,11 +4,10 @@
   width: 1080px;
   min-width: 1080px;
   max-width: 1080px;
-  margin: 0 auto;
-  margin-bottom: 10rem;
+  margin: 0.5rem auto 10rem auto;
 
-  background-color: var(--color-overlay);
-  border-radius: var(--custom-border-radius-2);
+  background-color: var(--color-background-dark);
+  border-radius: 1rem;
   padding: 0.5rem;
 }
 .header {
