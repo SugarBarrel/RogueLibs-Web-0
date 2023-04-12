@@ -4,12 +4,9 @@ import ReleasePageBody from "./Body";
 import ReleasePageSidebar from "./Sidebar";
 import { createContext, Dispatch, SetStateAction, useContext, useMemo, useState } from "react";
 import { StoreRelease } from "@ducks/releases";
-import { ImmerStateSetter, useImmerState, useMod } from "@lib/hooks";
+import { ImmerStateSetter, useImmerState, useMod, useRelease } from "@lib/hooks";
 import { StoreMod } from "@ducks/mods";
 
-export type ReleasePageProps = {
-  release: StoreRelease;
-};
 export type ReleasePageContext = {
   release: StoreRelease;
   original: StoreRelease;
@@ -23,14 +20,18 @@ export function useReleasePageContext() {
   return useContext(ReleasePageContext);
 }
 
-export default function ReleasePage({ release: original }: ReleasePageProps) {
-  const [release, mutateRelease] = useImmerState(original);
+export type ReleasePageProps = {
+  release: StoreRelease;
+};
+export default function ReleasePage({ release: initial }: ReleasePageProps) {
+  const [release, mutateRelease] = useImmerState(initial);
+  const original = useRelease(initial.id)[0] ?? initial;
   const mod = useMod(release?.mod_id)[0] ?? null;
   const [isEditing, setIsEditing] = useState(false);
 
   const context = useMemo(
     () => ({ original, release, mutateRelease, mod, isEditing, setIsEditing }),
-    [release, mod, isEditing],
+    [release, original, mod, isEditing],
   );
 
   return (

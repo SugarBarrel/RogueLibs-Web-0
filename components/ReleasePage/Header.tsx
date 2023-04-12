@@ -1,9 +1,9 @@
 import { Button, Icon, IconButton, Link } from "@components/Common";
 import { useRootDispatch } from "@ducks/index";
 import { setModNugget } from "@ducks/mods";
-import { useApi } from "@lib/API";
+import { RestRelease, useApi } from "@lib/API";
 import { useUser } from "@lib/hooks";
-import { orderInsensitiveEqual } from "@lib/index";
+import { collectionDiff, primitiveDiff } from "@lib/index";
 import { useSession as useSupabaseSession } from "@supabase/auth-helpers-react";
 import { useMemo, useState } from "react";
 import { Tooltip } from "react-tooltip";
@@ -11,6 +11,7 @@ import { useReleasePageContext } from ".";
 import styles from "./Header.module.scss";
 import clsx from "clsx";
 import { useRouter } from "next/router";
+import { upsertRelease } from "@ducks/releases";
 
 export default function ReleasePageHeader() {
   const { release } = useReleasePageContext();
@@ -59,7 +60,7 @@ export default function ReleasePageHeader() {
 }
 
 export function Breadcrumbs() {
-  const { release, mod } = useReleasePageContext();
+  const { original: release, mod } = useReleasePageContext();
 
   const homeLink = "/";
   const modLink = `/mods/${mod?.slug ?? release.mod_id}`;
@@ -82,47 +83,82 @@ export function Breadcrumbs() {
   );
 }
 export function AuthoringControls() {
-  const { release, original, isEditing, setIsEditing } = useReleasePageContext();
+  const { release, original, mutateRelease, isEditing, setIsEditing } = useReleasePageContext();
 
+  const dispatch = useRootDispatch();
   const session = useSupabaseSession();
   const [myUser] = useUser(session?.user.id);
 
-  const hasChanges = useMemo(() => {
-    return (
-      release.title !== original.title ||
-      release.description !== original.description ||
-      release.version !== original.version ||
-      release.slug !== original.slug ||
-      !orderInsensitiveEqual(
-        release.files,
-        original.files,
-        file => file.filename,
-        (a, b) => a.order === b.order && a.title === b.title && a.tooltip === b.tooltip && a.type === b.type,
-      ) ||
-      !orderInsensitiveEqual(
-        release.authors,
-        original.authors,
-        author => author.user_id,
-        (a, b) =>
-          a.order === b.order &&
-          a.credit === b.credit &&
-          a.can_see === b.can_see &&
-          a.can_edit === b.can_edit &&
-          a.is_creator === b.is_creator,
-      )
-    );
-  }, [release, original]);
+  const [savingChanges, setSavingChanges] = useState(false);
+
+  const releaseChanges = useMemo(() => {
+    return primitiveDiff(original, release);
+  }, [original, release]);
+  const filesChanges = useMemo(() => {
+    return collectionDiff(original.files, release.files, "filename");
+  }, [original.files, release.files]);
+  const authorsChanges = useMemo(() => {
+    return collectionDiff(original.authors, release.authors, "user_id");
+  }, [original.authors, release.authors]);
+
+  const hasChanges = !!releaseChanges || filesChanges.hasChanges || authorsChanges.hasChanges;
+
+  async function toggleEditing() {
+    if (savingChanges) return;
+
+    try {
+      if (hasChanges) {
+        setSavingChanges(true);
+
+        const diff = {
+          id: release.id,
+          ...releaseChanges,
+          files: filesChanges.hasChanges ? filesChanges.diff : undefined,
+          authors: authorsChanges.hasChanges ? authorsChanges.diff : undefined,
+        };
+        console.log(diff);
+
+        const response = fetch(`${location.origin}/api/update_release`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(diff),
+        });
+
+        const newRelease = (await (await response).json()) as RestRelease;
+        dispatch(upsertRelease(newRelease));
+        mutateRelease(r => Object.assign(r, newRelease));
+      }
+      setIsEditing(v => !v);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSavingChanges(false);
+    }
+  }
+  function resetChanges() {
+    mutateRelease(r => Object.assign(r, original));
+  }
 
   const isAuthor = myUser && release.authors.find(a => a.user_id == myUser.id)?.can_edit;
   if (!isAuthor) return null;
 
   return (
     <div className={styles.authoringControls}>
-      <Button onClick={() => setIsEditing(v => !v)}>
-        <Icon type={isEditing ? "save" : "edit"} />
+      <Button onClick={toggleEditing} disabled={savingChanges}>
+        <Icon type={savingChanges ? "loading" : isEditing ? "save" : "edit"} />
         {isEditing ? "Save" : "Edit"}
       </Button>
-      {hasChanges && <div className={styles.unsavedChanges}>There are unsaved changes!</div>}
+      {hasChanges && (
+        <>
+          <Button onClick={resetChanges} disabled={savingChanges}>
+            <Icon type="cross" />
+            {"Reset"}
+          </Button>
+          <div className={styles.unsavedChanges}>There are unsaved changes!</div>
+        </>
+      )}
     </div>
   );
 }

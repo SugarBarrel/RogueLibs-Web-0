@@ -63,3 +63,9 @@ export function useImmerState<T>(defaultState: T | (() => T)) {
 
   return [state, mutateState] as [T, ImmerStateSetter<T>];
 }
+
+export function useLocation(): Location | null {
+  const [location, setLocation] = useState<Location | null>(null);
+  useEffect(() => setLocation(window.location), []);
+  return location;
+}

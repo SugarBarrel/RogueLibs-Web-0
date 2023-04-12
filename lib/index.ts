@@ -3,6 +3,7 @@ import { Session as SupabaseSession } from "@supabase/supabase-js";
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult, PreviewData } from "next";
 import { ParsedUrlQuery } from "querystring";
 import { RestMod, RestRelease, RestUser } from "./API";
+export { useSession as useSupabaseSession } from "@supabase/auth-helpers-react";
 
 export function extract<T extends object, Prop extends keyof T>(subject: T, prop: Prop): T[Prop] {
   const value = subject[prop];
@@ -43,6 +44,83 @@ export function reorder<T>(dnd: DropResult, containers: T[] | Record<string, T[]
       [dnd.destination.droppableId]: copyTo,
     };
   }
+}
+
+export function primitiveDiff<T>(prevValue: T, newValue: T): Partial<T> | null {
+  let hasValues = false;
+  const diff: Partial<T> = {};
+
+  for (const key in prevValue) {
+    const next = newValue[key];
+    if (next !== undefined && isPrimitive(next) && next !== prevValue[key]) {
+      diff[key] = next;
+      hasValues = true;
+    }
+  }
+  return hasValues ? diff : null;
+}
+export function isPrimitive(value: any): value is string | number | null | undefined {
+  return (typeof value !== "object" && typeof value !== "function") || value === null;
+}
+export function extractPrimitiveProps<T>(value: T): {
+  [K in keyof T as T[K] extends string | number | null ? K : never]: T[K];
+} {
+  const extracted: Partial<T> = {};
+
+  for (const key in value) {
+    if (isPrimitive(value[key])) {
+      extracted[key] = value[key];
+    }
+  }
+  return extracted as any;
+}
+
+export function collectionDiff<T>(
+  prevValues: T[],
+  newValues: T[],
+  idProp: keyof T,
+): { added: T[]; removed: T[]; updated: Partial<T>[]; diff: Partial<T>[]; hasChanges: boolean };
+export function collectionDiff<T>(
+  prevValues: T[],
+  newValues: T[],
+  selectIdentity: keyof T | ((obj: T) => string | number),
+  extractIdentity?: (obj: T) => object,
+): { added: T[]; removed: T[]; updated: Partial<T>[]; diff: Partial<T>[]; hasChanges: boolean } {
+  if (!prevValues || !newValues) return { added: [], removed: [], updated: [], diff: [], hasChanges: false };
+
+  if (typeof selectIdentity !== "function") {
+    const key = selectIdentity;
+    selectIdentity = (obj: T) => obj[key] as string | number;
+    extractIdentity = (obj: T) => ({ [key]: obj[key] });
+  }
+
+  const prevIds = prevValues.map(selectIdentity);
+  const newIds = newValues.map(selectIdentity);
+  const uniqueIds = prevIds.concat(newIds).filter((id, i, arr) => i === arr.indexOf(id));
+
+  const added: T[] = [];
+  const removed: T[] = [];
+  const updated: Partial<T>[] = [];
+  const diff: Partial<T>[] = [];
+
+  for (const id of uniqueIds) {
+    if (!prevIds.includes(id)) {
+      const newValue = newValues[newIds.indexOf(id)];
+      added.push(newValue);
+      diff.push(newValue);
+    } else if (!newIds.includes(id)) {
+      removed.push(prevValues[prevIds.indexOf(id)]);
+    } else {
+      const prev = prevValues[prevIds.indexOf(id)];
+      const next = newValues[newIds.indexOf(id)];
+      const objDiff = primitiveDiff(prev, next);
+      if (objDiff) updated.push(Object.assign(objDiff, extractIdentity!(next)));
+      diff.push(objDiff || extractIdentity!(next));
+    }
+  }
+
+  const hasChanges = !!(added.length || removed.length || updated.length);
+  return { added, removed, updated, diff, hasChanges };
 }
 
 export function orderInsensitiveEqual<T>(

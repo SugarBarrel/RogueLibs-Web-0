@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@types/loader-utils": "^2.0.3",
+    "@types/lodash": "^4.14.192",
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",

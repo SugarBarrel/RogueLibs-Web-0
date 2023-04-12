@@ -1,10 +1,10 @@
 import { createBrowserSupabaseClient, createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider as SupabaseProvider } from "@supabase/auth-helpers-react";
-import { Session as SupabaseSession, SupabaseClient } from "@supabase/supabase-js";
+import { createClient, Session as SupabaseSession, SupabaseClient } from "@supabase/supabase-js";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 import { createContext, useContext, useMemo, useState } from "react";
 import { DbMod, DbModAuthor, DbRelease, DbReleaseAuthor, DbReleaseDependency, DbReleaseFile, DbUser } from "./Database";
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next";
 
 const ApiContext = createContext<RogueLibsApi | null>(null);
 
@@ -25,8 +25,14 @@ export function ApiProvider({ initialSession, children }: React.PropsWithChildre
 export function useApi() {
   return useContext(ApiContext)!;
 }
-export function createServerApi(cxt: GetServerSidePropsContext) {
-  return new RogueLibsApi(createServerSupabaseClient(cxt));
+export function createServerApi(cxt: GetServerSidePropsContext | { req: NextApiRequest; res: NextApiResponse }) {
+  const supabase = createServerSupabaseClient(cxt);
+  return new RogueLibsApi(supabase);
+}
+export function createServiceServerApi(service: "SERVICE_ROLE_API") {
+  if (service !== "SERVICE_ROLE_API") return null!;
+  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!);
+  return new RogueLibsApi(supabase);
 }
 
 const selectUser = `
