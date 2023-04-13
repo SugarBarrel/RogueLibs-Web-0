@@ -25,7 +25,8 @@
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
     "react-select": "^5.7.2",
-    "react-tooltip": "5.10.1-beta.4"
+    "react-tooltip": "5.10.1-beta.4",
+    "semver": "^7.4.0"
   },
   "devDependencies": {
     "@types/loader-utils": "^2.0.3",
@@ -33,6 +34,7 @@
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
+    "@types/semver": "^7.3.13",
     "@typescript-eslint/eslint-plugin": "^5.48.2",
     "@typescript-eslint/parser": "^5.48.2",
     "eslint": "^8.32.0",

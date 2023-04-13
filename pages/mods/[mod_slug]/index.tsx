@@ -37,7 +37,7 @@ export async function getServerSideProps(cxt: GSSPC<{ mod_slug: string }>): Prom
     api.fetchReleasesByModSlug(mod_slug),
   ]);
 
-  if (mod.slug && !Number.isNaN(+mod_slug)) {
+  if (mod.slug && /^\d+$/.test(mod_slug)) {
     return {
       redirect: { destination: `/mods/${mod.slug}`, permanent: false },
     };

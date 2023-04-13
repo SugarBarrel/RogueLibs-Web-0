@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { ChangeEventHandler, MouseEventHandler, useCallback, useRef } from "react";
 import styles from "./index.module.scss";
 
@@ -8,8 +9,17 @@ export type TextInputProps = {
   prefix?: React.ReactNode;
   suffix?: React.ReactNode;
   autoTrimEnd?: boolean;
+  error?: boolean | string | null | undefined;
 };
-export default function TextInput({ value, placeholder, onChange, prefix, suffix, autoTrimEnd }: TextInputProps) {
+export default function TextInput({
+  value,
+  placeholder,
+  onChange,
+  prefix,
+  suffix,
+  autoTrimEnd,
+  error,
+}: TextInputProps) {
   const inputOnChange = useCallback<ChangeEventHandler<HTMLInputElement>>(e => onChange?.(e.target.value), [onChange]);
 
   const inputOnBlur = useCallback<ChangeEventHandler<HTMLInputElement>>(
@@ -24,24 +34,27 @@ export default function TextInput({ value, placeholder, onChange, prefix, suffix
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const wrapperOnClick = useCallback<MouseEventHandler>(e => {
+  const containerOnClick = useCallback<MouseEventHandler>(e => {
     if (e.target === inputRef.current) return;
     e.preventDefault();
     inputRef.current?.focus();
   }, []);
 
   return (
-    <div className={styles.wrapper} onClick={wrapperOnClick}>
-      {prefix && <span className={styles.prefix}>{prefix}</span>}
-      <input
-        ref={inputRef}
-        className={styles.input}
-        value={value ?? ""}
-        placeholder={placeholder ?? ""}
-        onChange={inputOnChange}
-        onBlur={inputOnBlur}
-      />
-      {suffix && <span className={styles.suffix}>{suffix}</span>}
+    <div className={styles.wrapper}>
+      <div className={clsx(styles.container, !!error && styles.error)} onClick={containerOnClick}>
+        {prefix && <span className={styles.prefix}>{prefix}</span>}
+        <input
+          ref={inputRef}
+          className={styles.input}
+          value={value ?? ""}
+          placeholder={placeholder ?? ""}
+          onChange={inputOnChange}
+          onBlur={inputOnBlur}
+        />
+        {suffix && <span className={styles.suffix}>{suffix}</span>}
+      </div>
+      {error !== undefined && <div className={styles.errorField}>{error}</div>}
     </div>
   );
 }

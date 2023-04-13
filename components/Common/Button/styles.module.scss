@@ -21,11 +21,14 @@
   &:active {
     background-color: var(--color-secondary-dark);
   }
-  &[disabled]:not(:active) {
+  &[disabled] {
     cursor: default;
     opacity: 0.5;
     &:hover {
-      background-color: var(--color-background-lighter);
+      background-color: var(--color-background-light);
+    }
+    &:active {
+      background-color: var(--color-background);
     }
   }
 

@@ -30,7 +30,7 @@ export default function ReleasePageHeader() {
         <AuthoringControls />
       </div>
       <div className={styles.header}>
-        <img className={styles.banner} src={release.banner_url ?? "/placeholder.png"} />
+        <img className={styles.banner} src={release.banner_url ?? "/placeholder.png"} alt="" />
         <div className={styles.headerOverlay}>
           <span className={styles.title}>{release.title}</span>
           <div className={styles.titleButtons}>
@@ -60,11 +60,11 @@ export default function ReleasePageHeader() {
 }
 
 export function Breadcrumbs() {
-  const { original: release, mod } = useReleasePageContext();
+  const { original, release, mod } = useReleasePageContext();
 
   const homeLink = "/";
-  const modLink = `/mods/${mod?.slug ?? release.mod_id}`;
-  const releaseLink = `${modLink}/${release.slug ?? release.id}`;
+  const modLink = `/mods/${mod?.slug ?? original.mod_id}`;
+  const releaseLink = `${modLink}/${original.slug ?? original.id}`;
 
   return (
     <div className={styles.breadcrumbs}>
@@ -103,34 +103,33 @@ export function AuthoringControls() {
 
   const hasChanges = !!releaseChanges || filesChanges.hasChanges || authorsChanges.hasChanges;
 
-  async function toggleEditing() {
+  function toggleEditing() {
+    setIsEditing(v => !v);
+  }
+  async function saveChanges() {
     if (savingChanges) return;
 
     try {
-      if (hasChanges) {
-        setSavingChanges(true);
+      setSavingChanges(true);
 
-        const diff = {
-          id: release.id,
-          ...releaseChanges,
-          files: filesChanges.hasChanges ? filesChanges.diff : undefined,
-          authors: authorsChanges.hasChanges ? authorsChanges.diff : undefined,
-        };
-        console.log(diff);
+      const diff = {
+        id: release.id,
+        ...releaseChanges,
+        files: filesChanges.diff,
+        authors: authorsChanges.diff,
+      };
 
-        const response = fetch(`${location.origin}/api/update_release`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(diff),
-        });
+      const response = await fetch(`${location.origin}/api/update_release`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(diff),
+      });
 
-        const newRelease = (await (await response).json()) as RestRelease;
-        dispatch(upsertRelease(newRelease));
-        mutateRelease(r => Object.assign(r, newRelease));
-      }
-      setIsEditing(v => !v);
+      const newRelease = (await response.json()) as RestRelease;
+
+      dispatch(upsertRelease(newRelease));
+      mutateRelease(r => Object.assign(r, newRelease));
+      setIsEditing(false);
     } catch (error) {
       console.error(error);
     } finally {
@@ -147,15 +146,23 @@ export function AuthoringControls() {
   return (
     <div className={styles.authoringControls}>
       <Button onClick={toggleEditing} disabled={savingChanges}>
-        <Icon type={savingChanges ? "loading" : isEditing ? "save" : "edit"} />
-        {isEditing ? "Save" : "Edit"}
+        <Icon type={isEditing ? (hasChanges ? "eye" : "cross") : "edit"} />
+        {isEditing ? (hasChanges ? "Preview" : "Cancel") : "Edit"}
       </Button>
+      {(isEditing || hasChanges) && (
+        <Button onClick={saveChanges} disabled={savingChanges || !hasChanges}>
+          <Icon type={savingChanges ? "loading" : "save"} />
+          {"Save"}
+        </Button>
+      )}
       {hasChanges && (
         <>
-          <Button onClick={resetChanges} disabled={savingChanges}>
-            <Icon type="cross" />
-            {"Reset"}
-          </Button>
+          {isEditing && (
+            <Button onClick={resetChanges} disabled={savingChanges}>
+              <Icon type="cross" />
+              {"Reset"}
+            </Button>
+          )}
           <div className={styles.unsavedChanges}>There are unsaved changes!</div>
         </>
       )}

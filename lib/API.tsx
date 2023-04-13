@@ -116,7 +116,7 @@ export class RogueLibsApi {
     return this.selectOne<DbMod, RestMod>("mods", selectMod, b => b.eq("id", id));
   }
   public fetchModBySlug(slug: string) {
-    if (!Number.isNaN(+slug)) return this.fetchModById(+slug);
+    if (/^\d+$/.test(slug)) return this.fetchModById(+slug);
     return this.selectOne<DbMod, RestMod>("mods", selectMod, b => b.eq("slug", slug));
   }
 
@@ -132,9 +132,9 @@ export class RogueLibsApi {
   }
 
   public fetchReleaseBySlug(mod_slug: string, slug: string) {
-    if (!Number.isNaN(+slug)) return this.fetchReleaseById(+slug, true);
+    if (/^\d+$/.test(slug)) return this.fetchReleaseById(+slug, true);
     return this.selectOne<DbRelease, RestReleaseWithMod>("releases", selectReleaseWithMod, b => {
-      return b.eq(Number.isNaN(+mod_slug) ? "mod.slug" : "mod_id", mod_slug).eq("slug", slug);
+      return b.eq(/^\d+$/.test(mod_slug) ? "mod_id" : "mod.slug", mod_slug).eq("slug", slug);
     });
   }
 
@@ -145,7 +145,7 @@ export class RogueLibsApi {
     return this.selectMany<DbRelease, RestRelease>("releases", selectRelease, b => b.eq("mod_id", mod_id));
   }
   public fetchReleasesByModSlug(mod_slug: string) {
-    if (!Number.isNaN(+mod_slug)) return this.fetchReleasesByModId(+mod_slug);
+    if (/^\d+$/.test(mod_slug)) return this.fetchReleasesByModId(+mod_slug);
     return this.selectMany<DbRelease, RestRelease>("releases", selectReleaseWithMod, b => b.eq("mod.slug", mod_slug));
   }
 

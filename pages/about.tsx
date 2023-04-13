@@ -61,7 +61,7 @@ export function Author({ user_id, credit }: AuthorProps) {
 
   return (
     <div className={authorStyles.author}>
-      <img className={authorStyles.avatar} width={64} height={64} src={user?.avatar_url ?? undefined} />
+      <img className={authorStyles.avatar} width={64} height={64} src={user?.avatar_url ?? undefined} alt="" />
       <div className={clsx(authorStyles.userInfo, credit && authorStyles.withCredits)}>
         <span className={authorStyles.username}>{user?.username ?? "..."}</span>
         {credit && (

@@ -2,10 +2,10 @@ import { Icon, IconButton, Link } from "@components/Common";
 import TextInput from "@components/Common/TextInput";
 import { useLocation } from "@lib/hooks";
 import lodashTrimStart from "lodash/trimStart";
-import { useRouter } from "next/router";
 import { useCallback } from "react";
 import { useReleasePageContext } from ".";
 import styles from "./Body.module.scss";
+import parseSemVer from "semver/functions/parse";
 
 export default function ReleasePageBody() {
   return (
@@ -51,7 +51,11 @@ export function ReleaseMetadataEditor() {
             </IconButton>
           )}
         </div>
-        <TextInput value={release.title} onChange={onChangeTitle} />
+        <TextInput
+          value={release.title}
+          onChange={onChangeTitle}
+          error={release.title.length > 50 ? "The release title must not exceed 50 characters!" : null}
+        />
       </div>
       <div className={styles.metadataField}>
         <div className={styles.metadataHeader}>
@@ -66,6 +70,7 @@ export function ReleaseMetadataEditor() {
           value={release.banner_url}
           onChange={onChangeBannerUrl}
           placeholder={"https://roguelibs.com/placeholder.png"}
+          error={release.banner_url?.length! > 255 ? "The release banner URL must not exceed 255 characters!" : null}
         />
       </div>
       <div className={styles.metadataField}>
@@ -89,6 +94,15 @@ export function ReleaseMetadataEditor() {
           onChange={onChangeVersion}
           prefix={release.version ? "v" : ""}
           placeholder={"No version"}
+          error={(() => {
+            if (release.version?.length! > 20) {
+              return "The release version must not exceed 20 characters!";
+            }
+            if (release.version != null && !parseSemVer(release.version)) {
+              return "The release version is not a valid semantic version!";
+            }
+            return null;
+          })()}
         />
       </div>
       <div className={styles.metadataField}>
@@ -105,6 +119,13 @@ export function ReleaseMetadataEditor() {
           onChange={onChangeSlug}
           prefix={`${location?.origin}/mods/${mod.slug ?? mod.id}/`}
           placeholder={"" + release.id}
+          error={(() => {
+            if (release.slug != null) {
+              if (release.slug.length > 20) return "The release slug must not exceed 20 characters!";
+              if (!Number.isNaN(parseInt(release.slug))) return "The release slug must not be numeric!";
+            }
+            return null;
+          })()}
         />
       </div>
     </div>

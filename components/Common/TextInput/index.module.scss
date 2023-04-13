@@ -1,4 +1,7 @@
 .wrapper {
+  display: contents;
+}
+.container {
   display: inline-flex;
   outline: 1px solid var(--color-background-lightest);
   border-radius: 0.5rem;
@@ -9,6 +12,9 @@
   cursor: text;
   &:focus-within {
     outline: 1px solid var(--color-primary-light);
+  }
+  &.error {
+    outline: 1px solid var(--color-danger);
   }
 }
 .prefix {
@@ -24,4 +30,10 @@
   outline: none;
   color: var(--color-main);
   line-height: 2;
+}
+.error-field {
+  display: inline-flex;
+  margin: 0 1rem;
+  color: var(--color-danger-dark);
+  min-height: 1.15rem;
 }

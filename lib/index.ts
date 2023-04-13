@@ -79,13 +79,13 @@ export function collectionDiff<T>(
   prevValues: T[],
   newValues: T[],
   idProp: keyof T,
-): { added: T[]; removed: T[]; updated: Partial<T>[]; diff: Partial<T>[]; hasChanges: boolean };
+): { added: T[]; removed: T[]; updated: Partial<T>[]; diff?: Partial<T>[]; hasChanges: boolean };
 export function collectionDiff<T>(
   prevValues: T[],
   newValues: T[],
   selectIdentity: keyof T | ((obj: T) => string | number),
   extractIdentity?: (obj: T) => object,
-): { added: T[]; removed: T[]; updated: Partial<T>[]; diff: Partial<T>[]; hasChanges: boolean } {
+): { added: T[]; removed: T[]; updated: Partial<T>[]; diff?: Partial<T>[]; hasChanges: boolean } {
   if (!prevValues || !newValues) return { added: [], removed: [], updated: [], diff: [], hasChanges: false };
 
   if (typeof selectIdentity !== "function") {
@@ -120,7 +120,7 @@ export function collectionDiff<T>(
   }
 
   const hasChanges = !!(added.length || removed.length || updated.length);
-  return { added, removed, updated, diff, hasChanges };
+  return { added, removed, updated, diff: hasChanges ? diff : undefined, hasChanges };
 }
 
 export function orderInsensitiveEqual<T>(

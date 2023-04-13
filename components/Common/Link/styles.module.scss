@@ -29,4 +29,7 @@
   & span {
     width: fit-content;
   }
+  &.block-span span {
+    display: block;
+  }
 }
