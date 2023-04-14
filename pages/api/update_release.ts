@@ -25,39 +25,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const filesDiff = collectionDiff(original.files, release.files!, "filename");
   const authorsDiff = collectionDiff(original.authors, release.authors!, "user_id");
 
-  if (release.title !== undefined && release.title?.length > 50) {
-    return res.status(400).json({ error: "The release title must not exceed 50 characters." });
-  }
-  if (release.description !== undefined && release.description?.length > 8192) {
-    return res.status(400).json({ error: "The release description must not exceed 8192 characters." });
-  }
-  if (release.banner_url !== undefined && release.banner_url?.length! > 255) {
-    return res.status(400).json({ error: "The release banner_url must not exceed 255 characters." });
-  }
-  if (release.version !== undefined && release.version?.length! > 20) {
-    return res.status(400).json({ error: "The release version must not exceed 20 characters." });
-  }
-  if (release.version != null && !parseSemVer(release.version)) {
-    return res.status(400).json({ error: "The release version is not a valid semantic version." });
-  }
-  if (release.slug !== undefined) {
-    if (release.slug != null && release.slug.length === 0) {
-      return res.status(400).json({ error: "The release slug must not be empty." });
-    }
-    if (release.slug?.length! > 20) {
-      return res.status(400).json({ error: "The release slug must not exceed 20 characters." });
-    }
-    if (release.slug != null && !Number.isNaN(parseInt(release.slug))) {
-      return res.status(400).json({ error: "The release slug must not be numeric." });
-    }
-  }
-
   // ===== Validate release authors changes
 
   if (authorsDiff.hasChanges) {
     if (myAuthor.is_creator) {
       let creatorCount = 1;
 
+      // TODO: Security Vulnerability: { is_creator: "true" }
       if (authorsDiff.removed.some(a => a.is_creator)) creatorCount--;
       if (authorsDiff.updated.some(a => a.is_creator === false)) creatorCount--;
       creatorCount += authorsDiff.updated.filter(a => a.is_creator === true).length;

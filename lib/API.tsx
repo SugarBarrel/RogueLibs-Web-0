@@ -112,6 +112,12 @@ export class RogueLibsApi {
   public fetchUserById(id: string) {
     return this.selectOne<DbUser, RestUser>("users", selectUser, b => b.eq("id", id));
   }
+  public fetchUserBySlug(user_slug: string) {
+    if (/^[\da-f]{8}-([\da-f]{4}-){3}[\da-f]{12}$/i.test(user_slug)) {
+      return this.fetchUserById(user_slug);
+    }
+    return this.selectOne<DbUser, RestUser>("users", selectUser, b => b.eq("slug", user_slug));
+  }
   public fetchModById(id: number) {
     return this.selectOne<DbMod, RestMod>("mods", selectMod, b => b.eq("id", id));
   }

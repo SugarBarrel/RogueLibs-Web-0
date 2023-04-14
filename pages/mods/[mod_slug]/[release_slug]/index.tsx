@@ -38,7 +38,10 @@ export async function getServerSideProps(
     api.fetchReleaseBySlug(mod_slug, release_slug),
   ]);
 
-  if ((release.mod.slug && /^\d+$/.test(mod_slug)) || (release.slug && /^\d+$/.test(release_slug))) {
+  if (
+    (release.mod.slug !== null && release.mod.slug !== mod_slug) ||
+    (release.slug !== null && release.slug !== release_slug)
+  ) {
     return {
       redirect: {
         destination: `/mods/${release.mod.slug ?? release.mod_id}/${release.slug ?? release.id}`,

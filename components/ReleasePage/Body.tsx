@@ -54,7 +54,11 @@ export function ReleaseMetadataEditor() {
         <TextInput
           value={release.title}
           onChange={onChangeTitle}
-          error={release.title.length > 50 ? "The release title must not exceed 50 characters!" : null}
+          error={(() => {
+            if (release.title.length < 1) return "The release title must not be empty!";
+            if (release.title.length > 50) return "The release title must not exceed 50 characters!";
+            return null;
+          })()}
         />
       </div>
       <div className={styles.metadataField}>
@@ -95,11 +99,11 @@ export function ReleaseMetadataEditor() {
           prefix={release.version ? "v" : ""}
           placeholder={"No version"}
           error={(() => {
-            if (release.version?.length! > 20) {
-              return "The release version must not exceed 20 characters!";
+            if (release.version?.length! > 32) {
+              return "The release version must not exceed 32 characters!";
             }
             if (release.version != null && !parseSemVer(release.version)) {
-              return "The release version is not a valid semantic version!";
+              return "The release version must be a valid semantic version!";
             }
             return null;
           })()}
@@ -121,8 +125,11 @@ export function ReleaseMetadataEditor() {
           placeholder={"" + release.id}
           error={(() => {
             if (release.slug != null) {
-              if (release.slug.length > 20) return "The release slug must not exceed 20 characters!";
-              if (!Number.isNaN(parseInt(release.slug))) return "The release slug must not be numeric!";
+              if (release.slug.length > 32) return "The release slug must not exceed 32 characters!";
+              if (!/^[a-z0-9\\._-]+$/i.test(release.slug)) {
+                return "The release slug must only contain [a-zA-Z0-9\\._-] characters.";
+              }
+              if (/^\d+$/.test(release.slug)) return "The release slug must not be numeric!";
             }
             return null;
           })()}
