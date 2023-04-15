@@ -13,7 +13,9 @@ export type LinkProps = {
   block?: boolean;
 };
 function Link({ children, href, className, style, underline = true, title, onClick, blank, block }: React.PropsWithChildren<LinkProps>) {
-  if (typeof children === "string") children = <span>{children}</span>;
+  if (typeof children === "string" || typeof children === "number") {
+    children = <span>{children}</span>;
+  }
 
   if (blank === undefined) {
     blank = href?.startsWith("http");
