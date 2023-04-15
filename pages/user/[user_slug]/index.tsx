@@ -1,5 +1,6 @@
 import { Head } from "@components/Common";
 import MainLayout from "@components/MainLayout";
+import UserPage from "@components/UserPage";
 import { createServerApi, RestUser } from "@lib/API";
 import { GSSPC, GSSPR, PageProps } from "@lib/index";
 
@@ -8,8 +9,9 @@ export interface ModPageProps extends PageProps {
 }
 export default function ModPageIndex({ user }: ModPageProps) {
   return (
-    <MainLayout>
+    <MainLayout key={user.id}>
       <Head path={`/user/${user.id}`} title={user.username} description="" type="article" />
+      <UserPage user={user} />
     </MainLayout>
   );
 }

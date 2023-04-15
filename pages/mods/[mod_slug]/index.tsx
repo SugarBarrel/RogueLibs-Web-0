@@ -12,7 +12,7 @@ export default function ModPageIndex({ mod, releases }: ModPageProps) {
   const release = releases[0];
 
   return (
-    <MainLayout>
+    <MainLayout key={mod.id}>
       <Head
         path={`/mods/${mod.slug ?? mod.id}/${release.slug ?? release.id}`}
         title={release.title}

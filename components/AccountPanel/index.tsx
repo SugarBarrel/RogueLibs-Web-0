@@ -1,9 +1,10 @@
 import { useState } from "react";
 import styles from "./styles.module.scss";
-import { Button, Icon, IconButton } from "@components/Common";
+import { Avatar, Button, Icon, IconButton } from "@components/Common";
 import { useSession as useSupabaseSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useUser } from "@lib/hooks";
 import { Tooltip } from "react-tooltip";
+import { useRouter } from "next/router";
 
 export default function AccountPanel() {
   const [authorizing, setAuthorizing] = useState(false);
@@ -11,6 +12,9 @@ export default function AccountPanel() {
   const supabase = useSupabaseClient();
 
   const [user] = useUser(session?.user.id);
+
+  const router = useRouter();
+  const profileLink = `/user/${user?.slug ?? user?.id}`;
 
   async function signIn() {
     try {
@@ -45,7 +49,7 @@ export default function AccountPanel() {
       {session ? (
         <div className={styles.wrapper}>
           <div className={styles.account}>
-            <img className={styles.avatar} src={user?.avatar_url ?? undefined} alt={`Avatar of ${user?.username}.`} />
+            <Avatar src={user?.avatar_url} href={router.asPath.startsWith(profileLink) ? undefined : profileLink} />
             <div className={styles.buttons}>
               <IconButton data-tooltip-id="sign-out" onClick={signOut} disabled={authorizing}>
                 <Icon type={authorizing ? "loading" : "cross"} size={16} />

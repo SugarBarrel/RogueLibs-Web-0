@@ -46,9 +46,7 @@ export function ReleaseMetadataEditor() {
         <div className={styles.metadataHeader}>
           <label>{"Release Title"}</label>
           {release.title !== original.title && (
-            <IconButton onClick={() => mutateRelease(r => (r.title = original.title))}>
-              <Icon type="edit" alpha={0.5} size={16} />
-            </IconButton>
+            <IconButton type="edit" size={16} onClick={() => mutateRelease(r => (r.title = original.title))} />
           )}
         </div>
         <TextInput
@@ -65,9 +63,11 @@ export function ReleaseMetadataEditor() {
         <div className={styles.metadataHeader}>
           <label>{"Release Banner URL"}</label>
           {release.banner_url !== original.banner_url && (
-            <IconButton onClick={() => mutateRelease(r => (r.banner_url = original.banner_url))}>
-              <Icon type="edit" alpha={0.5} size={16} />
-            </IconButton>
+            <IconButton
+              type="edit"
+              size={16}
+              onClick={() => mutateRelease(r => (r.banner_url = original.banner_url))}
+            />
           )}
         </div>
         <TextInput
@@ -88,9 +88,7 @@ export function ReleaseMetadataEditor() {
             </span>
           </label>
           {release.version !== original.version && (
-            <IconButton onClick={() => mutateRelease(r => (r.version = original.version))}>
-              <Icon type="edit" alpha={0.5} size={16} />
-            </IconButton>
+            <IconButton type="edit" size={16} onClick={() => mutateRelease(r => (r.version = original.version))} />
           )}
         </div>
         <TextInput
@@ -113,9 +111,7 @@ export function ReleaseMetadataEditor() {
         <div className={styles.metadataHeader}>
           <label>{"URL slug"}</label>
           {release.slug !== original.slug && (
-            <IconButton onClick={() => mutateRelease(r => (r.slug = original.slug))}>
-              <Icon type="edit" alpha={0.5} size={16} />
-            </IconButton>
+            <IconButton type="edit" size={16} onClick={() => mutateRelease(r => (r.slug = original.slug))} />
           )}
         </div>
         <TextInput

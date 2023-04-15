@@ -1,4 +1,4 @@
-import { Head } from "@components/Common";
+import { Avatar, Head } from "@components/Common";
 import MainLayout from "@components/MainLayout";
 import { createServerApi } from "@lib/API";
 import { useUser } from "@lib/hooks";
@@ -61,7 +61,8 @@ export function Author({ user_id, credit }: AuthorProps) {
 
   return (
     <div className={authorStyles.author}>
-      <img className={authorStyles.avatar} width={64} height={64} src={user?.avatar_url ?? undefined} alt="" />
+      <Avatar src={user?.avatar_url} href={`/user/${user?.slug ?? user?.id}`} />
+
       <div className={clsx(authorStyles.userInfo, credit && authorStyles.withCredits)}>
         <span className={authorStyles.username}>{user?.username ?? "..."}</span>
         {credit && (

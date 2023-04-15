@@ -1,7 +1,6 @@
 import { createServerApi, createServiceServerApi, RestRelease } from "@lib/API";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { collectionDiff, primitiveDiff } from "@lib/index";
-import parseSemVer from "semver/functions/parse";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const api = createServerApi({ req, res });

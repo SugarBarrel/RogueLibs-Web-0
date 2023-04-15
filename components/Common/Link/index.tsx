@@ -5,13 +5,14 @@ import clsx, { ClassValue } from "clsx";
 export type LinkProps = {
   href?: string;
   className?: string;
+  style?: React.CSSProperties;
   underline?: boolean;
   title?: string;
   onClick?: React.MouseEventHandler;
   blank?: boolean;
   block?: boolean;
 };
-function Link({ children, href, className, underline = true, title, onClick, blank, block }: React.PropsWithChildren<LinkProps>) {
+function Link({ children, href, className, style, underline = true, title, onClick, blank, block }: React.PropsWithChildren<LinkProps>) {
   if (typeof children === "string") children = <span>{children}</span>;
 
   if (blank === undefined) {
@@ -24,6 +25,7 @@ function Link({ children, href, className, underline = true, title, onClick, bla
     <NextLink
       href={href}
       className={className}
+      style={style}
       title={title}
       onClick={e => e.stopPropagation()}
       target={blank ? "_blank" : undefined}
@@ -31,7 +33,7 @@ function Link({ children, href, className, underline = true, title, onClick, bla
       {children}
     </NextLink>
   ) : (
-    <span className={className} title={title} onClick={onClick}>
+    <span className={className} style={style} title={title} onClick={onClick}>
       {children}
     </span>
   );

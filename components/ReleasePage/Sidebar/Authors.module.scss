@@ -36,17 +36,6 @@
   }
 }
 
-.avatar-wrapper {
-  height: 48px;
-}
-.avatar {
-  width: 48px; height: 48px;
-  border: none;
-  border-radius: 50%;
-  backdrop-filter: brightness(80%);
-  // background-color: var(--color-background-dark);
-  outline: 1px solid var(--color-background-lighter);
-}
 .username {
   margin-left: 1rem;
   font-size: 1.2rem;

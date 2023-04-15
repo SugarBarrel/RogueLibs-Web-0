@@ -1,0 +1,43 @@
+.wrapper {
+  display: inline-block;
+  border: none; border-radius: 50%;
+  backdrop-filter: brightness(80%);
+  outline: 1px solid var(--color-background-lighter);
+  line-height: 0;
+  // overflow: hidden;
+
+  &:hover .overlay {
+    opacity: 1;
+  }
+  &:hover .overlay-backdrop {
+    backdrop-filter: brightness(50%);
+    outline: 1px solid var(--color-primary-lightest);
+  }
+}
+
+.avatar {
+  border: none; border-radius: 50%;
+  aspect-ratio: 1;
+}
+.overlay {
+  position: absolute; inset: 0;
+  border: none; border-radius: 50%;
+  z-index: 2;
+
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.overlay-backdrop {
+  position: absolute; inset: 0;
+  border: none; border-radius: 50%;
+  z-index: 1;
+  backdrop-filter: none;
+  outline: 1px solid transparent;
+  transition: backdrop-filter 0.5s ease, outline 0.5s ease;
+}
+
+.link-wrapper {
+  border: none;
+  border-radius: 50%;
+  line-height: 0;
+}

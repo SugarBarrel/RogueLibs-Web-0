@@ -1,0 +1,17 @@
+.wrapper {
+  background: none;
+  padding: 0; border-radius: 0;
+
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.5rem;
+}
+.section {
+  background: var(--color-background);
+  padding: 1rem; border-radius: 1rem;
+  min-height: 3rem;
+
+  &:nth-child(2) {
+    flex-grow: 1;
+  }
+}

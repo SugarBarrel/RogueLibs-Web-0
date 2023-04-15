@@ -34,9 +34,7 @@ export default function ReleasePageHeader() {
         <div className={styles.headerOverlay}>
           <span className={styles.title}>{release.title}</span>
           <div className={styles.titleButtons}>
-            <IconButton data-tooltip-id="mod-link" onClick={copyPermanentLink}>
-              <Icon type="link" size={32} alpha={0.5} />
-            </IconButton>
+            <IconButton type="link" data-tooltip-id="mod-link" onClick={copyPermanentLink} />
             <Tooltip
               id="mod-link"
               place="bottom"

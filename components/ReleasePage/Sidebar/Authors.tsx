@@ -6,7 +6,7 @@ import { DbModAuthor, DbReleaseAuthor } from "@lib/Database";
 import { reorder } from "@lib/index";
 import styles from "./Authors.module.scss";
 import clsx from "clsx";
-import { Link } from "@components/Common";
+import { Avatar, Link } from "@components/Common";
 
 export default function ReleasePageAuthors() {
   const { release } = useReleasePageContext();
@@ -71,14 +71,8 @@ export function Author({ author, canDrag, index }: AuthorProps) {
           {...provided.dragHandleProps}
           className={styles.author}
         >
-          <Link
-            className={styles.avatarWrapper}
-            href={`/user/${user?.slug ?? user?.id}`}
-            underline={false}
-            blank={canDrag}
-          >
-            <img className={styles.avatar} src={user?.avatar_url ?? undefined} alt="" />
-          </Link>
+          <Avatar src={user?.avatar_url} size={48} href={`/user/${user?.slug ?? user?.id}`} />
+
           <div className={clsx(styles.userInfo, author.credit && styles.withCredits)}>
             <span className={styles.username}>{user?.username ?? "..."}</span>
             {author.credit && (
