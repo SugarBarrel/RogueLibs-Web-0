@@ -6,18 +6,19 @@ type BaseProps = {
   className?: string;
   style?: React.CSSProperties;
   disabled?: boolean;
+  onClick?: React.MouseEventHandler;
 };
 type ChildlessIconButtonProps = BaseProps & IconProps;
 type ChildfulIconButtonProps = React.PropsWithChildren<BaseProps>;
 
 export type IconButtonProps = ChildlessIconButtonProps | ChildfulIconButtonProps;
 
-export default function IconButton({ className, style, disabled, ...props }: IconButtonProps) {
+export default function IconButton({ className, style, disabled, onClick, ...props }: IconButtonProps) {
   const children = (props as ChildfulIconButtonProps).children;
   const childless = props as ChildlessIconButtonProps;
 
   return (
-    <button className={clsx(styles.iconButton, className)} style={style} disabled={disabled}>
+    <button className={clsx(styles.iconButton, className)} style={style} disabled={disabled} onClick={onClick}>
       {children || <Icon alpha={childless.alpha ?? 0.5} {...childless} />}
     </button>
   );
