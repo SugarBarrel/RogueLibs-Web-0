@@ -28,4 +28,20 @@
       scale: 1.25;
     }
   }
+
+  &[disabled] {
+    &:hover {
+      background-color: var(--color-overlay-2);
+      > svg > image {
+        opacity: 0.5 !important;
+      }
+    }
+    &:active {
+      background-color: var(--color-overlay-2);
+      outline: none;
+      & > svg {
+        scale: 1;
+      }
+    }
+  }
 }

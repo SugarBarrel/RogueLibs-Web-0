@@ -8,10 +8,29 @@
 }
 .section {
   background: var(--color-background);
-  padding: 1rem; border-radius: 1rem;
-  min-height: 3rem;
+  padding: 0.5rem 1rem; border-radius: 1rem;
+  min-height: 2.5rem;
 
-  &:nth-child(2) {
-    flex-grow: 1;
-  }
+  &:nth-child(2) { flex-grow: 1; }
+}
+
+.username-container {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.username {
+  display: inline-block;
+  font-size: 1.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 1.15em;
+}
+.username-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  min-width: 360px;
 }

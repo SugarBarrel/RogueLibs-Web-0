@@ -1,5 +1,7 @@
 .wrapper {
-  display: contents;
+  display: flex;
+  flex-flow: column nowrap;
+  flex-grow: 1;
 }
 .container {
   display: inline-flex;
@@ -32,7 +34,7 @@
   line-height: 2;
 }
 .error-field {
-  display: inline-flex;
+  display: block;
   margin: 0 1rem;
   color: var(--color-danger-dark);
   min-height: 1.15rem;

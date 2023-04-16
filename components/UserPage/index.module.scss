@@ -1,5 +1,8 @@
 .container {
   display: grid;
-  grid-template-columns: 20fr 40fr 40fr;
+  grid-template-columns:
+    calc(0.2 * (100% - 2rem))
+    calc(0.4 * (100% - 2rem))
+    calc(0.4 * (100% - 2rem));
   gap: 1rem;
 }
