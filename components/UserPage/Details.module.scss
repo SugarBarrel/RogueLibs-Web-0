@@ -34,3 +34,31 @@
   padding: 0.5rem 0;
   min-width: 360px;
 }
+
+.badges-container {
+  display: flex;
+  flex-flow: row wrap;
+  overflow-y: auto;
+  max-height: 5rem;
+  padding: 2px;
+}
+.badge-info {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  gap: 0.25rem;
+}
+.badge-title {
+  font-size: 2rem;
+  text-align: center;
+}
+.badge-description {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  gap: 0.25rem;
+
+  font-size: 1.2rem;
+  text-align: center;
+  max-width: 300px;
+}

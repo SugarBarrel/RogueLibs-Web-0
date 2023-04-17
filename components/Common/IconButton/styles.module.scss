@@ -15,7 +15,7 @@
     transition: opacity 0.5s ease, scale 0.1s ease;
   }
 
-  &:hover {
+  &:hover, &:focus {
     background-color: var(--color-overlay-4);
     > svg > image {
       opacity: 1 !important;
@@ -29,7 +29,7 @@
     }
   }
 
-  &[disabled] {
+  &[disabled], &.disabled {
     &:hover {
       background-color: var(--color-overlay-2);
       > svg > image {

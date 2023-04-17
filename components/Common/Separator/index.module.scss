@@ -1,0 +1,44 @@
+.separator {
+  border-radius: 9999px;
+  background-color: var(--color-secondary);
+  opacity: 0.5;
+
+  &.primary {
+    background-color: var(--color-primary);
+    opacity: 1;
+  }
+}
+.horizontal {
+  width: 90%;
+  height: 2px;
+  margin: 3px auto;
+
+  &.thin {
+    height: 1px;
+    margin: 1.5px auto;
+  }
+  &.bold {
+    height: 4px;
+    margin: 6px auto;
+  }
+  &.full {
+    width: 100%;
+  }
+}
+.vertical {
+  height: 90%;
+  width: 2px;
+  margin: auto 3px;
+
+  &.thin {
+    width: 1px;
+    margin: auto 1.5px;
+  }
+  &.bold {
+    width: 4px;
+    margin: auto 6px;
+  }
+  &.full {
+    height: 100%;
+  }
+}

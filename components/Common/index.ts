@@ -6,3 +6,4 @@ export { default as Sprite, type SpriteProps } from "./Sprite";
 export { default as Head, type HeadProps } from "./Head";
 export { default as TextInput, type TextInputProps } from "./TextInput";
 export { default as Avatar, type AvatarProps } from "./Avatar";
+export { default as Separator, type SeparatorProps } from "./Separator";

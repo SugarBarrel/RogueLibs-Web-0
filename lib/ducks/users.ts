@@ -6,8 +6,9 @@ import { fetchModById, fetchReleaseById, RootState, WithApi } from ".";
 import { extractAll } from "..";
 import { setModNugget, upsertMod, upsertMods } from "./mods";
 import { upsertRelease, upsertReleases } from "./releases";
+import { BadgeName } from "./badges";
 
-export type StoreUser = DbUser & { nuggets?: { mod_id: number }[] };
+export type StoreUser = DbUser & { nuggets?: { mod_id: number }[]; badges?: { badge_name: BadgeName }[] };
 
 export const usersAdapter = createAsyncEntityAdapter<StoreUser>();
 

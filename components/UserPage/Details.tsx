@@ -1,4 +1,6 @@
-import { IconButton, TextInput } from "@components/Common";
+import { IconButton, Sprite, TextInput } from "@components/Common";
+import Separator from "@components/Common/Separator";
+import { BadgeContext, badgeDescriptions, badgeNames } from "@ducks/badges";
 import { useRootDispatch } from "@ducks/index";
 import { upsertUser } from "@ducks/users";
 import { RestUser, useApi } from "@lib/API";
@@ -51,8 +53,12 @@ function UsernameSection() {
       setSavingUsername(true);
 
       const diff = { id: user.id, username: user.username };
-      await api.Supabase.from("users").update(diff).eq("id", user.id).single().throwOnError();
-      const newUser = { ...original, ...diff } as RestUser;
+      const response = await fetch(`${location.origin}/api/update_user`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(diff),
+      });
+      const newUser = (await response.json()) as RestUser;
 
       dispatch(upsertUser(newUser));
       mutateUser(r => Object.assign(r, newUser));
@@ -103,8 +109,49 @@ function UsernameSection() {
 }
 
 function BadgesSection() {
-  return <></>;
+  const { user, original, mutateUser } = useUserPageContext();
+  const session = useSupabaseSession();
+
+  const badgeContext = new BadgeContext(user.uid === session?.user.id);
+
+  return (
+    <>
+      <label>{"Badges"}</label>
+      <Separator full />
+      <div className={styles.badgesContainer}>
+        {user.badges?.map(({ badge_name }) => {
+          return (
+            <div key={badge_name}>
+              <IconButton data-tooltip-id={badge_name} disabled="fake">
+                <Sprite src={`/badges/${badge_name}.png`} size={32} alpha={1} crisp />
+              </IconButton>
+              <Tooltip
+                id={badge_name}
+                delayShow={100}
+                place="bottom"
+                style={{ ["--rt-opacity" as string]: 1 }}
+                render={() => (
+                  <div className={styles.badgeInfo}>
+                    <span className={styles.badgeTitle}>{badgeNames[badge_name]?.()}</span>
+                    <Separator primary />
+                    <Sprite src={`/badges/${badge_name}.png`} size={128} alpha={1} crisp />
+                    <Separator primary />
+                    <div className={styles.badgeDescription}>{badgeDescriptions[badge_name]?.(badgeContext)}</div>
+                  </div>
+                )}
+              />
+            </div>
+          );
+        })}
+      </div>
+    </>
+  );
 }
+
 function MiscellaneousSection() {
-  return <></>;
+  return (
+    <>
+      <label>{"Miscellaneous"}</label>
+    </>
+  );
 }

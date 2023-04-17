@@ -5,6 +5,7 @@ import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 import { createContext, useContext, useMemo, useState } from "react";
 import { DbMod, DbModAuthor, DbRelease, DbReleaseAuthor, DbReleaseDependency, DbReleaseFile, DbUser } from "./Database";
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next";
+import { BadgeName } from "@ducks/badges";
 
 const ApiContext = createContext<RogueLibsApi | null>(null);
 
@@ -37,7 +38,8 @@ export function createServiceServerApi(service: "SERVICE_ROLE_API") {
 
 const selectUser = `
   *,
-  nuggets: mod_nuggets(mod_id)
+  nuggets: mod_nuggets(mod_id),
+  badges: user_badges(badge_name)
 `;
 const selectMod = `
   *,
@@ -54,7 +56,7 @@ const selectReleaseWithMod = `
   mod: mods!releases_mod_id_fkey!inner(${selectMod})
 `;
 
-export type RestUser = DbUser & { nuggets: { mod_id: number }[] };
+export type RestUser = DbUser & { nuggets: { mod_id: number }[]; badges: { badge_name: BadgeName }[] };
 export type RestMod = DbMod & { authors: RestModAuthor[] };
 export type RestModAuthor = DbModAuthor & { user: RestUser };
 

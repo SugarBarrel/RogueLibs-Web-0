@@ -1,6 +1,7 @@
 export type Database = {
   // Tables
   users: DbUser[];
+  user_badges: DbUserBadge[];
   mods: DbMod[];
   releases: DbRelease[];
   mod_authors: DbModAuthor[];
@@ -23,6 +24,11 @@ export type DbUser = {
   username: string; // { length [1;64] }
   discord_id: string | null; // = null { regex /^\d{1,20}$/ }
   avatar_url: string | null; // = null { length [1;255] }
+};
+export type DbUserBadge = {
+  user_id: string; // PK, FK: DbUser
+  badge_name: string; // PK
+  automatic: boolean; // = true
 };
 
 export type DbMod = {
