@@ -1,0 +1,38 @@
+.wrapper {
+  display: flex;
+  flex-flow: column nowrap;
+  flex-grow: 1;
+}
+.container {
+  display: flex;
+  outline: 1px solid var(--color-background-lightest);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  padding: 0.5rem;
+  line-height: 2;
+
+  cursor: text;
+  &:focus-within {
+    outline: 1px solid var(--color-primary-light);
+  }
+  &.error {
+    outline: 1px solid var(--color-danger);
+  }
+}
+.textarea {
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: var(--color-main);
+  resize: none;
+  line-height: 1.15;
+}
+.error-field {
+  display: block;
+  margin: 0 1rem;
+  color: var(--color-danger-dark);
+  min-height: 1.15rem;
+}

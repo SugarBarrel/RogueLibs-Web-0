@@ -1,30 +1,31 @@
-import clsx from "clsx";
 import { ChangeEventHandler, MouseEventHandler, useCallback, useRef } from "react";
 import styles from "./index.module.scss";
+import clsx from "clsx";
 
-export type TextInputProps = {
+export type TextAreaProps = {
   className?: string;
   value: string | null | undefined;
   placeholder?: string | null | undefined;
   onChange?: (newValue: string) => void;
-  prefix?: React.ReactNode;
-  suffix?: React.ReactNode;
   autoTrimEnd?: boolean;
+  height?: number;
   error?: boolean | string | null | undefined;
 };
-export default function TextInput({
+export default function TextArea({
   className,
   value,
-  placeholder,
   onChange,
-  prefix,
-  suffix,
+  placeholder,
   autoTrimEnd,
+  height,
   error,
-}: TextInputProps) {
-  const inputOnChange = useCallback<ChangeEventHandler<HTMLInputElement>>(e => onChange?.(e.target.value), [onChange]);
+}: TextAreaProps) {
+  const textareaOnChange = useCallback<ChangeEventHandler<HTMLTextAreaElement>>(
+    e => onChange?.(e.target.value),
+    [onChange],
+  );
 
-  const inputOnBlur = useCallback<ChangeEventHandler<HTMLInputElement>>(
+  const textareaOnBlur = useCallback<ChangeEventHandler<HTMLTextAreaElement>>(
     e => {
       if (autoTrimEnd === false) return;
       const value = e.target.value;
@@ -34,27 +35,26 @@ export default function TextInput({
     [autoTrimEnd, onChange],
   );
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const containerOnClick = useCallback<MouseEventHandler>(e => {
-    if (e.target === inputRef.current) return;
+    if (e.target === textareaRef.current) return;
     e.preventDefault();
-    inputRef.current?.focus();
+    textareaRef.current?.focus();
   }, []);
 
   return (
     <div className={clsx(styles.wrapper, className)}>
       <div className={clsx(styles.container, !!error && styles.error)} onClick={containerOnClick}>
-        {prefix && <span className={styles.prefix}>{prefix}</span>}
-        <input
-          ref={inputRef}
-          className={styles.input}
+        <textarea
+          ref={textareaRef}
+          className={styles.textarea}
           value={value ?? ""}
           placeholder={placeholder ?? ""}
-          onChange={inputOnChange}
-          onBlur={inputOnBlur}
+          onChange={textareaOnChange}
+          onBlur={textareaOnBlur}
+          style={{ minHeight: `${(height ?? 1) * 1.15}em` }}
         />
-        {suffix && <span className={styles.suffix}>{suffix}</span>}
       </div>
       {error !== undefined && <div className={styles.errorField}>{error}</div>}
     </div>

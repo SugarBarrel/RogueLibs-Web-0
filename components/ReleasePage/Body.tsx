@@ -1,5 +1,4 @@
-import { Icon, IconButton, Link } from "@components/Common";
-import TextInput from "@components/Common/TextInput";
+import { IconButton, Link, TextArea, TextInput } from "@components/Common";
 import { useLocation } from "@lib/hooks";
 import lodashTrimStart from "lodash/trimStart";
 import { useCallback } from "react";
@@ -10,8 +9,8 @@ import parseSemVer from "semver/functions/parse";
 export default function ReleasePageBody() {
   return (
     <div className={styles.body}>
-      <ReleaseMetadataEditor />
       <ReleaseDescription />
+      <ReleaseMetadataEditor />
       <ReleaseJsonView />
     </div>
   );
@@ -136,12 +135,29 @@ export function ReleaseMetadataEditor() {
 }
 
 export function ReleaseDescription() {
-  const { release } = useReleasePageContext();
+  const { release, mutateRelease, isEditing } = useReleasePageContext();
+
+  if (isEditing) {
+    return (
+      <div>
+        <label>{"Description"}</label>
+        <TextArea
+          className={styles.descriptionInput}
+          value={release.description}
+          onChange={v => mutateRelease(r => (r.description = v))}
+          height={15}
+          error={(() => {
+            if (release.description.length > 4000) return "The release description must not exceed 4000 characters!";
+            return null;
+          })()}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.description}>
       {release.description.split("\n").map((t, i) => {
-        if (!t) return <br key={i} />;
         return <p key={i}>{t}</p>;
       })}
     </div>
