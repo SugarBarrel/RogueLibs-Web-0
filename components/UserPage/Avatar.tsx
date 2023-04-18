@@ -1,4 +1,5 @@
 import { Avatar, IconButton } from "@components/Common";
+import { useUser } from "@lib/hooks";
 import { useSupabaseSession } from "@lib/index";
 import { Tooltip } from "react-tooltip";
 import { useUserPageContext } from ".";
@@ -8,14 +9,15 @@ export default function UserPageAvatar() {
   const { user } = useUserPageContext();
 
   const session = useSupabaseSession();
-  const isMe = user.uid === session?.user.id;
+  const myUser = useUser(session?.user.id)[0];
+  const canEdit = user.uid === myUser?.uid || myUser?.is_admin;
 
   return (
     <div className={styles.wrapper}>
       <Avatar data-tooltip-id="upload-avatar" src={user.avatar_url} size="100%">
-        {isMe && <IconButton type="upload" size={64} style={{ width: "100%", height: "100%" }} />}
+        {canEdit && <IconButton type="upload" size={64} style={{ width: "100%", height: "100%" }} />}
       </Avatar>
-      {isMe && <Tooltip id="upload-avatar" content="Upload avatar" place="bottom" />}
+      {canEdit && <Tooltip id="upload-avatar" content="Upload avatar" place="bottom" />}
     </div>
   );
 }

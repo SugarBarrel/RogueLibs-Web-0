@@ -4,6 +4,7 @@ import { BadgeContext, badgeDescriptions, badgeNames } from "@ducks/badges";
 import { useRootDispatch } from "@ducks/index";
 import { upsertUser } from "@ducks/users";
 import { RestUser, useApi } from "@lib/API";
+import { useUser } from "@lib/hooks";
 import { useSupabaseSession } from "@lib/index";
 import { useState } from "react";
 import { Tooltip } from "react-tooltip";
@@ -30,7 +31,8 @@ function UsernameSection() {
   const { user, original, mutateUser } = useUserPageContext();
 
   const session = useSupabaseSession();
-  const isMe = user.uid === session?.user.id;
+  const myUser = useUser(session?.user.id)[0];
+  const canEdit = user.uid === myUser?.uid || myUser?.is_admin;
 
   const [isEditingUsername, setIsEditingUsername] = useState(false);
   const changedUsername = user.username !== original.username;
@@ -74,7 +76,7 @@ function UsernameSection() {
     <>
       <div className={styles.usernameContainer} data-tooltip-id="username">
         <div className={styles.username}>{user.username}</div>
-        {isMe && !isEditingUsername && <IconButton type="edit" size={16} onClick={editUsername} />}
+        {canEdit && !isEditingUsername && <IconButton type="edit" size={16} onClick={editUsername} />}
       </div>
 
       <Tooltip

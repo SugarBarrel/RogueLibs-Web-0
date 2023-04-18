@@ -10,15 +10,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const [original, session] = await Promise.all([serviceApi.fetchUserById(user.id!), api.getSupabaseSession()]);
 
-  const isMe = original.uid === session?.user.id;
-  if (!isMe) {
-    return res.status(403).json({ error: "You're not authorized to edit this profile." });
+  const canEdit = original.uid === session?.user.id;
+  if (!canEdit) {
+    let denyAccess = true;
+
+    if (session?.user) {
+      const myUser = await api.fetchUserById(session.user.id);
+      if (myUser.is_admin) denyAccess = false;
+    }
+
+    if (denyAccess) {
+      return res.status(403).json({ error: "You're not authorized to edit this profile." });
+    }
   }
 
   // ===== Can't edit these fields
   delete user.created_at;
   user.edited_at = new Date().toISOString();
   delete user.uid;
+  delete user.is_admin;
 
   const userDiff = primitiveDiff(original, user);
 

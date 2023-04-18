@@ -138,8 +138,8 @@ export function AuthoringControls() {
     mutateRelease(r => Object.assign(r, original));
   }
 
-  const isAuthor = myUser && release.authors.find(a => a.user_id == myUser.id)?.can_edit;
-  if (!isAuthor) return null;
+  const canEdit = release.authors.find(a => a.user_id == myUser?.id)?.can_edit || myUser?.is_admin;
+  if (!canEdit) return null;
 
   return (
     <div className={styles.authoringControls}>

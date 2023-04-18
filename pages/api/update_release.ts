@@ -12,7 +12,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const myAuthor = original.authors.find(a => a.user_id === session?.user.id);
   if (!myAuthor || !myAuthor.can_edit) {
-    return res.status(403).json({ error: "You're not authorized to edit this release." });
+    let denyAccess = true;
+
+    if (session?.user) {
+      const myUser = await api.fetchUserById(session.user.id);
+      if (myUser.is_admin) denyAccess = false;
+    }
+
+    if (denyAccess) {
+      return res.status(403).json({ error: "You're not authorized to edit this release." });
+    }
   }
 
   // ===== Can't edit these fields
@@ -27,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // ===== Validate release authors changes
 
   if (authorsDiff.hasChanges) {
-    if (myAuthor.is_creator) {
+    if (!myAuthor || myAuthor.is_creator) {
       let creatorCount = 1;
 
       // TODO: Security Vulnerability: { is_creator: "true" }
