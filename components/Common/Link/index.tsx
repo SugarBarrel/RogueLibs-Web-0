@@ -12,7 +12,17 @@ export type LinkProps = {
   blank?: boolean;
   block?: boolean;
 };
-function Link({ children, href, className, style, underline = true, title, onClick, blank, block }: React.PropsWithChildren<LinkProps>) {
+function Link({
+  children,
+  href,
+  className,
+  style,
+  underline = true,
+  title,
+  onClick,
+  blank,
+  block,
+}: React.PropsWithChildren<LinkProps>) {
   if (typeof children === "string" || typeof children === "number") {
     children = <span>{children}</span>;
   }

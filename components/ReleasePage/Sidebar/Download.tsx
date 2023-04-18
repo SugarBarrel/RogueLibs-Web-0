@@ -4,9 +4,9 @@ import { triggerDownload, useApi } from "@lib/API";
 import { useReleasePageContext } from "..";
 import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from "@hello-pangea/dnd";
 import { DbReleaseFile, DbReleaseFileType } from "@lib/Database";
-import { WritableDraft } from "immer/dist/internal";
 import { reorder } from "@lib/index";
 import styles from "./Download.module.scss";
+import { Draft } from "immer";
 
 export default function ReleasePageDownload() {
   const { release } = useReleasePageContext();
@@ -79,7 +79,7 @@ export function Download({ file, index, onDownload, isLoading }: DownloadProps) 
   const id = "file-" + file.filename;
   const [editorOpen, setEditorOpen] = useState(false);
 
-  function mutateFile(recipe: (draft: WritableDraft<DbReleaseFile>) => void) {
+  function mutateFile(recipe: (draft: Draft<DbReleaseFile>) => void) {
     mutateRelease(release => {
       recipe(release.files.find(f => f.filename === file.filename)!);
     });

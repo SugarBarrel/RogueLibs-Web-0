@@ -5,10 +5,10 @@ import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from "@hell
 import { DbModAuthor, DbReleaseAuthor, DbUser } from "@lib/Database";
 import { reorder, useSupabaseSession } from "@lib/index";
 import { Avatar, IconButton, TextInput, DragHandle, Button, Icon, Popup, Separator } from "@components/Common";
-import { WritableDraft } from "immer/dist/internal";
 import { useApi, UserSearchResult } from "@lib/API";
 import styles from "./Authors.module.scss";
 import clsx from "clsx";
+import { Draft } from "immer";
 
 export default function ReleasePageAuthors() {
   const { release } = useReleasePageContext();
@@ -64,7 +64,7 @@ export function Author({ author, index }: AuthorProps) {
 
   const [editorOpen, setEditorOpen] = useState(false);
 
-  function mutateAuthor(recipe: (draft: WritableDraft<DbReleaseAuthor | DbModAuthor>) => void) {
+  function mutateAuthor(recipe: (draft: Draft<DbReleaseAuthor | DbModAuthor>) => void) {
     mutateRelease(release => {
       recipe(release.authors.find(a => a.user_id === author.user_id)!);
     });

@@ -8,7 +8,15 @@ export type HeadProps = {
   image?: string | null;
   noindex?: boolean;
 };
-export default function Head({ path, type, title, description, image, noindex, children }: React.PropsWithChildren<HeadProps>) {
+export default function Head({
+  path,
+  type,
+  title,
+  description,
+  image,
+  noindex,
+  children,
+}: React.PropsWithChildren<HeadProps>) {
   if (!path.startsWith("/")) path = "/" + path;
   image ||= "/logo.png";
 
@@ -27,7 +35,7 @@ export default function Head({ path, type, title, description, image, noindex, c
       <meta key="og:locale" property="og:locale" content="en_us" />
       <meta key="og:site_name" property="og:site_name" content="RogueLibs" />
       {/* Twitter */}
-      {/* {<meta key="twitter:site" property="twitter:site" content="@roguelibs" />} */} {/* Uncomment when there's a Twitter account */}
+      {/* {<meta key="twitter:site" property="twitter:site" content="@roguelibs" />} */}
       <meta key="twitter:card" property="twitter:card" content="summary_large_image" />
       <meta key="twitter:url" property="twitter:url" content={path} />
       <meta key="twitter:title" property="twitter:title" content={title} />
