@@ -83,10 +83,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       serviceApi.Supabase.from("release_files").delete().eq("release_id", release.id).in("filename", removedFiles),
     );
   }
-  const upsertedFiles = filesDiff.updated.concat(filesDiff.added);
-  if (upsertedFiles.length) {
-    upsertedFiles.forEach(file => (file.release_id = release.id));
-    promises.push(serviceApi.Supabase.from("release_files").upsert(upsertedFiles));
+  if (filesDiff.added.length) {
+    filesDiff.added.forEach(file => (file.release_id = release.id!));
+    promises.push(...filesDiff.added.map(file => serviceApi.Supabase.from("release_files").insert(file)));
+  }
+  if (filesDiff.updated.length) {
+    filesDiff.updated.forEach(file => (file.release_id = release.id));
+    promises.push(
+      ...filesDiff.updated.map(file => {
+        return serviceApi.Supabase.from("release_files")
+          .update(file)
+          .eq("release_id", release.id)
+          .eq("filename", file.filename);
+      }),
+    );
   }
 
   if (authorsDiff.removed.length) {
@@ -95,10 +105,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       serviceApi.Supabase.from("release_authors").delete().eq("release_id", release.id).in("user_id", removedAuthors),
     );
   }
-  const upsertedAuthors = authorsDiff.updated.concat(authorsDiff.added);
-  if (upsertedAuthors.length) {
-    upsertedAuthors.forEach(author => (author.release_id = release.id));
-    promises.push(serviceApi.Supabase.from("release_authors").upsert(upsertedAuthors));
+  if (authorsDiff.added.length) {
+    authorsDiff.added.forEach(author => (author.release_id = release.id!));
+    promises.push(...authorsDiff.added.map(author => serviceApi.Supabase.from("release_authors").insert(author)));
+  }
+  if (authorsDiff.updated.length) {
+    authorsDiff.updated.forEach(author => (author.release_id = release.id));
+    promises.push(
+      ...authorsDiff.updated.map(author => {
+        return serviceApi.Supabase.from("release_authors")
+          .update(author)
+          .eq("release_id", release.id)
+          .eq("user_id", author.user_id);
+      }),
+    );
   }
 
   const data = await Promise.all(promises);
