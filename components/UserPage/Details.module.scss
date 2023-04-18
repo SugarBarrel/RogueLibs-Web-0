@@ -39,7 +39,7 @@
   display: flex;
   flex-flow: row wrap;
   overflow-y: auto;
-  max-height: 5rem;
+  max-height: calc(5rem + 4px);
   padding: 2px;
 }
 .badge-info {
