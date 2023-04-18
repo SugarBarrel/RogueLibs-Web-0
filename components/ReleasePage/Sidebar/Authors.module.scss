@@ -8,11 +8,18 @@
   display: flex;
   flex-direction: column;
 }
-.author {
+.author-wrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
   margin-bottom: 0.75rem;
+  border-radius: 32px;
+}
+.author {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 
   outline: 1px solid var(--color-background-lighter);
   border-radius: 32px;
@@ -24,6 +31,19 @@
     background-color: var(--color-background-dark);
   }
 }
+.author-edit-controls {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  height: 100%;
+  align-self: stretch;
+}
+.add-author {
+  margin-left: 14px;
+  margin-right: 24px;
+  border-radius: 32px;
+}
+
 .user-info {
   flex-grow: 1;
   display: flex;
@@ -35,12 +55,34 @@
     padding-left: 0.5rem;
   }
 }
-
 .username {
   margin-left: 1rem;
   font-size: 1.2rem;
   color: var(--color-white);
+  overflow-wrap: anywhere;
 }
 .credits {
   margin-left: 0.5rem;
+  overflow-wrap: anywhere;
+}
+
+.author-search {
+
+}
+.author-search-results {
+  display: grid;
+  grid-template-rows: repeat(4, 32px);
+  gap: 0.5rem;
+}
+.author-search-result {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  background-color: var(--color-background);
+  border-radius: 32px;
+}
+.author-search-no-results {
+  text-align: center;
+  font-size: 1.5rem;
 }

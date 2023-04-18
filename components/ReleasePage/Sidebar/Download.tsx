@@ -1,11 +1,12 @@
 import { useCallback, useMemo, useState } from "react";
-import { Button, Icon } from "@components/Common";
+import { Button, DragHandle, Icon, IconButton, Popup, TextInput } from "@components/Common";
 import { triggerDownload, useApi } from "@lib/API";
 import { useReleasePageContext } from "..";
 import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from "@hello-pangea/dnd";
-import styles from "./Download.module.scss";
 import { DbReleaseFile, DbReleaseFileType } from "@lib/Database";
+import { WritableDraft } from "immer/dist/internal";
 import { reorder } from "@lib/index";
+import styles from "./Download.module.scss";
 
 export default function ReleasePageDownload() {
   const { release } = useReleasePageContext();
@@ -55,7 +56,6 @@ export function DownloadList() {
                 index={i}
                 key={f.filename}
                 onDownload={download}
-                canDrag={isEditing}
                 isLoading={loadingFile == f.filename}
               />
             ))}
@@ -70,11 +70,26 @@ export function DownloadList() {
 export interface DownloadProps {
   file: DbReleaseFile;
   index: number;
-  canDrag: boolean;
   onDownload: (file: DbReleaseFile) => void;
   isLoading: boolean;
 }
-export function Download({ file, index, canDrag, onDownload, isLoading }: DownloadProps) {
+export function Download({ file, index, onDownload, isLoading }: DownloadProps) {
+  const { release, mutateRelease, isEditing } = useReleasePageContext();
+
+  const id = "file-" + file.filename;
+  const [editorOpen, setEditorOpen] = useState(false);
+
+  function mutateFile(recipe: (draft: WritableDraft<DbReleaseFile>) => void) {
+    mutateRelease(release => {
+      recipe(release.files.find(f => f.filename === file.filename)!);
+    });
+  }
+  function removeFile() {
+    mutateRelease(release => {
+      release.files = release.files.filter(f => f.filename !== file.filename);
+    });
+  }
+
   const className = {
     [DbReleaseFileType.Unknown]: undefined,
     [DbReleaseFileType.Plugin]: styles.downloadMain,
@@ -86,26 +101,56 @@ export function Download({ file, index, canDrag, onDownload, isLoading }: Downlo
   }[file.type];
 
   return (
-    <Draggable
-      draggableId={"file-" + file.filename}
-      index={index}
-      disableInteractiveElementBlocking
-      isDragDisabled={!canDrag}
-    >
-      {provided => (
-        <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          className={styles.download}
-        >
-          <Button className={className} onClick={() => onDownload(file)}>
-            <Icon type={isLoading ? "loading" : "download"} size={24} />
-            {file.title || file.filename}
-          </Button>
-          {file.tooltip && <div className={styles.tooltip}>{file.tooltip}</div>}
-        </div>
+    <>
+      <Draggable draggableId={id} index={index} disableInteractiveElementBlocking isDragDisabled={!isEditing}>
+        {provided => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            className={styles.downloadWrapper}
+            data-tooltip-id={id}
+          >
+            {isEditing && <DragHandle />}
+            <div className={styles.download}>
+              <Button className={className} onClick={() => onDownload(file)}>
+                <Icon type={isLoading ? "loading" : "download"} size={24} />
+                {file.title || file.filename}
+              </Button>
+              {file.tooltip && <div className={styles.tooltip}>{file.tooltip}</div>}
+            </div>
+            {isEditing && (
+              <div className={styles.downloadEditControls}>
+                <IconButton type="edit" size={16} onClick={() => setEditorOpen(true)} />
+                <IconButton type="cross" size={16} onClick={removeFile} />
+              </div>
+            )}
+          </div>
+        )}
+      </Draggable>
+      {isEditing && (
+        <Popup
+          id={id}
+          place="left"
+          open={[editorOpen, setEditorOpen]}
+          render={() => (
+            <div>
+              <label>{"Title"}</label>
+              <TextInput
+                value={file.title}
+                onChange={v => mutateFile(f => (f.title = v || null))}
+                placeholder={file.filename}
+              />
+              <label>{"Tooltip"}</label>
+              <TextInput
+                value={file.tooltip}
+                onChange={v => mutateFile(f => (f.tooltip = v || null))}
+                placeholder={"Not specified"}
+              />
+            </div>
+          )}
+        />
       )}
-    </Draggable>
+    </>
   );
 }

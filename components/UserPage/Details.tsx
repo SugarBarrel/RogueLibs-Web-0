@@ -1,5 +1,4 @@
-import { IconButton, Sprite, TextInput } from "@components/Common";
-import Separator from "@components/Common/Separator";
+import { IconButton, Popup, Sprite, TextInput, Separator } from "@components/Common";
 import { BadgeContext, badgeDescriptions, badgeNames } from "@ducks/badges";
 import { useRootDispatch } from "@ducks/index";
 import { upsertUser } from "@ducks/users";
@@ -79,13 +78,10 @@ function UsernameSection() {
         {canEdit && !isEditingUsername && <IconButton type="edit" size={16} onClick={editUsername} />}
       </div>
 
-      <Tooltip
+      <Popup
         id="username"
-        isOpen={isEditingUsername}
-        setIsOpen={v => v || resetUsername()}
-        openOnClick
-        clickable
         place="bottom"
+        open={[isEditingUsername, resetUsername]}
         render={() => (
           <div className={styles.usernameInput}>
             <TextInput
@@ -131,7 +127,6 @@ function BadgesSection() {
                 id={badge_name}
                 delayShow={100}
                 place="bottom"
-                style={{ ["--rt-opacity" as string]: 1 }}
                 render={() => (
                   <div className={styles.badgeInfo}>
                     <span className={styles.badgeTitle}>{badgeNames[badge_name]?.()}</span>

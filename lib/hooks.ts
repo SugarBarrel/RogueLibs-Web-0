@@ -2,11 +2,12 @@ import { fetchModById, selectModById } from "@ducks/mods";
 import { fetchReleaseById, selectReleaseById } from "@ducks/releases";
 import { fetchUserById, selectUserById } from "@ducks/users";
 import { Selector } from "@reduxjs/toolkit";
-import { DependencyList, useCallback, useEffect, useState } from "react";
+import { DependencyList, useCallback, useEffect, useRef, useState } from "react";
 import { RogueLibsApi, useApi } from "./API";
 import { AsyncEntity, AsyncEntityArr } from "./AsyncEntityAdapter";
 import { RootState, useRootDispatch, useRootSelector } from "./ducks";
 import { produce, Draft } from "immer";
+import lodashThrottle from "lodash/throttle";
 
 export function useDispatchEntity<T>(
   selector: Selector<RootState, AsyncEntity<T>>,
@@ -68,4 +69,16 @@ export function useLocation(): Location | null {
   const [location, setLocation] = useState<Location | null>(null);
   useEffect(() => setLocation(window.location), []);
   return location;
+}
+
+export function useThrottle<Func extends Function>(cb: Func, dependencies: [delay: number, ...deps: DependencyList]) {
+  const cbRef = useRef(cb);
+  const [delay, ...deps] = dependencies;
+
+  const throttledCb = useCallback(
+    lodashThrottle((...args) => cbRef.current(...args), delay, { leading: true, trailing: true }),
+    [delay],
+  );
+  useEffect(() => void (cbRef.current = cb));
+  useEffect(throttledCb, [throttledCb, ...deps]);
 }

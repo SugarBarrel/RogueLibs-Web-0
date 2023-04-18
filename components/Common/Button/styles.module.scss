@@ -11,6 +11,7 @@
   background-color: var(--color-background);
   outline: 1px solid var(--color-background-lighter);
   border-radius: 0.5rem;
+  overflow-wrap: anywhere;
 
   cursor: pointer;
   transition: all 0.1s ease;

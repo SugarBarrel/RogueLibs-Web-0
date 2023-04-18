@@ -70,6 +70,8 @@ export type RestReleaseAuthor = DbReleaseAuthor & { user: RestUser };
 export type RestReleaseFile = DbReleaseFile;
 export type RestReleaseDependency = DbReleaseDependency;
 
+export type UserSearchResult = DbUser & { similarity: number };
+
 export class RogueLibsApi {
   public constructor(public readonly Supabase: SupabaseClient) {}
 
@@ -101,10 +103,10 @@ export class RogueLibsApi {
     }
     return builder.throwOnError().then(res => res.data) as Promise<Return[]>;
   }
-  private rpc<Return>(functionName: string, args: object) {
-    return this.Supabase.rpc(functionName, args)
-      .throwOnError()
-      .then(res => res.data) as Promise<Return>;
+  private rpc<Return>(functionName: string, args: object, abort?: AbortSignal) {
+    const builder = this.Supabase.rpc(functionName, args);
+    if (abort) builder.abortSignal(abort);
+    return builder.throwOnError().then(res => res.data) as Promise<Return>;
   }
 
   public async getSupabaseSession() {
@@ -120,6 +122,10 @@ export class RogueLibsApi {
     }
     return this.selectOne<DbUser, RestUser>("users", selectUser, b => b.eq("slug", user_slug));
   }
+  public searchUsers(term: string, max_count: number, abort?: AbortSignal) {
+    return this.rpc<UserSearchResult[]>("search_users", { _term: term, _limit: max_count }, abort);
+  }
+
   public fetchModById(id: number) {
     return this.selectOne<DbMod, RestMod>("mods", selectMod, b => b.eq("id", id));
   }

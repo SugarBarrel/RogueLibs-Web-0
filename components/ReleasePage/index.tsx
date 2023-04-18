@@ -14,6 +14,8 @@ export type ReleasePageContext = {
   mod: StoreMod | null;
   isEditing: boolean;
   setIsEditing: Dispatch<SetStateAction<boolean>>;
+  hasChanges: boolean;
+  setHasChanges: Dispatch<SetStateAction<boolean>>;
 };
 const ReleasePageContext = createContext<ReleasePageContext>(null!);
 export function useReleasePageContext() {
@@ -28,10 +30,11 @@ export default function ReleasePage({ release: initial }: ReleasePageProps) {
   const original = useRelease(initial.id)[0] ?? initial;
   const mod = useMod(release?.mod_id)[0] ?? null;
   const [isEditing, setIsEditing] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
 
   const context = useMemo(
-    () => ({ original, release, mutateRelease, mod, isEditing, setIsEditing }),
-    [release, original, mod, isEditing],
+    () => ({ original, release, mutateRelease, mod, isEditing, setIsEditing, hasChanges, setHasChanges }),
+    [release, original, mod, isEditing, hasChanges],
   );
 
   return (

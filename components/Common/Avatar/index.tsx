@@ -5,8 +5,9 @@ export type AvatarProps = {
   src: string | null | undefined;
   size?: string | number;
   href?: string;
+  blank?: boolean;
 };
-export default function Avatar({ src, size, href, children, ...props }: React.PropsWithChildren<AvatarProps>) {
+export default function Avatar({ src, size, href, blank, children, ...props }: React.PropsWithChildren<AvatarProps>) {
   size ??= 64;
 
   const avatar = (
@@ -18,7 +19,7 @@ export default function Avatar({ src, size, href, children, ...props }: React.Pr
   );
 
   return href ? (
-    <Link href={href} className={styles.linkWrapper} style={{ width: size }} underline={false}>
+    <Link href={href} blank={blank} className={styles.linkWrapper} style={{ width: size }} underline={false}>
       {avatar}
     </Link>
   ) : (

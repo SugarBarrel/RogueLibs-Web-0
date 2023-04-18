@@ -5,13 +5,13 @@ import { RestRelease, useApi } from "@lib/API";
 import { useUser } from "@lib/hooks";
 import { collectionDiff, primitiveDiff } from "@lib/index";
 import { useSession as useSupabaseSession } from "@supabase/auth-helpers-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import { useReleasePageContext } from ".";
-import styles from "./Header.module.scss";
-import clsx from "clsx";
 import { useRouter } from "next/router";
 import { upsertRelease } from "@ducks/releases";
+import styles from "./Header.module.scss";
+import clsx from "clsx";
 
 export default function ReleasePageHeader() {
   const { release } = useReleasePageContext();
@@ -58,7 +58,7 @@ export default function ReleasePageHeader() {
 }
 
 export function Breadcrumbs() {
-  const { original, release, mod } = useReleasePageContext();
+  const { original, release, mod, hasChanges } = useReleasePageContext();
 
   const homeLink = "/";
   const modLink = `/mods/${mod?.slug ?? original.mod_id}`;
@@ -66,22 +66,23 @@ export function Breadcrumbs() {
 
   return (
     <div className={styles.breadcrumbs}>
-      <Link className={styles.breadcrumb} href={homeLink}>
+      <Link className={styles.breadcrumb} href={homeLink} blank={hasChanges}>
         Mods
       </Link>
       <span>{" > "}</span>
-      <Link className={styles.breadcrumb} href={modLink}>
+      <Link className={styles.breadcrumb} href={modLink} blank={hasChanges}>
         {release.title}
       </Link>
       <span>{" > "}</span>
-      <Link className={styles.breadcrumb} href={releaseLink}>
+      <Link className={styles.breadcrumb} href={releaseLink} blank={hasChanges}>
         {release.version ? "v" + release.version : release.slug ?? release.id}
       </Link>
     </div>
   );
 }
 export function AuthoringControls() {
-  const { release, original, mutateRelease, isEditing, setIsEditing } = useReleasePageContext();
+  const { release, original, mutateRelease, isEditing, setIsEditing, hasChanges, setHasChanges } =
+    useReleasePageContext();
 
   const dispatch = useRootDispatch();
   const session = useSupabaseSession();
@@ -99,7 +100,9 @@ export function AuthoringControls() {
     return collectionDiff(original.authors, release.authors, "user_id");
   }, [original.authors, release.authors]);
 
-  const hasChanges = !!releaseChanges || filesChanges.hasChanges || authorsChanges.hasChanges;
+  useEffect(() => {
+    setHasChanges(!!releaseChanges || filesChanges.hasChanges || authorsChanges.hasChanges);
+  }, [releaseChanges, filesChanges, authorsChanges]);
 
   function toggleEditing() {
     setIsEditing(v => !v);

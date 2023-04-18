@@ -1,7 +1,5 @@
 create or replace function public.get_user_badges(_user_id uuid)
-returns setof text
-security definer
-as
+returns setof text security definer as
 $$
 declare
   _user users;
@@ -33,7 +31,6 @@ begin
     return next 'nuggets_20';
   end if;
 
-
   select count(*) from mod_authors
   inner join mods on mod_authors.mod_id = mods.id
   where mod_authors.user_id = _user_id
@@ -61,15 +58,11 @@ begin
     return next 'mods_1';
   end if;
 
-
-
-
 end;
 $$ language plpgsql;
 
-create or replace procedure public.update_user_badges(_user_id uuid)
-security definer
-as
+create or replace function public.update_user_badges(_user_id uuid)
+returns void security definer as
 $$
 begin
   delete from user_badges
@@ -80,3 +73,75 @@ begin
   select _user_id, get_user_badges(_user_id);
 end;
 $$ language plpgsql;
+
+create or replace function public.update_all_user_badges()
+returns void security definer as
+$$
+declare
+  _user users;
+begin
+  for _user in
+    select * from users
+  loop
+    perform public.update_user_badges(_user.id);
+  end loop;
+end;
+$$ language plpgsql;
+
+
+
+create or replace function mod_nuggets_trigger_update_badges()
+returns trigger security definer as
+$$
+begin
+  perform update_user_badges(coalesce(old.user_id, new.user_id));
+  return new;
+end;
+$$ language plpgsql;
+
+drop trigger if exists mod_nuggets_update_badges on mod_nuggets;
+
+create trigger mod_nuggets_update_badges
+after insert or update or delete on mod_nuggets
+for each row execute function mod_nuggets_trigger_update_badges();
+
+
+
+create or replace function mod_authors_trigger_update_badges()
+returns trigger security definer as
+$$
+begin
+  perform update_user_badges(coalesce(old.user_id, new.user_id));
+  return new;
+end;
+$$ language plpgsql;
+
+drop trigger if exists mod_authors_update_badges on mod_authors;
+
+create trigger mod_authors_update_badges
+after insert or update or delete on mod_authors
+for each row execute function mod_authors_trigger_update_badges();
+
+
+
+create or replace function mods_trigger_update_badges()
+returns trigger security definer as
+$$
+declare
+  _mod_author mod_authors;
+begin
+  for _mod_author in
+    select * from mod_authors
+    where mod_authors.mod_id = coalesce(old.id, new.id)
+  loop
+    perform update_user_badges(_mod_author.user_id);
+  end loop;
+  return new;
+end;
+$$ language plpgsql;
+
+drop trigger if exists mods_update_badges on mods;
+
+create trigger mods_update_badges
+after insert or update of is_public or delete on mods
+for each row execute function mods_trigger_update_badges();
