@@ -70,7 +70,8 @@ begin
     and user_badges.automatic;
 
   insert into user_badges(user_id, badge_name)
-  select _user_id, get_user_badges(_user_id);
+  select _user_id, get_user_badges(_user_id)
+  on conflict do nothing;
 end;
 $$ language plpgsql;
 
