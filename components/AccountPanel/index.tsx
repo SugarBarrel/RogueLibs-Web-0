@@ -1,9 +1,8 @@
 import { useState } from "react";
 import styles from "./styles.module.scss";
-import { Avatar, Button, Icon, IconButton } from "@components/Common";
+import { Avatar, Button, Icon, IconButton, Tooltip } from "@components/Common";
 import { useSession as useSupabaseSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useUser } from "@lib/hooks";
-import { Tooltip } from "react-tooltip";
 import { useRouter } from "next/router";
 
 export default function AccountPanel() {

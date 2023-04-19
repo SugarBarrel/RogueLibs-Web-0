@@ -1,14 +1,14 @@
-import { useThrottle, useUser } from "@lib/hooks";
+import { useUser } from "@lib/hooks";
 import { useReleasePageContext } from "..";
 import { useCallback, useMemo, useState } from "react";
 import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from "@hello-pangea/dnd";
 import { DbModAuthor, DbReleaseAuthor, DbUser } from "@lib/Database";
 import { reorder, useSupabaseSession } from "@lib/index";
-import { Avatar, IconButton, TextInput, DragHandle, Button, Icon, Popup, Separator } from "@components/Common";
-import { useApi, UserSearchResult } from "@lib/API";
+import { Avatar, IconButton, TextInput, DragHandle, Icon, Popup } from "@components/Common";
+import { FindUser } from "@components/Editor";
+import { Draft } from "immer";
 import styles from "./Authors.module.scss";
 import clsx from "clsx";
-import { Draft } from "immer";
 
 export default function ReleasePageAuthors() {
   const { release } = useReleasePageContext();
@@ -65,14 +65,10 @@ export function Author({ author, index }: AuthorProps) {
   const [editorOpen, setEditorOpen] = useState(false);
 
   function mutateAuthor(recipe: (draft: Draft<DbReleaseAuthor | DbModAuthor>) => void) {
-    mutateRelease(release => {
-      recipe(release.authors.find(a => a.user_id === author.user_id)!);
-    });
+    mutateRelease(release => recipe(release.authors.find(a => a.user_id === author.user_id)!));
   }
   function removeAuthor() {
-    mutateRelease(release => {
-      release.authors = release.authors.filter(a => a.user_id !== author.user_id);
-    });
+    mutateRelease(release => (release.authors = release.authors.filter(a => a.user_id !== author.user_id)));
   }
 
   const session = useSupabaseSession();
@@ -126,11 +122,8 @@ export function Author({ author, index }: AuthorProps) {
         )}
       </Draggable>
       {isEditing && (
-        <Popup
-          id={id}
-          place="left"
-          open={[editorOpen, setEditorOpen]}
-          render={() => (
+        <Popup id={id} place="left" open={[editorOpen, setEditorOpen]}>
+          {() => (
             <div>
               <label>{"Credit"}</label>
               <TextInput
@@ -140,7 +133,7 @@ export function Author({ author, index }: AuthorProps) {
               />
             </div>
           )}
-        />
+        </Popup>
       )}
     </>
   );
@@ -148,42 +141,8 @@ export function Author({ author, index }: AuthorProps) {
 
 export function AddAuthor() {
   const { release, isEditing, mutateRelease } = useReleasePageContext();
-
-  const api = useApi();
-
-  const [isOpen, setIsOpen] = useState(false);
   const [term, setTerm] = useState("");
-  const [searching, setSearching] = useState(false);
-  const [searchResultTerm, setSearchResultTerm] = useState("");
-  const [searchResults, setSearchResults] = useState<UserSearchResult[]>([]);
 
-  useThrottle(() => {
-    const ac = new AbortController();
-
-    if (term.trim()) {
-      (async () => {
-        try {
-          setSearching(true);
-          const data = await api.searchUsers(term.trim(), 4, ac.signal);
-          setSearchResults(data);
-          setSearchResultTerm(term);
-        } catch (err) {
-        } finally {
-          setSearching(false);
-        }
-      })();
-    } else {
-      setSearchResults([]);
-    }
-
-    return () => ac.abort();
-  }, [500, term]);
-
-  function openSearch() {
-    if (isOpen) return;
-    setTerm("");
-    setIsOpen(true);
-  }
   function addAuthor(user: DbUser) {
     mutateRelease(release => {
       const newAuthor: DbReleaseAuthor = {
@@ -193,7 +152,7 @@ export function AddAuthor() {
         can_edit: false,
         can_see: true,
         credit: null,
-        order: Math.max(0, ...release.authors.map(a => a.order)) + 1,
+        order: Math.max(-1, ...release.authors.map(a => a.order)) + 1,
       };
       release.authors.push(newAuthor);
     });
@@ -202,44 +161,15 @@ export function AddAuthor() {
   if (!isEditing) return null;
 
   return (
-    <>
-      <Button data-tooltip-id="author-add" className={styles.addAuthor} onClick={openSearch}>
-        <Icon type="upload" size={16} />
-        {"Add an author"}
-      </Button>
-      <Popup
-        id="author-add"
-        place="left"
-        open={[isOpen, setIsOpen]}
-        render={() => (
-          <div className={styles.authorSearch}>
-            <TextInput value={term} onChange={setTerm} />
-            <Separator bold />
-            <div className={styles.authorSearchResults}>
-              {searchResults.length === 0 && (
-                <span className={styles.authorSearchNoResults}>
-                  {term.length === 0
-                    ? "Start searching!"
-                    : searching || term != searchResultTerm
-                    ? "Searching..."
-                    : "No results :("}
-                </span>
-              )}
-              {searchResults.map(user => (
-                <Button
-                  key={user.id}
-                  className={styles.authorSearchResult}
-                  disabled={release.authors.some(a => a.user_id === user.id)}
-                  onClick={() => addAuthor(user)}
-                >
-                  <Avatar src={user.avatar_url} size={32} />
-                  {user.username}
-                </Button>
-              ))}
-            </div>
-          </div>
-        )}
-      />
-    </>
+    <FindUser
+      className={styles.addAuthor}
+      place="left"
+      term={[term, setTerm]}
+      disabled={u => release.authors.some(a => a.user_id === u.id)}
+      onClick={addAuthor}
+    >
+      <Icon type="upload" size={16} />
+      {"Add an author"}
+    </FindUser>
   );
 }

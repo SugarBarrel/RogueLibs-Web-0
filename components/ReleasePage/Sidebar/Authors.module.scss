@@ -66,24 +66,3 @@
   margin-left: 0.5rem;
   overflow-wrap: anywhere;
 }
-
-.author-search {
-  display: block;
-}
-.author-search-results {
-  display: grid;
-  grid-template-rows: repeat(4, 32px);
-  gap: 0.5rem;
-}
-.author-search-result {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0;
-  background-color: var(--color-background);
-  border-radius: 32px;
-}
-.author-search-no-results {
-  text-align: center;
-  font-size: 1.5rem;
-}

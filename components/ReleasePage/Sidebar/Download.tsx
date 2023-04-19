@@ -129,11 +129,8 @@ export function Download({ file, index, onDownload, isLoading }: DownloadProps) 
         )}
       </Draggable>
       {isEditing && (
-        <Popup
-          id={id}
-          place="left"
-          open={[editorOpen, setEditorOpen]}
-          render={() => (
+        <Popup id={id} place="left" open={[editorOpen, setEditorOpen]}>
+          {() => (
             <div>
               <label>{"Title"}</label>
               <TextInput
@@ -149,7 +146,7 @@ export function Download({ file, index, onDownload, isLoading }: DownloadProps) 
               />
             </div>
           )}
-        />
+        </Popup>
       )}
     </>
   );

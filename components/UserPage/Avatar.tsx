@@ -1,7 +1,6 @@
-import { Avatar, IconButton } from "@components/Common";
+import { Avatar, IconButton, Tooltip } from "@components/Common";
 import { useUser } from "@lib/hooks";
 import { useSupabaseSession } from "@lib/index";
-import { Tooltip } from "react-tooltip";
 import { useUserPageContext } from ".";
 import styles from "./Avatar.module.scss";
 

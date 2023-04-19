@@ -1,0 +1,21 @@
+
+.search {
+  display: block;
+}
+.results {
+  display: grid;
+  grid-template-rows: repeat(4, 32px);
+  gap: 0.5rem;
+}
+.result {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  background-color: var(--color-background);
+  border-radius: 32px;
+}
+.no-results {
+  text-align: center;
+  font-size: 1.5rem;
+}

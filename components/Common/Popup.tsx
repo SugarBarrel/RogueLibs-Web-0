@@ -1,12 +1,18 @@
-import { Tooltip } from "react-tooltip";
+import { Tooltip, TooltipProps } from "@components/Common";
 
-type ITooltipController = Parameters<typeof Tooltip>[0];
-type OmitProps = "isOpen" | "setIsOpen" | "clickable" | "openOnClick";
-export type PopupProps = Omit<ITooltipController, OmitProps> & {
+type OmitProps = "clickable" | "openOnClick" | "isOpen" | "setIsOpen";
+export type PopupProps = Omit<TooltipProps, OmitProps> & {
   open: [boolean, (isOpen: boolean) => void];
 };
 
-export default function Popup({ open, ...props }: PopupProps) {
-  const [isOpen, setIsOpen] = open;
-  return <Tooltip clickable openOnClick isOpen={isOpen} setIsOpen={v => v || setIsOpen(false)} {...props} />;
+export default function Popup({ open: [isOpen, setIsOpen], ...props }: PopupProps) {
+  return (
+    <Tooltip
+      clickable
+      openOnClick
+      isOpen={isOpen}
+      setIsOpen={v => v || setIsOpen(false)}
+      {...(props as TooltipProps)}
+    />
+  );
 }

@@ -1,4 +1,4 @@
-import { Button, Icon, IconButton, Link } from "@components/Common";
+import { Button, Icon, IconButton, Link, Tooltip } from "@components/Common";
 import { useRootDispatch } from "@ducks/index";
 import { setModNugget } from "@ducks/mods";
 import { RestRelease, useApi } from "@lib/API";
@@ -6,7 +6,6 @@ import { useUser } from "@lib/hooks";
 import { collectionDiff, primitiveDiff } from "@lib/index";
 import { useSession as useSupabaseSession } from "@supabase/auth-helpers-react";
 import { useEffect, useMemo, useState } from "react";
-import { Tooltip } from "react-tooltip";
 import { useReleasePageContext } from ".";
 import { useRouter } from "next/router";
 import { upsertRelease } from "@ducks/releases";
@@ -35,19 +34,13 @@ export default function ReleasePageHeader() {
           <span className={styles.title}>{release.title}</span>
           <div className={styles.titleButtons}>
             <IconButton type="link" data-tooltip-id="mod-link" onClick={copyPermanentLink} />
-            <Tooltip
-              id="mod-link"
-              place="bottom"
-              offset={5}
-              openOnClick
-              clickable
-              delayHide={3000}
-              render={() => (
+            <Tooltip id="mod-link" place="bottom" offset={5} openOnClick clickable delayHide={3000}>
+              {() => (
                 <div>
                   <span>{"Copied permanent link!"}</span>
                 </div>
               )}
-            />
+            </Tooltip>
           </div>
         </div>
         <LeftQuickBar />
@@ -189,12 +182,8 @@ export function LeftQuickBar() {
               <Icon type="copy" size={16} alpha={0.75} />
             </span>
           </pre>
-          <Tooltip
-            id="mod-guid"
-            place="right"
-            openOnClick={true}
-            clickable={true}
-            render={() => {
+          <Tooltip id="mod-guid" place="right" clickable openOnClick>
+            {() => {
               const csharpString = `"${mod.guid}"`;
               const dependencyAttr = `[BepInDependency("${mod.guid}")]`;
               return (
@@ -206,11 +195,11 @@ export function LeftQuickBar() {
                   <Button data-tooltip-id="mod-guid-2" onClick={() => navigator.clipboard.writeText(dependencyAttr)}>
                     {"Copy as BepInDependency attribute"}
                   </Button>
-                  <Tooltip id="mod-guid-2" place="right" openOnClick={true} content="Copied!" delayHide={3000} />
+                  <Tooltip id="mod-guid-2" place="right" openOnClick content="Copied!" delayHide={3000} />
                 </div>
               );
             }}
-          />
+          </Tooltip>
         </>
       )}
     </div>
@@ -254,7 +243,7 @@ export function RightQuickBar() {
         <Tooltip
           id="mod-nugget"
           place="left"
-          openOnClick={true}
+          openOnClick
           variant="error"
           content="You must sign in to rate mods!"
           delayHide={3000}

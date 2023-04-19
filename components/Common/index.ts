@@ -10,3 +10,4 @@ export { default as Separator, type SeparatorProps } from "./Separator";
 export { default as DragHandle } from "./DragHandle";
 export { default as Popup, type PopupProps } from "./Popup";
 export { default as TextArea, type TextAreaProps } from "./TextArea";
+export { default as Tooltip, type TooltipProps, type ReactTooltipProps } from "./Tooltip";

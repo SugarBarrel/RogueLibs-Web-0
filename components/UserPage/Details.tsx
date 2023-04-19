@@ -1,4 +1,4 @@
-import { IconButton, Popup, Sprite, TextInput, Separator } from "@components/Common";
+import { IconButton, Popup, Sprite, TextInput, Separator, Tooltip } from "@components/Common";
 import { BadgeContext, badgeDescriptions, badgeNames } from "@ducks/badges";
 import { useRootDispatch } from "@ducks/index";
 import { upsertUser } from "@ducks/users";
@@ -6,7 +6,6 @@ import { RestUser, useApi } from "@lib/API";
 import { useUser } from "@lib/hooks";
 import { useSupabaseSession } from "@lib/index";
 import { useState } from "react";
-import { Tooltip } from "react-tooltip";
 import { useUserPageContext } from ".";
 import styles from "./Details.module.scss";
 
@@ -78,11 +77,8 @@ function UsernameSection() {
         {canEdit && !isEditingUsername && <IconButton type="edit" size={16} onClick={editUsername} />}
       </div>
 
-      <Popup
-        id="username"
-        place="bottom"
-        open={[isEditingUsername, resetUsername]}
-        render={() => (
+      <Popup id="username" place="bottom" open={[isEditingUsername, resetUsername]}>
+        {() => (
           <div className={styles.usernameInput}>
             <TextInput
               value={user.username}
@@ -101,7 +97,7 @@ function UsernameSection() {
             />
           </div>
         )}
-      />
+      </Popup>
     </>
   );
 }
@@ -123,11 +119,8 @@ function BadgesSection() {
               <IconButton data-tooltip-id={badge_name} disabled="fake">
                 <Sprite src={`/badges/${badge_name}.png`} size={32} alpha={1} crisp />
               </IconButton>
-              <Tooltip
-                id={badge_name}
-                delayShow={100}
-                place="bottom"
-                render={() => (
+              <Tooltip id={badge_name} delayShow={100} place="bottom">
+                {() => (
                   <div className={styles.badgeInfo}>
                     <span className={styles.badgeTitle}>{badgeNames[badge_name]?.()}</span>
                     <Separator primary />
@@ -136,7 +129,7 @@ function BadgesSection() {
                     <div className={styles.badgeDescription}>{badgeDescriptions[badge_name]?.(badgeContext)}</div>
                   </div>
                 )}
-              />
+              </Tooltip>
             </div>
           );
         })}
