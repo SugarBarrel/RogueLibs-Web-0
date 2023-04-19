@@ -19,20 +19,20 @@ export default function ReleasePageBody() {
 export function ReleaseMetadataEditor() {
   const { release, original, mutateRelease, isEditing, mod } = useReleasePageContext();
 
-  const onChangeSlug = useCallback((newValue: string) => {
-    newValue = newValue.replace(" ", "-").trimStart();
-    mutateRelease(release => (release.slug = newValue || null));
+  const onChangeSlug = useCallback((newSlug: string | null) => {
+    if (newSlug != null) newSlug = newSlug.replace(" ", "-").trimStart();
+    mutateRelease(release => void (release.slug = newSlug || null));
   }, []);
   const onChangeTitle = useCallback((newTitle: string) => {
     newTitle = newTitle.trimStart();
-    mutateRelease(release => (release.title = newTitle));
+    mutateRelease(release => void (release.title = newTitle));
   }, []);
-  const onChangeVersion = useCallback((newVersion: string) => {
-    newVersion = lodashTrimStart(newVersion.trimStart(), "vV");
-    mutateRelease(release => (release.version = newVersion || null));
+  const onChangeVersion = useCallback((newVersion: string | null) => {
+    if (newVersion != null) newVersion = lodashTrimStart(newVersion.trimStart(), "vV");
+    mutateRelease(release => void (release.version = newVersion || null));
   }, []);
-  const onChangeBannerUrl = useCallback((newBannerUrl: string) => {
-    mutateRelease(release => (release.banner_url = newBannerUrl || null));
+  const onChangeBannerUrl = useCallback((newBannerUrl: string | null) => {
+    mutateRelease(release => void (release.banner_url = newBannerUrl || null));
   }, []);
 
   const location = useLocation();
@@ -45,7 +45,7 @@ export function ReleaseMetadataEditor() {
         <div className={styles.metadataHeader}>
           <label>{"Release Title"}</label>
           {release.title !== original.title && (
-            <IconButton type="edit" size={16} onClick={() => mutateRelease(r => (r.title = original.title))} />
+            <IconButton type="edit" size={16} onClick={() => onChangeTitle(original.title)} />
           )}
         </div>
         <TextInput
@@ -62,11 +62,7 @@ export function ReleaseMetadataEditor() {
         <div className={styles.metadataHeader}>
           <label>{"Release Banner URL"}</label>
           {release.banner_url !== original.banner_url && (
-            <IconButton
-              type="edit"
-              size={16}
-              onClick={() => mutateRelease(r => (r.banner_url = original.banner_url))}
-            />
+            <IconButton type="edit" size={16} onClick={() => onChangeBannerUrl(original.banner_url)} />
           )}
         </div>
         <TextInput
@@ -87,7 +83,7 @@ export function ReleaseMetadataEditor() {
             </span>
           </label>
           {release.version !== original.version && (
-            <IconButton type="edit" size={16} onClick={() => mutateRelease(r => (r.version = original.version))} />
+            <IconButton type="edit" size={16} onClick={() => onChangeVersion(original.version)} />
           )}
         </div>
         <TextInput
@@ -110,7 +106,7 @@ export function ReleaseMetadataEditor() {
         <div className={styles.metadataHeader}>
           <label>{"URL slug"}</label>
           {release.slug !== original.slug && (
-            <IconButton type="edit" size={16} onClick={() => mutateRelease(r => (r.slug = original.slug))} />
+            <IconButton type="edit" size={16} onClick={() => onChangeSlug(original.slug)} />
           )}
         </div>
         <TextInput
@@ -144,7 +140,7 @@ export function ReleaseDescription() {
         <TextArea
           className={styles.descriptionInput}
           value={release.description}
-          onChange={v => mutateRelease(r => (r.description = v))}
+          onChange={v => mutateRelease(r => void (r.description = v))}
           height={15}
           error={(() => {
             if (release.description.length > 4000) return "The release description must not exceed 4000 characters!";

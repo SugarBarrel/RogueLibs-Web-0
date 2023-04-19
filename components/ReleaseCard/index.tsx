@@ -10,16 +10,20 @@ export type ReleaseCardProps = {
 export default function ReleaseCard({ release }: ReleaseCardProps) {
   const mod = release.mod;
   const modLink = `/mods/${mod.slug ?? mod.id}`;
-  const releaseLink = `${modLink}/${release.slug ?? release.id}`;
 
   const api = useApi();
   const [downloading, setDownloading] = useState(false);
 
   async function download(file: DbReleaseFile) {
-    setDownloading(true);
-    const blob = await api.downloadReleaseFile(`${release.mod_id}.${release.id}.${file.filename}`);
-    triggerDownload(document, blob!, file.filename);
-    setTimeout(() => setDownloading(false), 500);
+    try {
+      setDownloading(true);
+      const blob = await api.downloadReleaseFile(`${release.id}.${file.filename}`);
+      triggerDownload(document, blob!, file.filename);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setTimeout(() => setDownloading(false), 500);
+    }
   }
 
   const singleImportantFile = release.files.filter(f => f.type <= 3).length === 1;

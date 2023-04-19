@@ -134,7 +134,7 @@ export function AuthoringControls() {
     mutateRelease(r => Object.assign(r, original));
   }
 
-  const canEdit = release.authors.find(a => a.user_id == myUser?.id)?.can_edit || myUser?.is_admin;
+  const canEdit = original.authors.find(a => a.user_id == myUser?.id)?.can_edit || myUser?.is_admin;
   if (!canEdit) return null;
 
   return (

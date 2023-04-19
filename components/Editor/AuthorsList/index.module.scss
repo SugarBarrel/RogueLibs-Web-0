@@ -1,13 +1,8 @@
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
 .author-list {
   display: flex;
   flex-direction: column;
 }
+
 .author-wrapper {
   display: flex;
   flex-direction: row;
@@ -31,6 +26,7 @@
     background-color: var(--color-background-dark);
   }
 }
+
 .author-edit-controls {
   display: flex;
   flex-flow: column nowrap;

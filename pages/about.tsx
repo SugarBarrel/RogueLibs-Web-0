@@ -1,11 +1,10 @@
-import { Avatar, Head } from "@components/Common";
+import { Head } from "@components/Common";
 import MainLayout from "@components/MainLayout";
 import { createServerApi } from "@lib/API";
-import { useUser } from "@lib/hooks";
 import { GSSPC, GSSPR, PageProps } from "@lib/index";
+import { DbReleaseAuthor } from "@lib/Database";
+import { AuthorsList } from "@components/Editor";
 import styles from "./about.module.scss";
-import clsx from "clsx";
-import authorStyles from "@components/ReleasePage/Sidebar/Authors.module.scss";
 
 export default function AboutPage() {
   return (
@@ -33,13 +32,17 @@ export default function AboutPage() {
       </div>
 
       <div className={styles.header}>{"Contributors"}</div>
-      <div className={styles.credits}>
-        <Author user_id="4ce33253-ca26-4924-bfdc-8ed3ed9bd6e1" credit={"Developer of the library and the site."} />
-        <Author user_id="4788ae9f-448f-4326-87f0-78244b56376d" credit={"RogueLibs logo and website icon design."} />
+      <div>
+        <AuthorsList authors={authors} />
       </div>
     </MainLayout>
   );
 }
+
+const authors = [
+  { user_id: "4ce33253-ca26-4924-bfdc-8ed3ed9bd6e1", credit: "Developer of the library and the site." },
+  { user_id: "4788ae9f-448f-4326-87f0-78244b56376d", credit: "RogueLibs logo and website icon design." },
+].map((a, i) => ({ ...a, order: i } as DbReleaseAuthor));
 
 export async function getServerSideProps(cxt: GSSPC): Promise<GSSPR<PageProps>> {
   const api = createServerApi(cxt);
@@ -50,29 +53,4 @@ export async function getServerSideProps(cxt: GSSPC): Promise<GSSPR<PageProps>> 
       initialState: { session },
     },
   };
-}
-
-export type AuthorProps = {
-  user_id: string;
-  credit: string;
-};
-export function Author({ user_id, credit }: AuthorProps) {
-  const user = useUser(user_id)[0];
-
-  return (
-    <div className={authorStyles.author}>
-      <Avatar src={user?.avatar_url} href={`/user/${user?.slug ?? user?.id}`} />
-
-      <div className={clsx(authorStyles.userInfo, credit && authorStyles.withCredits)}>
-        <span className={authorStyles.username}>{user?.username ?? "..."}</span>
-        {credit && (
-          <div className={authorStyles.credits}>
-            {credit.split("\n").map((line, i) => (
-              <p key={i}>{line}</p>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
 }

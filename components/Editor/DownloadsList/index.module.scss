@@ -1,13 +1,8 @@
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
 .download-list {
   display: flex;
   flex-direction: column;
 }
+
 .download-wrapper {
   display: flex;
   flex-direction: row;
@@ -22,6 +17,7 @@
     justify-content: stretch;
   }
 }
+
 .download-edit-controls {
   display: flex;
   flex-flow: column nowrap;

@@ -18,6 +18,7 @@ export type ReleasePageContext = {
   setHasChanges: Dispatch<SetStateAction<boolean>>;
 };
 const ReleasePageContext = createContext<ReleasePageContext>(null!);
+
 export function useReleasePageContext() {
   return useContext(ReleasePageContext);
 }

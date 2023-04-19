@@ -45,7 +45,7 @@ function UsernameSection() {
   }
   function resetUsername() {
     setIsEditingUsername(false);
-    mutateUser(u => (u.username = original.username));
+    mutateUser(u => void (u.username = original.username));
   }
   async function saveUsername() {
     if (savingUsername || user.username.length < 1 || user.username.length > 64) return;
@@ -82,7 +82,7 @@ function UsernameSection() {
           <div className={styles.usernameInput}>
             <TextInput
               value={user.username}
-              onChange={v => mutateUser(u => (u.username = v))}
+              onChange={v => mutateUser(u => void (u.username = v))}
               error={(() => {
                 if (user.username.length < 1) return "The username must not be empty.";
                 if (user.username.length > 64) return "The username must not exceed 64 characters.";
