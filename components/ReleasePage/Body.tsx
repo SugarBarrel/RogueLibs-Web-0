@@ -121,8 +121,8 @@ export function ReleaseMetadataEditor() {
           error={(() => {
             if (release.slug != null) {
               if (release.slug.length > 32) return "The release slug must not exceed 32 characters!";
-              if (!/^[a-z0-9\\._-]+$/i.test(release.slug)) {
-                return "The release slug must only contain [a-zA-Z0-9\\._-] characters.";
+              if (!/^[a-z0-9._-]+$/i.test(release.slug)) {
+                return "The release slug must only contain [a-zA-Z0-9._-] characters.";
               }
               if (/^\d+$/.test(release.slug)) return "The release slug must not be numeric!";
             }

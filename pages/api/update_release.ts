@@ -85,7 +85,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   if (filesDiff.added.length) {
     filesDiff.added.forEach(file => (file.release_id = release.id!));
-    promises.push(...filesDiff.added.map(file => serviceApi.Supabase.from("release_files").insert(file)));
+    promises.push(serviceApi.Supabase.from("release_files").insert(filesDiff.added, { defaultToNull: false }));
   }
   if (filesDiff.updated.length) {
     filesDiff.updated.forEach(file => (file.release_id = release.id));
@@ -107,7 +107,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   if (authorsDiff.added.length) {
     authorsDiff.added.forEach(author => (author.release_id = release.id!));
-    promises.push(...authorsDiff.added.map(author => serviceApi.Supabase.from("release_authors").insert(author)));
+    promises.push(serviceApi.Supabase.from("release_authors").insert(authorsDiff.added, { defaultToNull: false }));
   }
   if (authorsDiff.updated.length) {
     authorsDiff.updated.forEach(author => (author.release_id = release.id));

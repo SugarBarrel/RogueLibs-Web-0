@@ -18,7 +18,7 @@ export default Database;
 export type DbUser = {
   id: string; // PK
   uid: string; // FK: auth.users
-  slug: string | null; // = null { length [3;32]; regex /^[a-z0-9\._-]+$/i; doesn't match UUID pattern }
+  slug: string | null; // = null { length [3;32]; regex /^[a-z0-9._-]+$/i; doesn't match UUID pattern }
   created_at: string; // = now()
   edited_at: string | null; // = null
   username: string; // { length [1;64] }
@@ -38,7 +38,7 @@ export type DbMod = {
   created_at: string; // = now()
   edited_at: string | null; // = null
   guid: string | null; // = null { length [1;255] }
-  slug: string | null; // = null { length [3;32]; regex /^[a-z0-9\._-]+$/i; doesn't match regex /^\d+$/ }
+  slug: string | null; // = null { length [3;32]; regex /^[a-z0-9._-]+$/i; doesn't match regex /^\d+$/ }
   is_public: boolean; // = false
   is_verified: boolean; // = false
   title: string; // { length [1;50] }
@@ -65,7 +65,7 @@ export type DbRelease = {
   created_at: string; // = now()
   edited_at: string | null; // = null
   version: string | null; // = null { length [1;32]; regex semver }
-  slug: string | null; // = null { length [1;32]; regex /^[a-z0-9\._-]+$/i; doesn't match regex /^\d+$/ }
+  slug: string | null; // = null { length [1;32]; regex /^[a-z0-9._-]+$/i; doesn't match regex /^\d+$/ }
   is_public: boolean; // = false
   title: string; // { length [1;50] }
   description: string; // { length [0;4000] }
