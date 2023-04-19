@@ -325,25 +325,24 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.2.0.tgz#8be36a1f66f3265389e90b5f9c9962146758f728"
   integrity sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==
 
-"@supabase/auth-helpers-nextjs@^0.7.0-next.2":
-  version "0.7.0-next.2"
-  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-nextjs/-/auth-helpers-nextjs-0.7.0-next.2.tgz#9a5a931e23935faba6d21a3eebae4c233a06057b"
-  integrity sha512-rbncw+0/GgAjSkYJUOZ2ua2Ftl7/2h/SqT5vv7SuYxqAKcDxQNZX1aV+WFM8ejM7nGaRzVuf3c2dnPvLIvj1dA==
+"@supabase/auth-helpers-nextjs@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-nextjs/-/auth-helpers-nextjs-0.6.1.tgz#d327099201a55b8225e0f8e642c6a18eccbab9ca"
+  integrity sha512-ffDAR4pW2Cosj/CuuGRAhzOFfHtqzdgax7zqRGGyq334gxxPplsmJFGaLPRJ3Z/4mTSIJHyFd6LYdHMN0a+5Bw==
   dependencies:
-    "@supabase/auth-helpers-shared" "0.4.0-next.2"
-    set-cookie-parser "^2.6.0"
+    "@supabase/auth-helpers-shared" "0.3.4"
 
-"@supabase/auth-helpers-react@^0.4.0-next.0":
-  version "0.4.0-next.0"
-  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-react/-/auth-helpers-react-0.4.0-next.0.tgz#5cc2dfb130bf7a14f1848b86c13323639bd1560c"
-  integrity sha512-V2ZcccgAHDIYO4objKXPbKzj/GTbUD/39DIr59JhWlrMSnFWOud5YnAkAaJOyOIZl/7Hl1UQjTLWG9w8SVDJXA==
+"@supabase/auth-helpers-react@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-react/-/auth-helpers-react-0.3.1.tgz#815493a294662c56b83c7dd51692dacd24329342"
+  integrity sha512-g3SFv08Dz9FapNif/ZY1b7qKGlMJDyTLSayHBz3kb3FuYxg7aLWgQtydDhm5AGbc0XtvpIBuhGTIOVevwpdosA==
 
-"@supabase/auth-helpers-shared@0.4.0-next.2":
-  version "0.4.0-next.2"
-  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-shared/-/auth-helpers-shared-0.4.0-next.2.tgz#3bb8334e27694128538d9f07e5a89262da7b13d0"
-  integrity sha512-P6HSBPnBQtr+hNa18xem9jH1GSDNKGcWEbNZ89DMXJk2+jjd2EJmAezkSNof7kyGBdsSdoB5Y4qwU1NgL97qGQ==
+"@supabase/auth-helpers-shared@0.3.4":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-shared/-/auth-helpers-shared-0.3.4.tgz#dcea97d55d535a720023f081576f3b61e00ad75f"
+  integrity sha512-8I3D0SPHHexkFTSfPg0nZgJSVazWoB3tZDpT6IjRv6w89vDMUzO99Lit4H9anVLF4teW8c/nJJxawDNbDlgbgg==
   dependencies:
-    js-base64 "^3.7.5"
+    jose "^4.14.0"
 
 "@supabase/functions-js@^2.1.0":
   version "2.1.1"
@@ -2067,10 +2066,10 @@ isexe@^2.0.0:
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==
 
-js-base64@^3.7.5:
-  version "3.7.5"
-  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-3.7.5.tgz#21e24cf6b886f76d6f5f165bfcd69cc55b9e3fca"
-  integrity sha512-3MEt5DTINKqfScXKfJFrRbxkrnk2AxPWGBL/ycjz4dK8iqiSJ06UxD8jh8xuh6p10TX4t2+7FsBYVxxQbMg+qA==
+jose@^4.14.0:
+  version "4.14.0"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-4.14.0.tgz#c8c03579a0ba3598194c92ccca777d96adca8f48"
+  integrity sha512-LSA/XenLPwqk6e2L+PSUNuuY9G4NGsvjRWz6sJcUBmzTLEPJqQh46FHSUxnAQ64AWOkRO6bSXpy3yXuEKZkbIA==
 
 js-sdsl@^4.1.4:
   version "4.4.0"
@@ -2881,11 +2880,6 @@ semver@^7.3.7, semver@^7.5.0:
   integrity sha512-+XC0AD/R7Q2mPSRuy2Id0+CGTZ98+8f+KvwirxOKIEyid+XSx6HbC63p+O4IndTHuX5Z+JxQ0TghCkO5Cg/2HA==
   dependencies:
     lru-cache "^6.0.0"
-
-set-cookie-parser@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/set-cookie-parser/-/set-cookie-parser-2.6.0.tgz#131921e50f62ff1a66a461d7d62d7b21d5d15a51"
-  integrity sha512-RVnVQxTXuerk653XfuliOxBP81Sf0+qfQE73LIYKcyMYHG94AuH0kgrQpRDuTZnSmjpysHmzxJXKNfa6PjFhyQ==
 
 shebang-command@^2.0.0:
   version "2.0.0"
