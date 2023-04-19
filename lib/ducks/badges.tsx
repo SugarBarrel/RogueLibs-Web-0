@@ -1,17 +1,17 @@
 export type BadgeName = keyof typeof badgeNames;
 
 export const badgeNames = {
-  nuggets_90: () => "Broke",
-  nuggets_50: () => "Experiencing Inflation",
-  nuggets_20: () => "Generous Benefactor",
+  nuggets_10: () => "Generous Benefactor",
 
-  mods_1: () => "You're a Modder, Harry!",
-  mods_3: () => "Mod-est Beginnings",
-  mods_5: () => "The Modfather",
-  mods_10: () => "Modzart",
-  mods_25: () => "Modstradamus",
-  mods_50: () => "Mod Hatter",
-  mods_100: () => "The Ultimate Modding-Form",
+  releases_1: () => "You're a Modder, Harry!",
+  releases_3: () => "Mod-est Beginnings",
+  releases_5: () => "The Modfather",
+  releases_10: () => "Modzart",
+  releases_20: () => "Modstradamus",
+  releases_35: () => "Modster Mash",
+  releases_50: () => "The Mod Hatter",
+  releases_75: () => "Mod Almighty",
+  releases_100: () => "The Ultimate Modding-Form",
 };
 
 export class BadgeContext {
@@ -32,25 +32,15 @@ export class BadgeContext {
 }
 
 export const badgeDescriptions: Record<BadgeName, (cxt: BadgeContext) => React.ReactNode> = {
-  nuggets_90: ({ You, Your }) => (
-    <>
-      {`${You}'ve given nuggets to basically everyone. ${Your} nuggets are worthless as a currency.`}
-      <b>{`${Your} nuggets are worth nothing.`}</b>
-    </>
-  ),
-  nuggets_50: ({ You, your, Your }) => (
-    <>
-      {`${You}'ve given away so many nuggets, that ${your} internal nugget economy is experiencing an inflation.`}
-      <b>{`${Your} nuggets are worth less now.`}</b>
-    </>
-  ),
-  nuggets_20: ({ You }) => <>{`${You}'ve generously given away a lot of nuggets.`}</>,
+  nuggets_10: ({ You }) => `${You}'ve given away over 10 nuggets.`,
 
-  mods_1: ({ You }) => `${You}'ve authored a mod.`,
-  mods_3: ({ You }) => `${You}'ve authored over 3 mods.`,
-  mods_5: ({ You }) => `${You}'ve authored over 5 mods.`,
-  mods_10: ({ You }) => `${You}'ve authored over 10 mods.`,
-  mods_25: ({ You }) => `${You}'ve authored over 25 mods.`,
-  mods_50: ({ You }) => `${You}'ve authored over 50 mods.`,
-  mods_100: ({ You }) => `${You}'ve authored over 100 mods.`,
+  releases_1: ({ You }) => `${You}'ve authored a mod release.`,
+  releases_3: ({ You }) => `${You}'ve authored over 3 mod releases.`,
+  releases_5: ({ You }) => `${You}'ve authored over 5 mod releases.`,
+  releases_10: ({ You }) => `${You}'ve authored over 10 mod releases.`,
+  releases_20: ({ You }) => `${You}'ve authored over 20 mod releases.`,
+  releases_35: ({ You }) => `${You}'ve authored over 35 mod releases.`,
+  releases_50: ({ You }) => `${You}'ve authored over 50 mod releases.`,
+  releases_75: ({ You }) => `${You}'ve authored over 75 mod releases.`,
+  releases_100: ({ You }) => `${You}'ve authored over 100 mod releases.`,
 };
