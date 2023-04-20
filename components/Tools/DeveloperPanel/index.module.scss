@@ -69,9 +69,9 @@
   border: 8px solid;
   border-image: url('/border-3.png') 8;
   background-color: var(--color-background-darkest);
-  overflow: hidden;
   width: 116px;
 
+  white-space: nowrap;
   user-select: none;
   cursor: default;
 
