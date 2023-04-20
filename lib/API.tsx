@@ -152,8 +152,9 @@ export class RogueLibsApi {
     });
   }
 
-  public fetchLatestReleases(count: number): Promise<RestReleaseWithMod[]> {
-    return this.selectMany<DbRelease, RestReleaseWithMod>("latest_releases", selectReleaseWithMod, b => b, count);
+  public fetchLatestReleases(count: number, includePrivate?: boolean): Promise<RestReleaseWithMod[]> {
+    const tableName = includePrivate ? "latest_releases" : "latest_releases_public";
+    return this.selectMany<DbRelease, RestReleaseWithMod>(tableName, selectReleaseWithMod, b => b, count);
   }
   public fetchReleasesByModId(mod_id: number) {
     return this.selectMany<DbRelease, RestRelease>("releases", selectRelease, b => b.eq("mod_id", mod_id));

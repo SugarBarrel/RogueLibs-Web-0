@@ -13,7 +13,8 @@ begin
     end if;
 
     select * from mod_authors into _mod_author
-    where mod_authors.mod_id = _mod_id;
+    where mod_authors.mod_id = _mod_id
+      and mod_authors.user_id = auth.uid();
 
     if found and _mod_author.can_see then -- user is allowed to see the mod
       return true;

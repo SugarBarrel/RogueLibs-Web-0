@@ -9,19 +9,23 @@ export interface ModPageProps extends PageProps {
   releases: RestRelease[];
 }
 export default function ModPageIndex({ mod, releases }: ModPageProps) {
-  const release = releases[0];
+  const release = releases[0] as RestRelease | undefined;
 
   return (
     <MainLayout key={mod.id}>
       <Head
-        path={`/mods/${mod.slug ?? mod.id}/${release.slug ?? release.id}`}
-        title={release.title}
-        description={release.description}
-        image={release.banner_url}
-        noindex={!mod.is_public || !release.is_public}
+        path={`/mods/${mod.slug ?? mod.id}`}
+        title={mod.title}
+        description={mod.description}
+        image={release?.banner_url}
+        noindex={!mod.is_public}
         type="article"
       />
-      <ReleasePage release={release} />
+      {release ? (
+        <ReleasePage release={release} />
+      ) : (
+        <div>{"You can't see any of this mod's releases :("}</div>
+      )}
     </MainLayout>
   );
 }

@@ -17,7 +17,8 @@ begin
     end if;
 
     select * from release_authors into _release_author
-    where release_authors.release_id = _release_id;
+    where release_authors.release_id = _release_id
+      and release_authors.user_id = auth.uid();
 
     if found and _release_author.can_see then -- user is allowed to see the release
       return true;

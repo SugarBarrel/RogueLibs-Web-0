@@ -61,7 +61,7 @@ export const modsSlice = createSlice({
         }
       })
       .addCase(upsertReleases, (state, { payload }) => {
-        if ("mod" in payload[0]) {
+        if (payload[0] && "mod" in payload[0]) {
           modsAdapter.upsertMany(state, extractAll(payload as RestReleaseWithMod[], "mod"));
         }
       })
