@@ -1,4 +1,4 @@
-import { ChangeEventHandler, MouseEventHandler, useCallback, useRef } from "react";
+import { ChangeEventHandler, KeyboardEventHandler, MouseEventHandler, useCallback, useRef } from "react";
 import Icon from "../Icon";
 import styles from "./index.module.scss";
 import iconButtonStyles from "../IconButton/styles.module.scss";
@@ -13,20 +13,28 @@ export default function Checkbox({ value, onChange, children, ...props }: Checkb
   const inputRef = useRef<HTMLInputElement>(null);
 
   const inputChange = useCallback<ChangeEventHandler<HTMLInputElement>>(e => onChange?.(e.target.checked), [onChange]);
+  const inputKey = useCallback<KeyboardEventHandler>(e => e.key === "Enter" && onChange?.(!value), [value, onChange]);
 
-  const onClick = useCallback<MouseEventHandler>(() => {
+  const otherClick = useCallback<MouseEventHandler>(() => {
     onChange?.(!value);
     inputRef.current?.focus();
   }, [value, onChange]);
 
   return (
     <div className={styles.wrapper} {...props}>
-      <div className={clsx(iconButtonStyles.iconButton, styles.checkbox)} onClick={onClick}>
-        <input type="checkbox" ref={inputRef} className={styles.input} checked={value} onChange={inputChange} />
+      <div className={clsx(iconButtonStyles.iconButton, styles.checkbox)} onClick={otherClick}>
+        <input
+          type="checkbox"
+          ref={inputRef}
+          className={styles.input}
+          checked={value}
+          onChange={inputChange}
+          onKeyDown={inputKey}
+        />
         <Icon type={value ? "check" : "cross"} className={styles.icon} />
       </div>
       {children && (
-        <div className={styles.label} onClick={onClick}>
+        <div className={styles.label} onClick={otherClick}>
           {children}
         </div>
       )}

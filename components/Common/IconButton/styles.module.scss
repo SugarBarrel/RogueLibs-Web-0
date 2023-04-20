@@ -1,5 +1,5 @@
 .icon-button {
-  display: inline-flex;
+  display: grid;
   padding: 0.25rem;
   width: min-content;
   height: min-content;
@@ -11,6 +11,8 @@
   transition: all 0.1s ease;
 
   > img, > svg {
+    align-self: center;
+    justify-self: center;
     transition: opacity 0.5s ease, scale 0.1s ease;
   }
 
