@@ -11,20 +11,20 @@
   cursor: pointer;
   transition: all 0.1s ease;
 
-  & > svg {
+  > img, > svg {
     transition: opacity 0.5s ease, scale 0.1s ease;
   }
 
   &:hover, &:focus {
     background-color: var(--color-overlay-4);
-    > svg > image {
+    > img, > svg {
       opacity: 1 !important;
     }
   }
   &:active {
     background-color: var(--color-overlay-8);
     outline: 1px solid var(--color-overlay-4);
-    & > svg {
+    > img, > svg {
       scale: 1.25;
     }
   }
@@ -32,14 +32,14 @@
   &[disabled], &.disabled {
     &:hover {
       background-color: var(--color-overlay-2);
-      > svg > image {
+      > img, > svg {
         opacity: 0.5 !important;
       }
     }
     &:active {
       background-color: var(--color-overlay-2);
       outline: none;
-      & > svg {
+      > img, > svg {
         scale: 1;
       }
     }

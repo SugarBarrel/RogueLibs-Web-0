@@ -1,4 +1,4 @@
-import { MouseEventHandler, useId } from "react";
+import { memo, useId, useMemo } from "react";
 import styles from "./styles.module.scss";
 import clsx from "clsx";
 
@@ -13,23 +13,65 @@ export type SpriteProps = {
   // ...props
   className?: string;
   style?: React.CSSProperties;
-  onClick?: MouseEventHandler<SVGSVGElement>;
 };
-export default function Sprite({ src, color, width, height, size, crisp, alpha, ...props }: SpriteProps) {
+
+const Sprite = memo(function Sprite(props: SpriteProps) {
+  if (props.color == null) {
+    return <ImgSprite {...props} />;
+  } else {
+    return <SvgSprite {...props} />;
+  }
+});
+export default Sprite;
+
+export type ImgSpriteProps = Omit<SpriteProps, "color">;
+export function ImgSprite({ src, width, height, size, crisp, alpha, className, style, ...props }: ImgSpriteProps) {
+  if (width == null) width = size ?? 32;
+  if (height == null) height = size ?? 32;
+
+  return (
+    <img
+      src={src}
+      alt=""
+      width={width}
+      height={height}
+      className={clsx(styles.sprite, crisp && styles.crisp, className)}
+      style={{ opacity: alpha, ...style }}
+      onDragStart={e => e.preventDefault()}
+      {...props}
+    />
+  );
+}
+
+export type SvgSpriteProps = SpriteProps;
+export function SvgSprite({
+  src,
+  color,
+  width,
+  height,
+  size,
+  crisp,
+  alpha,
+  className,
+  style,
+  ...props
+}: SvgSpriteProps) {
   if (width == null) width = size ?? 32;
   if (height == null) height = size ?? 32;
   if (color == null) color = "white";
 
   const id = useId();
+  const filterStyle = useMemo(() => ({ filter: `url(#${id})` }), [id]);
 
   return (
     <svg
-      className={styles.svg}
+      className={clsx(styles.sprite, crisp && styles.crisp, className)}
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
       width={width}
       height={height}
       viewBox="0 0 16 16"
+      style={{ opacity: alpha, ...style }}
       {...props}
     >
       <defs>
@@ -39,11 +81,7 @@ export default function Sprite({ src, color, width, height, size, crisp, alpha, 
         </filter>
       </defs>
 
-      <image
-        className={clsx(styles.sprite, crisp && styles.crisp)}
-        xlinkHref={src}
-        style={{ filter: `url(#${id})`, opacity: alpha }}
-      />
+      <image xlinkHref={src} style={filterStyle} />
     </svg>
   );
 }
