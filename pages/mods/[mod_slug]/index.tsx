@@ -12,7 +12,7 @@ export default function ModPageIndex({ mod, releases }: ModPageProps) {
   const release = releases[0] as RestRelease | undefined;
 
   return (
-    <MainLayout key={mod.id}>
+    <MainLayout>
       <Head
         path={`/mods/${mod.slug ?? mod.id}`}
         title={mod.title}
@@ -22,7 +22,7 @@ export default function ModPageIndex({ mod, releases }: ModPageProps) {
         type="article"
       />
       {release ? (
-        <ReleasePage release={release} />
+        <ReleasePage key={mod.id} release={release} />
       ) : (
         <div>{"You can't see any of this mod's releases :("}</div>
       )}

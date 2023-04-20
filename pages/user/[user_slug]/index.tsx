@@ -9,9 +9,9 @@ export interface ModPageProps extends PageProps {
 }
 export default function ModPageIndex({ user }: ModPageProps) {
   return (
-    <MainLayout key={user.id}>
+    <MainLayout>
       <Head path={`/user/${user.id}`} title={user.username} description="" type="article" />
-      <UserPage user={user} />
+      <UserPage key={user.id} user={user} />
     </MainLayout>
   );
 }

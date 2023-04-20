@@ -12,7 +12,7 @@ export default function ReleasePageIndex({ release }: ReleasePageProps) {
   const mod = useMod(release.mod_id)[0]!;
 
   return (
-    <MainLayout key={release.id}>
+    <MainLayout>
       <Head
         path={`/mods/${mod.slug ?? mod.id}/${release.slug ?? release.id}`}
         title={release.title}
@@ -21,7 +21,7 @@ export default function ReleasePageIndex({ release }: ReleasePageProps) {
         noindex={!mod.is_public || !release.is_public}
         type="article"
       />
-      <ReleasePage release={release} />
+      <ReleasePage key={release.id} release={release} />
     </MainLayout>
   );
 }
