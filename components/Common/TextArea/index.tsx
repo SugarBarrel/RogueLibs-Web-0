@@ -19,6 +19,7 @@ export default function TextArea({
   autoTrimEnd,
   height,
   error,
+  ...props
 }: TextAreaProps) {
   const textareaOnChange = useCallback<ChangeEventHandler<HTMLTextAreaElement>>(
     e => onChange?.(e.target.value),
@@ -44,7 +45,7 @@ export default function TextArea({
   }, []);
 
   return (
-    <div className={clsx(styles.wrapper, className)}>
+    <div className={clsx(styles.wrapper, className)} {...props}>
       <div className={clsx(styles.container, !!error && styles.error)} onClick={containerOnClick}>
         <textarea
           ref={textareaRef}

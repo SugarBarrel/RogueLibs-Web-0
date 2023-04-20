@@ -11,6 +11,7 @@ export type LinkProps = {
   onClick?: React.MouseEventHandler;
   blank?: boolean;
   block?: boolean;
+  tabIndex?: number;
 };
 function Link({
   children,
@@ -22,6 +23,8 @@ function Link({
   onClick,
   blank,
   block,
+  tabIndex,
+  ...props
 }: React.PropsWithChildren<LinkProps>) {
   if (typeof children === "string" || typeof children === "number") {
     children = <span>{children}</span>;
@@ -41,11 +44,13 @@ function Link({
       title={title}
       onClick={e => e.stopPropagation()}
       target={blank ? "_blank" : undefined}
+      tabIndex={tabIndex}
+      {...props}
     >
       {children}
     </NextLink>
   ) : (
-    <span className={className} style={style} title={title} onClick={onClick}>
+    <span className={className} style={style} title={title} onClick={onClick} {...props}>
       {children}
     </span>
   );

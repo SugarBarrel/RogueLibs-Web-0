@@ -18,13 +18,6 @@
   gap: 0.25rem;
 }
 
-.avatar {
-  height: 64px;
-  width: 64px;
-  border-radius: 50%;
-  outline: 2px solid var(--color-background-dark);
-  pointer-events: none;
-}
 .buttons {
   display: flex;
   flex-flow: column-reverse nowrap;

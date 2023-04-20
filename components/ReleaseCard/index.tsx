@@ -31,7 +31,7 @@ export default function ReleaseCard({ release }: ReleaseCardProps) {
 
   return (
     <div className={styles.container}>
-      <Link href={modLink}>
+      <Link href={modLink} tabIndex={-1}>
         <div className={styles.window}>
           <img className={styles.banner} src={release.banner_url ?? "/placeholder-10.png"} alt="" />
           <div className={styles.description}>{release.description}</div>

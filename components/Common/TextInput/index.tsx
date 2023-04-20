@@ -21,6 +21,7 @@ export default function TextInput({
   suffix,
   autoTrimEnd,
   error,
+  ...props
 }: TextInputProps) {
   const inputOnChange = useCallback<ChangeEventHandler<HTMLInputElement>>(e => onChange?.(e.target.value), [onChange]);
 
@@ -43,7 +44,7 @@ export default function TextInput({
   }, []);
 
   return (
-    <div className={clsx(styles.wrapper, className)}>
+    <div className={clsx(styles.wrapper, className)} {...props}>
       <div className={clsx(styles.container, !!error && styles.error)} onClick={containerOnClick}>
         {prefix && <span className={styles.prefix}>{prefix}</span>}
         <input

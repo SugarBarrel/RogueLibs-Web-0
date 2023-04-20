@@ -31,7 +31,7 @@
   color: var(--color-black);
   background-color: var(--color-primary);
 
-  &:hover { background-color: var(--color-primary-darker); }
+  &:hover, &:focus { background-color: var(--color-primary-darker); }
   &:active { background-color: var(--color-primary-darkest); }
 }
 .downloadDocumentation {
@@ -40,7 +40,7 @@
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
   background-color: var(--color-info-dark);
 
-  &:hover { background-color: var(--color-info-darker); }
+  &:hover, &:focus { background-color: var(--color-info-darker); }
   &:active { background-color: var(--color-info-darkest); }
 }
 .downloadText {
@@ -48,17 +48,17 @@
   color: var(--color-black);
   background-color: var(--color-gray-500);
 
-  &:hover { background-color: var(--color-gray-300); }
+  &:hover, &:focus { background-color: var(--color-gray-300); }
   &:active { background-color: var(--color-gray-100); }
 }
 
 .tooltip {
-  outline: 1px solid gray;
+  border: 1px solid var(--color-background-lighter);
   background-color: var(--color-background-darker);
   border-radius: 0 0 0.5rem 0.5rem;
   font-size: 0.8rem;
   padding: 0.25rem 0.5rem;
-  margin-top: 1px;
+  margin-top: -1px;
   margin-left: 0.75rem;
   margin-right: 0.5rem;
   overflow-wrap: anywhere;

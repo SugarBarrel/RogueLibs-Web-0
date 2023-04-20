@@ -1,9 +1,8 @@
 .icon-button {
-  display: inline-block;
+  display: inline-flex;
   padding: 0.25rem;
   width: min-content;
   height: min-content;
-  line-height: 0;
 
   background-color: transparent;
   border-radius: 9999px;
@@ -15,7 +14,7 @@
     transition: opacity 0.5s ease, scale 0.1s ease;
   }
 
-  &:hover, &:focus {
+  &:hover, &:focus-within {
     background-color: var(--color-overlay-4);
     > img, > svg {
       opacity: 1 !important;

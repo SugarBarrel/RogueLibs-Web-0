@@ -8,7 +8,7 @@ export type SeparatorProps = {
   bold?: boolean;
   full?: boolean;
 };
-export default function Separator({ primary, thin, bold, full, vertical }: SeparatorProps) {
+export default function Separator({ primary, thin, bold, full, vertical, ...props }: SeparatorProps) {
   return (
     <div
       className={clsx(
@@ -19,6 +19,7 @@ export default function Separator({ primary, thin, bold, full, vertical }: Separ
         full && styles.full,
         vertical ? styles.vertical : styles.horizontal,
       )}
+      {...props}
     />
   );
 }

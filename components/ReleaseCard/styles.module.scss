@@ -8,10 +8,18 @@
   overflow: hidden;
   width: 200px; height: 145px;
 
-  &:hover {
+  &:hover, &:focus-within {
     outline: solid 1px var(--color-secondary);
     .window {
       outline: solid 1px var(--color-secondary);
+    }
+  }
+  &:focus-within {
+    & .window .banner {
+      filter: blur(2px) grayscale(0.5) brightness(0.5) saturate(0.5);
+    }
+    & .window .description, .quickbar, .authors {
+      opacity: 1;
     }
   }
 }
