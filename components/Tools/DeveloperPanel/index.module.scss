@@ -1,0 +1,157 @@
+.panel-wrapper {
+  position: fixed;
+  pointer-events: none;
+  inset: 0;
+  overflow: hidden;
+}
+.panel {
+  position: absolute;
+  pointer-events: all;
+  bottom: 4px;
+  right: 4px;
+
+  transition: transform 0.5s ease;
+  transform: translateX(100%);
+  &.is-open {
+    transform: none;
+    .toggle {
+      left: -32px;
+      width: 24px;
+      .toggle-arrow {
+        transform: rotate(180deg);
+        margin-left: 2px;
+      }
+    }
+  }
+
+  padding: 4px;
+  background-color: var(--color-background-darker);
+  border: 8px solid;
+  border-image: url('/border-3.png') 8;
+
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toggle {
+  position: absolute;
+  left: -28px;
+  bottom: 0px;
+  width: 20px;
+  height: 40px;
+  background-color: var(--color-background-darker);
+
+  border-style: solid;
+  border-image: url('/border-3.png') 8;
+  border-width: 8px 0 8px 8px;
+
+  cursor: pointer;
+}
+.toggle-arrow {
+  transition: none !important;
+  margin-left: -2px;
+}
+
+.auth-lock {
+  position: relative;
+  background-color: var(--color-background);
+  padding: 4px;
+
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  gap: 8px;
+}
+.console {
+  font-size: 20px;
+  border: 8px solid;
+  border-image: url('/border-3.png') 8;
+  background-color: var(--color-background-darkest);
+  overflow: hidden;
+  width: 116px;
+
+  user-select: none;
+  cursor: default;
+
+  .console-cursor {
+    color: var(--color-white);
+    animation: 1s steps(1, end) infinite blinking;
+  }
+  .console-error {
+    color: var(--color-danger);
+    margin-left: 4px;
+    animation: 0.333333s steps(1, end) infinite blinking-error;
+  }
+  .console-success {
+    color: var(--color-success);
+    margin-left: 4px;
+  }
+}
+
+@keyframes blinking {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes blinking-error {
+  0% {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 24px);
+  grid-template-rows: repeat(4, 24px);
+  gap: 4px;
+
+  > div {
+    position: relative;
+    text-align: center;
+    background-color: var(--color-background-lighter);
+    font-size: 20px;
+    line-height: 8px;
+    border: 8px solid;
+    border-image: url('/border-3.png') 8;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      filter: brightness(1.25);
+    }
+    &:active {
+      transform: translateY(4px);
+      filter: brightness(0.75);
+    }
+  }
+}
+.keypad-padding {
+  position: absolute;
+  display: block;
+  bottom: 8px;
+  height: 108px;
+  width: 12px;
+
+  background: repeating-linear-gradient(
+    0deg,
+    var(--color-background-dark),
+    var(--color-background-dark) 8px,
+    var(--color-background) 8px,
+    var(--color-background) 16px
+  );
+
+  &.keypad-padding-left {
+    left: 4px;
+  }
+  &.keypad-padding-right {
+    right: 4px;
+  }
+}

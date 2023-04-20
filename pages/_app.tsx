@@ -10,6 +10,7 @@ import { PageProps } from "@lib/index";
 import { upsertMods } from "@ducks/mods";
 import { setCurrentUser, upsertUsers } from "@ducks/users";
 import { upsertReleases } from "@ducks/releases";
+import { DeveloperPanel } from "@components/Tools";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [store] = useState(() => makeStore());
@@ -21,6 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <ReduxStoreProvider store={store}>
       <ApiProvider initialSession={pageProps.initialSession ?? pageProps.initialState?.session}>
         <Component {...pageProps} />
+        <DeveloperPanel />
       </ApiProvider>
     </ReduxStoreProvider>
   );
