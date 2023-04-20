@@ -48,7 +48,10 @@ export default function AccountPanel() {
       {session ? (
         <div className={styles.wrapper}>
           <div className={styles.account}>
-            <Avatar src={user?.avatar_url} href={router.asPath.startsWith(profileLink) ? undefined : profileLink} />
+            <Avatar
+              src={user?.avatar_url}
+              href={!user || router.asPath.startsWith(profileLink) ? undefined : profileLink}
+            />
             <div className={styles.buttons}>
               <IconButton data-tooltip-id="sign-out" onClick={signOut} disabled={authorizing}>
                 <Icon type={authorizing ? "loading" : "cross"} size={16} />
