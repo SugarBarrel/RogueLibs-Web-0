@@ -1,0 +1,25 @@
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+}
+.checkbox {
+  position: relative;
+  padding: 0.25rem;
+  border: 1px solid var(--color-background-lightest);
+  border-radius: 0.5rem;
+
+  > .input {
+    position: absolute;
+    inset: 0.25rem;
+    appearance: none;
+    cursor: pointer;
+  }
+  > .icon {
+    pointer-events: none;
+  }
+}
+.label {
+  margin: 0 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
