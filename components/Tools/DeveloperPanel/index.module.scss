@@ -65,26 +65,31 @@
   gap: 8px;
 }
 .console {
-  font-size: 20px;
+  font-size: 24px;
   border: 8px solid;
   border-image: url('/border-3.png') 8;
   background-color: var(--color-background-darkest);
-  width: 116px;
+  width: 136px; height: 36px;
+  line-height: 16px;
 
   white-space: nowrap;
+  font-family: 'Munro Small';
   user-select: none;
   cursor: default;
 
   .console-cursor {
+    font-family: 'Munro Small';
     color: var(--color-white);
     animation: 1s steps(1, end) infinite blinking;
   }
   .console-error {
+    font-family: 'Munro Small';
     color: var(--color-danger);
     margin-left: 4px;
     animation: 0.333333s steps(1, end) infinite blinking-error;
   }
   .console-success {
+    font-family: 'Munro Small';
     color: var(--color-success);
     margin-left: 4px;
   }
@@ -115,14 +120,24 @@
 
   > div {
     position: relative;
-    text-align: center;
     background-color: var(--color-background-lighter);
-    font-size: 20px;
-    line-height: 8px;
     border: 8px solid;
     border-image: url('/border-3.png') 8;
     cursor: pointer;
-    user-select: none;
+
+    > span {
+      position: absolute;
+      inset: -8px -8px -8px -5px;
+      user-select: none;
+      font-family: 'Munro Small';
+      font-size: 32px;
+      line-height: 18px;
+      text-align: center;
+      overflow: hidden;
+      &.offset {
+        left: -8px;
+      }
+    }
 
     &:hover {
       filter: brightness(1.25);
@@ -138,7 +153,7 @@
   display: block;
   bottom: 8px;
   height: 108px;
-  width: 12px;
+  width: 20px;
 
   background: repeating-linear-gradient(
     0deg,
@@ -149,9 +164,9 @@
   );
 
   &.keypad-padding-left {
-    left: 4px;
+    left: 6px;
   }
   &.keypad-padding-right {
-    right: 4px;
+    right: 6px;
   }
 }

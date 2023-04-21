@@ -66,6 +66,14 @@ export function KeypadLock({ unlocked, onUnlock }: KeypadLockProps) {
     onUnlock();
   }
 
+  function KeypadKey({ digit }: { digit: number }) {
+    return (
+      <div onMouseDown={() => appendInput(digit)}>
+        <span className={clsx(digit === 1 && styles.offset)}>{digit}</span>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.authLock}>
       <div className={styles.console}>
@@ -81,18 +89,22 @@ export function KeypadLock({ unlocked, onUnlock }: KeypadLockProps) {
         )}
       </div>
       <div className={styles.keypad}>
-        <div onMouseDown={() => appendInput(1)}>{"1"}</div>
-        <div onMouseDown={() => appendInput(2)}>{"2"}</div>
-        <div onMouseDown={() => appendInput(3)}>{"3"}</div>
-        <div onMouseDown={() => appendInput(4)}>{"4"}</div>
-        <div onMouseDown={() => appendInput(5)}>{"5"}</div>
-        <div onMouseDown={() => appendInput(6)}>{"6"}</div>
-        <div onMouseDown={() => appendInput(7)}>{"7"}</div>
-        <div onMouseDown={() => appendInput(8)}>{"8"}</div>
-        <div onMouseDown={() => appendInput(9)}>{"9"}</div>
-        <div onMouseDown={() => clearInput()}>{"C"}</div>
-        <div onMouseDown={() => appendInput(0)}>{"0"}</div>
-        <div onMouseDown={() => submitInput()}>{"E"}</div>
+        <KeypadKey digit={1} />
+        <KeypadKey digit={2} />
+        <KeypadKey digit={3} />
+        <KeypadKey digit={4} />
+        <KeypadKey digit={5} />
+        <KeypadKey digit={6} />
+        <KeypadKey digit={7} />
+        <KeypadKey digit={8} />
+        <KeypadKey digit={9} />
+        <div onMouseDown={() => clearInput()}>
+          <span>{"C"}</span>
+        </div>
+        <KeypadKey digit={0} />
+        <div onMouseDown={() => submitInput()}>
+          <span>{"E"}</span>
+        </div>
         <span className={clsx(styles.keypadPadding, styles.keypadPaddingLeft)} />
         <span className={clsx(styles.keypadPadding, styles.keypadPaddingRight)} />
       </div>
