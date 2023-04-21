@@ -56,6 +56,10 @@ export default function FindUser({
     setTerm("");
     setIsOpen(true);
   }
+  function selectUser(user: DbUser) {
+    setIsOpen(false);
+    onClick?.(user);
+  }
 
   return (
     <>
@@ -84,7 +88,7 @@ export default function FindUser({
                   key={user.id}
                   className={styles.result}
                   disabled={disabled?.(user)}
-                  onClick={() => onClick?.(user)}
+                  onClick={() => selectUser(user)}
                 >
                   <Avatar src={user.avatar_url} size={32} />
                   {user.username}
