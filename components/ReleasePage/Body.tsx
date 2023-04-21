@@ -45,7 +45,7 @@ export function ReleaseMetadataEditor() {
         <div className={styles.metadataHeader}>
           <label>{"Release Title"}</label>
           {release.title !== original.title && (
-            <IconButton type="edit" size={16} onClick={() => onChangeTitle(original.title)} />
+            <IconButton type="undo" size={16} alpha={1} onClick={() => onChangeTitle(original.title)} />
           )}
         </div>
         <TextInput
@@ -62,7 +62,7 @@ export function ReleaseMetadataEditor() {
         <div className={styles.metadataHeader}>
           <label>{"Release Banner URL"}</label>
           {release.banner_url !== original.banner_url && (
-            <IconButton type="edit" size={16} onClick={() => onChangeBannerUrl(original.banner_url)} />
+            <IconButton type="undo" size={16} alpha={1} onClick={() => onChangeBannerUrl(original.banner_url)} />
           )}
         </div>
         <TextInput
@@ -83,7 +83,7 @@ export function ReleaseMetadataEditor() {
             </span>
           </label>
           {release.version !== original.version && (
-            <IconButton type="edit" size={16} onClick={() => onChangeVersion(original.version)} />
+            <IconButton type="undo" size={16} alpha={1} onClick={() => onChangeVersion(original.version)} />
           )}
         </div>
         <TextInput
@@ -106,7 +106,7 @@ export function ReleaseMetadataEditor() {
         <div className={styles.metadataHeader}>
           <label>{"URL slug"}</label>
           {release.slug !== original.slug && (
-            <IconButton type="edit" size={16} onClick={() => onChangeSlug(original.slug)} />
+            <IconButton type="undo" size={16} alpha={1} onClick={() => onChangeSlug(original.slug)} />
           )}
         </div>
         <TextInput

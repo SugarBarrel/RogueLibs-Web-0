@@ -8,8 +8,10 @@ export type CheckboxProps = React.PropsWithChildren<{
   value: boolean;
   onChange?: (newValue: boolean) => void;
   children?: React.ReactNode;
+  checked?: React.ReactNode | (() => React.ReactNode);
+  unchecked?: React.ReactNode | (() => React.ReactNode);
 }>;
-export default function Checkbox({ value, onChange, children, ...props }: CheckboxProps) {
+export default function Checkbox({ value, onChange, children, checked, unchecked, ...props }: CheckboxProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const inputChange = useCallback<ChangeEventHandler<HTMLInputElement>>(e => onChange?.(e.target.checked), [onChange]);
@@ -31,7 +33,17 @@ export default function Checkbox({ value, onChange, children, ...props }: Checkb
           onChange={inputChange}
           onKeyDown={inputKey}
         />
-        <Icon type={value ? "check" : "cross"} className={styles.icon} />
+        {value ? (
+          checked !== undefined ? (
+            <span className={styles.icon}>{typeof checked === "function" ? checked() : checked}</span>
+          ) : (
+            <Icon type="check" className={styles.icon} />
+          )
+        ) : unchecked !== undefined ? (
+          <span className={styles.icon}>{typeof unchecked === "function" ? unchecked() : unchecked}</span>
+        ) : (
+          <Icon type="cross" className={styles.icon} />
+        )}
       </div>
       {children && (
         <div className={styles.label} onClick={otherClick}>

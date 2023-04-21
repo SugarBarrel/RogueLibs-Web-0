@@ -1,4 +1,4 @@
-import { Checkbox } from "@components/Common";
+import { Checkbox, Icon } from "@components/Common";
 import { AuthorsList, DownloadsList } from "@components/Editor";
 import { ImmerStateSetter, useImmerSlice } from "@lib/hooks";
 import { DbModAuthor, DbReleaseAuthor } from "@lib/Database";
@@ -15,7 +15,12 @@ export default function ReleasePageSidebar() {
     <div className={styles.sidebar}>
       <div>
         {isEditing && (
-          <Checkbox value={release.is_public} onChange={v => mutateRelease(r => void (r.is_public = v))}>
+          <Checkbox
+            value={release.is_public}
+            onChange={v => mutateRelease(r => void (r.is_public = v))}
+            checked={() => <Icon type="visibility" />}
+            unchecked={() => <Icon type="visibilityOff" />}
+          >
             {`${release.is_public ? "Public" : "Private"} release`}
           </Checkbox>
         )}
