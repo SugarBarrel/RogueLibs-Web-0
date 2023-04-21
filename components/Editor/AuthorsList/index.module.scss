@@ -44,11 +44,9 @@
   flex-grow: 1;
   display: flex;
   flex-flow: column nowrap;
-  padding: 0.5rem;
-  padding-left: 0;
-  padding-right: 1rem;
+  padding: 0.5rem 1rem 0.5rem 0;
   &.with-credits {
-    padding-left: 0.5rem;
+    padding: 0.2rem 1rem 0.2rem 0.5rem;
   }
 }
 .username {
