@@ -54,7 +54,7 @@ export default function AccountPanel() {
             />
             <div className={styles.buttons}>
               <IconButton data-tooltip-id="sign-out" onClick={signOut} disabled={authorizing}>
-                <Icon type={authorizing ? "loading" : "cross"} size={16} />
+                <Icon type={authorizing ? "loading" : "door"} size={16} />
               </IconButton>
               <Tooltip id="sign-out" place="left">
                 {"Sign out"}

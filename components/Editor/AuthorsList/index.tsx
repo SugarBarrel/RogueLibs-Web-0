@@ -181,7 +181,7 @@ export function AddAuthor() {
       disabled={u => authors.some(a => a.user_id === u.id)}
       onClick={addAuthor}
     >
-      <Icon type="upload" size={16} />
+      <Icon type="add" size={16} />
       {"Add an author"}
     </FindUser>
   );

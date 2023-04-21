@@ -140,7 +140,7 @@ export function AuthoringControls() {
   return (
     <div className={styles.authoringControls}>
       <Button onClick={toggleEditing} disabled={savingChanges}>
-        <Icon type={isEditing ? (hasChanges ? "eye" : "cross") : "edit"} />
+        <Icon type={isEditing ? (hasChanges ? "visibility" : "cross") : "edit"} />
         {isEditing ? (hasChanges ? "Preview" : "Cancel") : "Edit"}
       </Button>
       {(isEditing || hasChanges) && (
