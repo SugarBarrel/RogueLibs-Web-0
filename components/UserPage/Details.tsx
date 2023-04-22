@@ -2,9 +2,7 @@ import { IconButton, Popup, Sprite, TextInput, Separator, Tooltip } from "@compo
 import { BadgeContext, badgeDescriptions, badgeNames } from "@ducks/badges";
 import { useRootDispatch } from "@ducks/index";
 import { upsertUser } from "@ducks/users";
-import { RestUser, useApi } from "@lib/API";
-import { useUser } from "@lib/hooks";
-import { useSupabaseSession } from "@lib/index";
+import { RestUser } from "@lib/API";
 import { useState } from "react";
 import { useUserPageContext } from ".";
 import styles from "./Details.module.scss";
@@ -26,16 +24,10 @@ export default function UserPageDetails() {
 }
 
 function UsernameSection() {
-  const { user, original, mutateUser } = useUserPageContext();
-
-  const session = useSupabaseSession();
-  const myUser = useUser(session?.user.id)[0];
-  const canEdit = user.uid === myUser?.uid || myUser?.is_admin;
+  const { user, original, mutateUser, canEdit } = useUserPageContext();
 
   const [isEditingUsername, setIsEditingUsername] = useState(false);
-  const changedUsername = user.username !== original.username;
 
-  const api = useApi();
   const dispatch = useRootDispatch();
   const [savingUsername, setSavingUsername] = useState(false);
 
@@ -92,7 +84,7 @@ function UsernameSection() {
             <IconButton
               type={savingUsername ? "loading" : "save"}
               size={32}
-              disabled={savingUsername || !changedUsername}
+              disabled={savingUsername || user.username === original.username}
               onClick={saveUsername}
             />
           </div>
@@ -103,10 +95,8 @@ function UsernameSection() {
 }
 
 function BadgesSection() {
-  const { user, original, mutateUser } = useUserPageContext();
-  const session = useSupabaseSession();
-
-  const badgeContext = new BadgeContext(user.uid === session?.user.id);
+  const { user, isMe } = useUserPageContext();
+  const badgeContext = new BadgeContext(isMe);
 
   return (
     <>

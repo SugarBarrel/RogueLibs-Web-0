@@ -7,13 +7,14 @@ import UserPageExtra from "./Extra";
 import UserPageFavourites from "./Favourites";
 import styles from "./index.module.scss";
 import UserPageMods from "./Mods";
+import { useSupabaseSession } from "@lib/index";
 
 export type UserPageContext = {
   user: StoreUser;
   original: StoreUser;
   mutateUser: ImmerStateSetter<StoreUser>;
-  isEditing: boolean;
-  setIsEditing: Dispatch<SetStateAction<boolean>>;
+  isMe: boolean;
+  canEdit: boolean;
 };
 const UserPageContext = createContext<UserPageContext>(null!);
 export function useUserPageContext() {
@@ -26,9 +27,13 @@ export type UserPageProps = {
 export default function UserPage({ user: initial }: UserPageProps) {
   const [user, mutateUser] = useImmerState(initial);
   const original = useUser(initial.id)[0] ?? initial;
-  const [isEditing, setIsEditing] = useState(false);
 
-  const context = useMemo(() => ({ original, user, mutateUser, isEditing, setIsEditing }), [user, original, isEditing]);
+  const session = useSupabaseSession();
+  const myUser = useUser(session?.user.id)[0];
+  const isMe = initial.id === myUser?.id;
+  const canEdit = isMe || !!myUser?.is_admin;
+
+  const context = useMemo(() => ({ original, user, mutateUser, isMe, canEdit }), [user, original, isMe, canEdit]);
 
   return (
     <UserPageContext.Provider value={context}>

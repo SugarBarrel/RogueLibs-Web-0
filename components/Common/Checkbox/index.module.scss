@@ -1,6 +1,9 @@
 .wrapper {
   display: inline-flex;
   align-items: center;
+  &.disabled {
+    opacity: 0.5;
+  }
 }
 .checkbox {
   position: relative;
@@ -23,4 +26,7 @@
   margin: 0 0.5rem;
   cursor: pointer;
   user-select: none;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
 }

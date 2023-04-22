@@ -1,6 +1,13 @@
 .wrapper {
+  position: relative;
   padding: 1rem;
   border-radius: 1rem;
   background-color: var(--color-background);
   min-height: 12rem;
+}
+.public-nuggets-checkbox {
+  position: absolute;
+  left: 1rem;
+  bottom: -0.5rem;
+  transform: translateY(100%);
 }

@@ -1,15 +1,9 @@
 import { Avatar, IconButton, Tooltip } from "@components/Common";
-import { useUser } from "@lib/hooks";
-import { useSupabaseSession } from "@lib/index";
 import { useUserPageContext } from ".";
 import styles from "./Avatar.module.scss";
 
 export default function UserPageAvatar() {
-  const { user } = useUserPageContext();
-
-  const session = useSupabaseSession();
-  const myUser = useUser(session?.user.id)[0];
-  const canEdit = user.uid === myUser?.uid || myUser?.is_admin;
+  const { user, canEdit } = useUserPageContext();
 
   return (
     <div className={styles.wrapper}>

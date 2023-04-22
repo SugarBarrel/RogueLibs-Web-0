@@ -1,10 +1,25 @@
+import clsx from "clsx";
 import Sprite, { SpriteProps } from "../Sprite";
+import styles from "./index.module.scss";
 
 export type IconProps = Omit<SpriteProps, "src"> & {
   type: IconType;
 };
 export default function Icon({ type, ...props }: IconProps) {
   return <Sprite src={IconPaths[type]} crisp {...props} />;
+}
+export type MultiIconProps = Omit<SpriteProps, "src"> & {
+  types: IconType[];
+  column?: boolean;
+};
+export function MultiIcon({ types, column, ...props }: MultiIconProps) {
+  return (
+    <div className={clsx(styles.multiIcon, column && styles.column)}>
+      {types.map(t => (
+        <Sprite key={t} src={IconPaths[t]} crisp {...props} />
+      ))}
+    </div>
+  );
 }
 
 export const IconPaths = {
