@@ -35,8 +35,10 @@ export async function getServerSideProps(
 
   const [session, release] = await Promise.all([
     api.getSupabaseSession(),
-    api.fetchReleaseBySlug(mod_slug, release_slug),
+    api.fetchReleaseBySlug(mod_slug, release_slug).catch(() => null),
   ]);
+
+  if (!release) return { notFound: true };
 
   if (
     (release.mod.slug !== null && release.mod.slug !== mod_slug) ||

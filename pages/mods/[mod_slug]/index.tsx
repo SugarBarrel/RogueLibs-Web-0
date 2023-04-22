@@ -37,9 +37,11 @@ export async function getServerSideProps(cxt: GSSPC<{ mod_slug: string }>): Prom
 
   const [session, mod, releases] = await Promise.all([
     api.getSupabaseSession(),
-    api.fetchModBySlug(mod_slug),
-    api.fetchReleasesByModSlug(mod_slug),
+    api.fetchModBySlug(mod_slug).catch(() => null),
+    api.fetchReleasesByModSlug(mod_slug).catch(() => []),
   ]);
+
+  if (!mod) return { notFound: true };
 
   if (mod.slug !== null && mod.slug !== mod_slug) {
     return {

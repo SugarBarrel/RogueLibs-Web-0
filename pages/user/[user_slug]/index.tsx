@@ -21,7 +21,12 @@ export async function getServerSideProps(cxt: GSSPC<{ user_slug: string }>): Pro
 
   const { user_slug } = cxt.params!;
 
-  const [session, user] = await Promise.all([api.getSupabaseSession(), api.fetchUserBySlug(user_slug)]);
+  const [session, user] = await Promise.all([
+    api.getSupabaseSession(),
+    api.fetchUserBySlug(user_slug).catch(() => null),
+  ]);
+
+  if (!user) return { notFound: true };
 
   if (user.slug !== null && user_slug !== user.slug) {
     return {

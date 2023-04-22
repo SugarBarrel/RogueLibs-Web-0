@@ -8,25 +8,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const mod = req.body as Partial<RestMod>; // TODO: replace with a better type
 
-  const [original, session] = await Promise.all([serviceApi.fetchModById(mod.id!), api.getSupabaseSession()]);
+  const session = await api.getSupabaseSession();
+  const [original, myUser] = await Promise.all([
+    serviceApi.fetchModById(mod.id!).catch(() => null),
+    session?.user.id ? api.fetchUserById(session.user.id).catch(() => null) : null,
+  ]);
 
-  const myAuthor = original.authors.find(a => a.user_id === session?.user.id);
-  if (!myAuthor || !myAuthor.can_edit) {
-    let denyAccess = true;
-
-    if (session?.user) {
-      const myUser = await api.fetchUserById(session.user.id);
-      if (myUser.is_admin) denyAccess = false;
-    }
-
-    if (denyAccess) {
-      return res.status(403).json({ error: "You're not authorized to edit this mod." });
-    }
+  const myAuthor = original?.authors.find(a => a.user_id === myUser?.id);
+  if (!original || !(myAuthor?.can_edit || myUser?.is_admin)) {
+    return res.status(403).json({ error: "You're not authorized to edit this mod." });
   }
 
   // ===== Can't edit these fields
   delete mod.created_at;
   mod.edited_at = new Date().toISOString();
+  if (!myUser?.is_admin) {
+    delete mod.is_verified;
+    delete mod.nugget_count;
+  }
 
   const modDiff = primitiveDiff(original, mod);
   const authorsDiff = collectionDiff(original.authors, mod.authors!, "user_id");

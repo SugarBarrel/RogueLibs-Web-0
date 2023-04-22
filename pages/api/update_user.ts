@@ -8,20 +8,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const user = req.body as Partial<RestUser>; // TODO: replace with a better type
 
-  const [original, session] = await Promise.all([serviceApi.fetchUserById(user.id!), api.getSupabaseSession()]);
+  const session = await api.getSupabaseSession();
+  const [original, myUser] = await Promise.all([
+    serviceApi.fetchUserById(user.id!).catch(() => null),
+    session?.user.id ? api.fetchUserById(session.user.id).catch(() => null) : null,
+  ]);
 
-  const canEdit = original.uid === session?.user.id;
-  if (!canEdit) {
-    let denyAccess = true;
-
-    if (session?.user) {
-      const myUser = await api.fetchUserById(session.user.id);
-      if (myUser.is_admin) denyAccess = false;
-    }
-
-    if (denyAccess) {
-      return res.status(403).json({ error: "You're not authorized to edit this profile." });
-    }
+  if (!original || !(original.id === myUser?.id || myUser?.is_admin)) {
+    return res.status(403).json({ error: "You're not authorized to edit this profile." });
   }
 
   // ===== Can't edit these fields

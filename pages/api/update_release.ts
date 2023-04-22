@@ -8,20 +8,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const release = req.body as Partial<RestRelease>; // TODO: replace with a better type
 
-  const [original, session] = await Promise.all([serviceApi.fetchReleaseById(release.id!), api.getSupabaseSession()]);
+  const session = await api.getSupabaseSession();
+  const [original, myUser] = await Promise.all([
+    serviceApi.fetchReleaseById(release.id!).catch(() => null),
+    session?.user.id ? api.fetchUserById(session.user.id).catch(() => null) : null,
+  ]);
 
-  const myAuthor = original.authors.find(a => a.user_id === session?.user.id);
-  if (!myAuthor || !myAuthor.can_edit) {
-    let denyAccess = true;
-
-    if (session?.user) {
-      const myUser = await api.fetchUserById(session.user.id);
-      if (myUser.is_admin) denyAccess = false;
-    }
-
-    if (denyAccess) {
-      return res.status(403).json({ error: "You're not authorized to edit this release." });
-    }
+  const myAuthor = original?.authors.find(a => a.user_id === myUser?.id);
+  if (!original || !(myAuthor?.can_edit || myUser?.is_admin)) {
+    return res.status(403).json({ error: "You're not authorized to edit this release." });
   }
 
   // ===== Can't edit these fields
