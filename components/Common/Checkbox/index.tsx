@@ -37,12 +37,12 @@ export default function Checkbox({ value, onChange, children, checked, unchecked
           checked !== undefined ? (
             <span className={styles.icon}>{typeof checked === "function" ? checked() : checked}</span>
           ) : (
-            <Icon type="check" className={styles.icon} />
+            <Icon type="checkSmall" className={styles.icon} size={16} />
           )
         ) : unchecked !== undefined ? (
           <span className={styles.icon}>{typeof unchecked === "function" ? unchecked() : unchecked}</span>
         ) : (
-          <Icon type="cross" className={styles.icon} />
+          <Icon type="crossSmall" className={styles.icon} size={16} />
         )}
       </div>
       {children && (
