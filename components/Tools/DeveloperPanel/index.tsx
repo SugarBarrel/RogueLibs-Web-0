@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sprite } from "@components/Common";
 import MD5 from "crypto-js/md5";
 import styles from "./index.module.scss";
 import clsx from "clsx";
+
+const unlockedLocalStorageKey = "developer-panel.is-unlocked";
 
 export type DeveloperPanelProps = {};
 
@@ -10,10 +12,20 @@ export default function DeveloperPanel() {
   const [isOpen, setIsOpen] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
 
-  function onUnlock() {
-    setUnlocked(true);
-    setTimeout(() => setIsOpen(false), 2000);
+  function onUnlock(newUnlocked: boolean) {
+    setUnlocked(newUnlocked);
+    localStorage.setItem(unlockedLocalStorageKey, newUnlocked ? "1" : "0");
+    if (newUnlocked) {
+      setTimeout(() => setIsOpen(false), 2000);
+    }
   }
+
+  useEffect(() => {
+    const savedUnlocked = Number(localStorage.getItem(unlockedLocalStorageKey));
+    if (savedUnlocked === 1) {
+      setUnlocked(true);
+    }
+  }, []);
 
   return (
     <div className={styles.panelWrapper}>
@@ -21,7 +33,7 @@ export default function DeveloperPanel() {
         <div className={styles.toggle} onClick={() => setIsOpen(!isOpen)}>
           <Sprite className={styles.toggleArrow} src="/res/devPanelArrow.png" width={12} height={24} crisp />
         </div>
-        <KeypadLock unlocked={unlocked} onUnlock={onUnlock} />
+        <KeypadLock unlocked={unlocked} setUnlocked={onUnlock} />
         <div style={{ display: "none" }}>
           <input type="checkbox" checked={false} onChange={() => {}} />
           <span style={{ marginLeft: "8px" }}>{"is_admin"}</span>
@@ -34,9 +46,9 @@ export default function DeveloperPanel() {
 
 export type KeypadLockProps = {
   unlocked: boolean;
-  onUnlock: () => void;
+  setUnlocked: (newUpdated: boolean) => void;
 };
-export function KeypadLock({ unlocked, onUnlock }: KeypadLockProps) {
+export function KeypadLock({ unlocked, setUnlocked }: KeypadLockProps) {
   const [input, setInput] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -52,7 +64,8 @@ export function KeypadLock({ unlocked, onUnlock }: KeypadLockProps) {
     setInput(i => i + digit);
   }
   function clearInput() {
-    if (unlocked || !(input || errorMessage)) return;
+    if (unlocked) return setUnlocked(false);
+    if (!input && !errorMessage) return;
     setInput("");
     setErrorMessage(null);
   }
@@ -63,7 +76,7 @@ export function KeypadLock({ unlocked, onUnlock }: KeypadLockProps) {
     if (input === "80085" || input === "5318008") return showError("REALLY?");
     if (MD5(input).toString() !== "7f909caef5fbfdc2507d57d3cb5e805d") return showError("ERROR");
     clearInput();
-    onUnlock();
+    setUnlocked(true);
   }
 
   function KeypadKey({ digit }: { digit: number }) {
