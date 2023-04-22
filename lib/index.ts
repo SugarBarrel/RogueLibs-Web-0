@@ -138,6 +138,10 @@ export function orderInsensitiveEqual<T>(
   return true;
 }
 
+export type Filter<T, U> = {
+  [K in keyof T as T[K] extends U ? K : never]: T[K];
+};
+
 export interface PageProps {
   initialState: {
     session: SupabaseSession | null;

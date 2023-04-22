@@ -1,131 +1,128 @@
-import { IconButton, Link, TextArea, TextInput } from "@components/Common";
+import { IconButton, Link, TextArea, TextInput, Tooltip } from "@components/Common";
 import { useLocation } from "@lib/hooks";
 import lodashTrimStart from "lodash/trimStart";
-import { useCallback } from "react";
+import { useCallback, useId } from "react";
 import { useReleasePageContext } from ".";
 import styles from "./Body.module.scss";
 import parseSemVer from "semver/functions/parse";
+import { DbRelease } from "@lib/Database";
+import { Filter } from "@lib/index";
 
 export default function ReleasePageBody() {
+  const { isEditing } = useReleasePageContext();
+
   return (
     <div className={styles.body}>
       <ReleaseDescription />
-      <ReleaseMetadataEditor />
+      {isEditing && <ReleaseMetadataEditor />}
       <ReleaseJsonView />
     </div>
   );
 }
 
 export function ReleaseMetadataEditor() {
-  const { release, original, mutateRelease, isEditing, mod } = useReleasePageContext();
-
-  const onChangeSlug = useCallback((newSlug: string | null) => {
-    if (newSlug != null) newSlug = newSlug.replace(" ", "-").trimStart();
-    mutateRelease(release => void (release.slug = newSlug || null));
-  }, []);
-  const onChangeTitle = useCallback((newTitle: string) => {
-    newTitle = newTitle.trimStart();
-    mutateRelease(release => void (release.title = newTitle));
-  }, []);
-  const onChangeVersion = useCallback((newVersion: string | null) => {
-    if (newVersion != null) newVersion = lodashTrimStart(newVersion.trimStart(), "vV");
-    mutateRelease(release => void (release.version = newVersion || null));
-  }, []);
-  const onChangeBannerUrl = useCallback((newBannerUrl: string | null) => {
-    mutateRelease(release => void (release.banner_url = newBannerUrl || null));
-  }, []);
-
+  const { mod } = useReleasePageContext();
   const location = useLocation();
-
-  if (!isEditing || !mod) return null;
 
   return (
     <div className={styles.metadataWrapper}>
-      <div className={styles.metadataField}>
-        <div className={styles.metadataHeader}>
-          <label>{"Release Title"}</label>
-          {release.title !== original.title && (
-            <IconButton type="undo" size={16} alpha={1} onClick={() => onChangeTitle(original.title)} />
-          )}
-        </div>
-        <TextInput
-          value={release.title}
-          onChange={onChangeTitle}
-          error={(() => {
-            if (release.title.length < 1) return "The release title must not be empty!";
-            if (release.title.length > 50) return "The release title must not exceed 50 characters!";
-            return null;
-          })()}
-        />
-      </div>
-      <div className={styles.metadataField}>
-        <div className={styles.metadataHeader}>
-          <label>{"Release Banner URL"}</label>
-          {release.banner_url !== original.banner_url && (
-            <IconButton type="undo" size={16} alpha={1} onClick={() => onChangeBannerUrl(original.banner_url)} />
-          )}
-        </div>
-        <TextInput
-          value={release.banner_url}
-          onChange={onChangeBannerUrl}
-          placeholder={"https://roguelibs.com/placeholder.png"}
-          error={release.banner_url?.length! > 255 ? "The release banner URL must not exceed 255 characters!" : null}
-        />
-      </div>
-      <div className={styles.metadataField}>
-        <div className={styles.metadataHeader}>
-          <label>
+      <MetadataField
+        prop="title"
+        label="Release Title"
+        preProcess={title => title.trimStart()}
+        validate={title => {
+          if (title.length < 1) return "The release title must not be empty!";
+          if (title.length > 50) return "The release title must not exceed 50 characters!";
+        }}
+      />
+      <MetadataField
+        prop="banner_url"
+        label="Release Banner URL"
+        placeholder="https://roguelibs.com/placeholder.png"
+        validate={banner_url => {
+          if (banner_url.length > 255) return "The release banner URL must not exceed 255 characters!";
+        }}
+      />
+      <MetadataField
+        prop="version"
+        label={
+          <>
             {"Release Version "}
             <span className={styles.metadataHeaderNote}>
               {"("}
               <Link href="https://semver.org/spec/v2.0.0.html">{"SemVer 2.0.0"}</Link>
               {")"}
             </span>
-          </label>
-          {release.version !== original.version && (
-            <IconButton type="undo" size={16} alpha={1} onClick={() => onChangeVersion(original.version)} />
-          )}
-        </div>
-        <TextInput
-          value={release.version}
-          onChange={onChangeVersion}
-          prefix={release.version ? "v" : ""}
-          placeholder={"No version"}
-          error={(() => {
-            if (release.version?.length! > 32) {
-              return "The release version must not exceed 32 characters!";
-            }
-            if (release.version != null && !parseSemVer(release.version)) {
-              return "The release version must be a valid semantic version!";
-            }
-            return null;
-          })()}
-        />
+          </>
+        }
+        prefix={version => (version ? "v" : null)}
+        placeholder="No version"
+        preProcess={version => lodashTrimStart(version.trimStart(), "vV")}
+        validate={version => {
+          if (version.length > 32) {
+            return "The release version must not exceed 32 characters!";
+          }
+          if (version != null && !parseSemVer(version)) {
+            return "The release version must be a valid semantic version!";
+          }
+        }}
+      />
+      <MetadataField
+        prop="slug"
+        label="Release URL slug"
+        prefix={`${location?.origin}/mods/${mod?.slug ?? mod?.id}/`}
+        preProcess={slug => slug.replace(" ", "-").trimStart()}
+        validate={slug => {
+          if (slug.length > 32) return "The release slug must not exceed 32 characters!";
+          if (!/^[a-z0-9._-]+$/i.test(slug)) {
+            return "The release slug must only contain [a-zA-Z0-9._-] characters.";
+          }
+          if (/^\d+$/.test(slug)) return "The release slug must not be numeric!";
+        }}
+      />
+    </div>
+  );
+}
+
+export type MetadataFieldProps = {
+  prop: keyof Filter<DbRelease, string | null>;
+  label: React.ReactNode;
+  prefix?: string | ((value: string | null) => string | null);
+  placeholder?: string;
+  preProcess?: (newValue: string) => string | null;
+  validate?: (newValue: string) => string | null | void;
+};
+export function MetadataField({ prop, label, prefix, placeholder, preProcess, validate }: MetadataFieldProps) {
+  const { release, original, mutateRelease } = useReleasePageContext();
+  const id = useId();
+
+  const onChangeValue = useCallback(
+    (newValue: string | null) => {
+      if (newValue != null && preProcess) newValue = preProcess(newValue);
+      mutateRelease(release => void (release[prop] = newValue || null!));
+    },
+    [mutateRelease],
+  );
+  const undoValue = useCallback(() => onChangeValue(original[prop]), [onChangeValue, original]);
+
+  const value = release[prop];
+
+  return (
+    <div className={styles.metadataField}>
+      <div className={styles.metadataHeader}>
+        <label>{label}</label>
+        {value !== original[prop] && (
+          <IconButton data-tooltip-id={id} type="undo" size={16} alpha={1} onClick={undoValue} />
+        )}
+        <Tooltip id={id} place="right" content="Undo" />
       </div>
-      <div className={styles.metadataField}>
-        <div className={styles.metadataHeader}>
-          <label>{"URL slug"}</label>
-          {release.slug !== original.slug && (
-            <IconButton type="undo" size={16} alpha={1} onClick={() => onChangeSlug(original.slug)} />
-          )}
-        </div>
-        <TextInput
-          value={release.slug}
-          onChange={onChangeSlug}
-          prefix={`${location?.origin}/mods/${mod.slug ?? mod.id}/`}
-          placeholder={"" + release.id}
-          error={(() => {
-            if (release.slug != null) {
-              if (release.slug.length > 32) return "The release slug must not exceed 32 characters!";
-              if (!/^[a-z0-9._-]+$/i.test(release.slug)) {
-                return "The release slug must only contain [a-zA-Z0-9._-] characters.";
-              }
-              if (/^\d+$/.test(release.slug)) return "The release slug must not be numeric!";
-            }
-            return null;
-          })()}
-        />
-      </div>
+      <TextInput
+        value={value}
+        onChange={onChangeValue}
+        prefix={typeof prefix === "function" ? prefix(release[prop]) : prefix}
+        placeholder={placeholder}
+        error={validate ? (value !== null ? validate(value) || null : null) : undefined}
+      />
     </div>
   );
 }
@@ -164,7 +161,7 @@ export function ReleaseJsonView() {
 
   return (
     <details className={styles.jsonView}>
-      <summary>Show/Hide JSON</summary>
+      <summary>{"Show/Hide JSON"}</summary>
       <div className={styles.jsonViewBox}>
         <pre>
           <code>{JSON.stringify(release, null, 2)}</code>
