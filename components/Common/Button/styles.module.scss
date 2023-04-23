@@ -2,7 +2,6 @@
   display: inline-flex;
   flex-flow: row nowrap;
   align-items: center;
-  // justify-content: space-evenly;
   text-align: center;
 
   padding: 0.5rem 0.75rem;
@@ -32,8 +31,5 @@
       background-color: var(--color-background);
     }
   }
-
-  // font-size: 0.8rem;
-  // overflow: hidden;
 
 }
