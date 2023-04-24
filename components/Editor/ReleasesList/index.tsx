@@ -45,10 +45,10 @@ export function ReleaseItem({ release, blank }: ReleaseItemProps) {
         </div>
         <div className={clsx(styles.info, styles.metadata)}>
           <span>
-            {release.files.length} {release.files.length > 1 ? "files" : "file"}
+            {release.files.length} {release.files.length !== 1 ? "files" : "file"}
           </span>
           <span>
-            {release.authors.length} {release.authors.length > 1 ? "authors" : "author"}
+            {release.authors.length} {release.authors.length !== 1 ? "authors" : "author"}
           </span>
         </div>
       </div>
