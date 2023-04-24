@@ -12,7 +12,7 @@ export default function UserPageFavourites() {
 
   return (
     <div className={styles.wrapper}>
-      {canEdit && <PublicNuggetsCheckbox />}
+      {/* {canEdit && <PublicNuggetsCheckbox />} */}
       <NuggettedModsList />
     </div>
   );

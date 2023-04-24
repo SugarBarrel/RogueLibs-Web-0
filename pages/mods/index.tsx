@@ -12,7 +12,7 @@ export default function HomePage({ latestReleases }: HomePageProps) {
   return (
     <MainLayout>
       <Head path="/mods" title="RogueLibs Web" description="The mod-sharing platform." />
-      <div>RogueLibs website works!</div>
+      {/* <div>RogueLibs website works!</div> */}
       <div className={styles.wrapper}>
         {latestReleases.map(release => {
           return <ReleaseCard release={release} key={release.id} />;
