@@ -21,11 +21,7 @@ export default function ModPageIndex({ mod, releases }: ModPageProps) {
         noindex={!mod.is_public}
         type="article"
       />
-      {release ? (
-        <ModPage key={mod.id} mod={mod} releases={releases} />
-      ) : (
-        <div>{"You can't see any of this mod's releases :("}</div>
-      )}
+      <ModPage key={mod.id} mod={mod} releases={releases} />
     </MainLayout>
   );
 }

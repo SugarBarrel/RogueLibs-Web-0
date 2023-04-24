@@ -25,7 +25,7 @@ export default function HomePage({ latestReleases }: HomePageProps) {
 export async function getServerSideProps(cxt: GSSPC): Promise<GSSPR<HomePageProps>> {
   const api = createServerApi(cxt);
 
-  const [session, latestReleases] = await Promise.all([api.getSupabaseSession(), api.fetchLatestReleases(50)]);
+  const [session, latestReleases] = await Promise.all([api.getSupabaseSession(), api.fetchLatestReleases(100, true)]);
 
   return {
     props: {
