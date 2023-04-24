@@ -3,13 +3,14 @@ import { RestReleaseWithMod, triggerDownload, useApi } from "@lib/API";
 import { DbReleaseFile } from "@lib/Database";
 import { useState } from "react";
 import styles from "./styles.module.scss";
+import { useMod } from "@lib/hooks";
 
 export type ReleaseCardProps = {
   release: RestReleaseWithMod;
 };
 export default function ReleaseCard({ release }: ReleaseCardProps) {
-  const mod = release.mod;
-  const modLink = `/mods/${mod.slug ?? mod.id}`;
+  const mod = useMod(release.mod_id)[0];
+  const modLink = mod ? `/mods/${mod.slug ?? mod.id}` : undefined;
 
   const api = useApi();
   const [downloading, setDownloading] = useState(false);
@@ -52,7 +53,7 @@ export default function ReleaseCard({ release }: ReleaseCardProps) {
       <div className={styles.stats}>
         <div className={styles.stat}>
           <Icon type="nugget" size={16} />
-          {mod.nugget_count}
+          {mod?.nugget_count ?? "..."}
         </div>
       </div>
     </div>

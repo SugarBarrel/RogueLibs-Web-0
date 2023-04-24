@@ -1,6 +1,6 @@
 import { Head } from "@components/Common";
 import MainLayout from "@components/MainLayout";
-import ReleasePage from "@components/ReleasePage";
+import ModPage from "@components/ModPage";
 import { createServerApi, RestMod, RestRelease } from "@lib/API";
 import { GSSPC, GSSPR, PageProps } from "@lib/index";
 
@@ -22,7 +22,7 @@ export default function ModPageIndex({ mod, releases }: ModPageProps) {
         type="article"
       />
       {release ? (
-        <ReleasePage key={mod.id} release={release} />
+        <ModPage key={mod.id} mod={mod} releases={releases} />
       ) : (
         <div>{"You can't see any of this mod's releases :("}</div>
       )}
@@ -38,7 +38,10 @@ export async function getServerSideProps(cxt: GSSPC<{ mod_slug: string }>): Prom
   const [session, mod, releases] = await Promise.all([
     api.getSupabaseSession(),
     api.fetchModBySlug(mod_slug).catch(() => null),
-    api.fetchReleasesByModSlug(mod_slug).catch(() => []),
+    api
+      .fetchReleasesByModSlug(mod_slug)
+      .then(rs => rs.sort((a, b) => b.id - a.id))
+      .catch(() => []),
   ]);
 
   if (!mod) return { notFound: true };

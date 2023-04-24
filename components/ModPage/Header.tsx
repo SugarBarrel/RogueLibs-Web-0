@@ -1,23 +1,21 @@
 import { Button, Icon, IconButton, Link, Tooltip } from "@components/Common";
 import { useRootDispatch } from "@ducks/index";
-import { setModNugget } from "@ducks/mods";
-import { RestRelease, useApi } from "@lib/API";
+import { setModNugget, upsertMod } from "@ducks/mods";
+import { RestMod, useApi } from "@lib/API";
 import { useUser } from "@lib/hooks";
 import { collectionDiff, primitiveDiff } from "@lib/index";
 import { useSession as useSupabaseSession } from "@supabase/auth-helpers-react";
 import { useEffect, useMemo, useState } from "react";
-import { useReleasePageContext } from ".";
-import { upsertRelease } from "@ducks/releases";
+import { useModPageContext } from ".";
 import styles from "./Header.module.scss";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 
-export default function ReleasePageHeader() {
-  const { release } = useReleasePageContext();
-  const version = release.version ? "v" + release.version : "ID " + release.id;
+export default function ModPageHeader() {
+  const { mod, releases } = useModPageContext();
 
   function copyPermanentLink() {
-    navigator.clipboard.writeText(`${location.origin}/r/${release.id}`);
+    navigator.clipboard.writeText(`${location.origin}/m/${mod.id}`);
   }
 
   return (
@@ -27,11 +25,9 @@ export default function ReleasePageHeader() {
         <AuthoringControls />
       </div>
       <div className={styles.header}>
-        <img className={styles.banner} src={release.banner_url ?? "/placeholder.png"} alt="" />
+        <img className={styles.banner} src={releases[0]?.banner_url ?? "/placeholder.png"} alt="" />
         <div className={styles.headerOverlay}>
-          <span className={styles.title}>
-            {release.title} ({version})
-          </span>
+          <span className={styles.title}>{mod.title}</span>
           <div className={styles.titleButtons}>
             <IconButton type="link" data-tooltip-id="mod-link" onClick={copyPermanentLink} />
             <Tooltip id="mod-link" place="bottom" offset={5} openOnClick clickable delayHide={3000}>
@@ -51,11 +47,10 @@ export default function ReleasePageHeader() {
 }
 
 export function Breadcrumbs() {
-  const { original, release, mod, hasChanges } = useReleasePageContext();
+  const { original, mod, hasChanges } = useModPageContext();
 
   const homeLink = "/mods";
-  const modLink = `/mods/${mod?.slug ?? original.mod_id}`;
-  const releaseLink = `${modLink}/${original.slug ?? original.id}`;
+  const modLink = `/mods/${mod?.slug ?? original.id}`;
 
   return (
     <div className={styles.breadcrumbs}>
@@ -64,18 +59,13 @@ export function Breadcrumbs() {
       </Link>
       <span>{" > "}</span>
       <Link className={styles.breadcrumb} href={modLink} blank={hasChanges}>
-        {mod?.title}
-      </Link>
-      <span>{" > "}</span>
-      <Link className={styles.breadcrumb} href={releaseLink} blank={hasChanges}>
-        {release.version ? "v" + release.version : release.slug ?? release.id}
+        {mod.title}
       </Link>
     </div>
   );
 }
 export function AuthoringControls() {
-  const { release, original, mutateRelease, mod, isEditing, setIsEditing, hasChanges, setHasChanges } =
-    useReleasePageContext();
+  const { mod, original, mutateMod, isEditing, setIsEditing, hasChanges, setHasChanges } = useModPageContext();
 
   const dispatch = useRootDispatch();
   const session = useSupabaseSession();
@@ -84,19 +74,16 @@ export function AuthoringControls() {
 
   const [savingChanges, setSavingChanges] = useState(false);
 
-  const releaseChanges = useMemo(() => {
-    return primitiveDiff(original, release);
-  }, [original, release]);
-  const filesChanges = useMemo(() => {
-    return collectionDiff(original.files, release.files, "filename");
-  }, [original.files, release.files]);
+  const modChanges = useMemo(() => {
+    return primitiveDiff(original, mod);
+  }, [original, mod]);
   const authorsChanges = useMemo(() => {
-    return collectionDiff(original.authors, release.authors, "user_id");
-  }, [original.authors, release.authors]);
+    return collectionDiff(original.authors, mod.authors, "user_id");
+  }, [original.authors, mod.authors]);
 
   useEffect(() => {
-    setHasChanges(!!releaseChanges || filesChanges.hasChanges || authorsChanges.hasChanges);
-  }, [releaseChanges, filesChanges, authorsChanges]);
+    setHasChanges(!!modChanges || authorsChanges.hasChanges);
+  }, [modChanges, authorsChanges]);
 
   function toggleEditing() {
     setIsEditing(v => !v);
@@ -108,26 +95,24 @@ export function AuthoringControls() {
       setSavingChanges(true);
 
       const diff = {
-        id: release.id,
-        ...releaseChanges,
-        files: filesChanges.diff,
+        id: mod.id,
+        ...modChanges,
         authors: authorsChanges.diff,
       };
 
-      const response = await fetch(`${location.origin}/api/update_release`, {
+      const response = await fetch(`${location.origin}/api/update_mod`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(diff),
       });
 
-      const newRelease = (await response.json()) as RestRelease;
+      const newMod = (await response.json()) as RestMod;
 
-      dispatch(upsertRelease(newRelease));
-      mutateRelease(r => Object.assign(r, newRelease));
+      dispatch(upsertMod(newMod));
+      mutateMod(m => Object.assign(m, newMod));
       setIsEditing(false);
-
-      if (releaseChanges?.slug) {
-        router.push(`/mods/${mod!.slug ?? mod!.id}/${releaseChanges.slug ?? release.id}`);
+      if (modChanges?.slug) {
+        router.push(`/mods/${modChanges.slug ?? mod.id}`);
       }
     } catch (error) {
       console.error(error);
@@ -136,7 +121,7 @@ export function AuthoringControls() {
     }
   }
   function resetChanges() {
-    mutateRelease(r => Object.assign(r, original));
+    mutateMod(m => Object.assign(m, original));
   }
 
   const canEdit = original.authors.find(a => a.user_id == myUser?.id)?.can_edit || myUser?.is_admin;
@@ -170,7 +155,7 @@ export function AuthoringControls() {
 }
 
 export function LeftQuickBar() {
-  const { mod } = useReleasePageContext();
+  const { mod } = useModPageContext();
 
   return (
     <div className={styles.leftQuickbar}>
@@ -211,21 +196,21 @@ export function LeftQuickBar() {
   );
 }
 export function RightQuickBar() {
-  const { release, mod } = useReleasePageContext();
+  const { mod } = useModPageContext();
 
   const api = useApi();
   const dispatch = useRootDispatch();
   const session = useSupabaseSession();
 
   const [myUser] = useUser(session?.user.id);
-  const myNugget = myUser?.nuggets?.some(n => n.mod_id === release.mod_id);
+  const myNugget = myUser?.nuggets?.some(n => n.mod_id === mod.id);
   const [nuggetting, setNuggetting] = useState(false);
 
   async function toggleNugget() {
     if (!myUser) return;
     try {
       setNuggetting(true);
-      await dispatch(setModNugget({ api, mod_id: release.mod_id, nugget: !myNugget }));
+      await dispatch(setModNugget({ api, mod_id: mod.id, nugget: !myNugget }));
     } catch (error) {
       console.error(error);
     } finally {

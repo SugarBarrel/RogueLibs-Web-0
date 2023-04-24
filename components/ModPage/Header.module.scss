@@ -1,0 +1,195 @@
+.top-bar {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  min-height: 4rem;
+}
+.breadcrumbs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  font-size: 1.2rem !important;
+
+  .breadcrumb {
+    font-size: 1.2rem !important;
+    outline: 1px solid var(--color-background-light);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    white-space: nowrap;
+
+    > span {
+      display: block;
+      max-width: 40vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+.authoring-controls {
+  flex-grow: 1;
+  display: flex;
+  flex-flow: row-reverse nowrap;
+  align-items: stretch;
+  padding: 0.5rem;
+  gap: 0.5rem;
+
+  > button {
+    padding: 0.5rem 1rem;
+  }
+}
+.unsaved-changes {
+  flex-grow: 1;
+  padding: 0.25rem 0;
+  color: var(--color-warning-contrast);
+  background-color: var(--color-warning);
+  text-align: center;
+  font-size: 2rem;
+  border-radius: 0.5rem;
+}
+
+.header {
+  position: relative;
+  overflow: hidden;
+  height: 300px;
+  outline: 1px solid var(--color-background-light);
+  border-radius: 1rem;
+
+  &:hover, &:focus-within {
+    & > .banner {
+      filter: blur(0.25rem);
+    }
+    & > .header-overlay {
+      top: 0;
+    }
+  }
+}
+.banner {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  filter: none;
+  transition: all 0.5s ease;
+}
+.header-overlay {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1rem 2rem;
+  width: 100%;
+  position: absolute;
+  text-align: center;
+  top: -6rem;
+  left: 50%;
+  transform: translate(-50%, 0);
+  transition: all 0.5s ease;
+  background-color: #00000040;
+}
+.title {
+  font-size: 2rem;
+  color: var(--color-white);
+  text-shadow: var(--text-shadow);
+}
+.title-buttons {
+  position: absolute;
+  top: 0; right: 0; height: 4.3rem;
+  display: flex;
+  flex-flow: row-reverse nowrap;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  gap: 0.5rem;
+}
+
+.right-quickbar {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 0.75rem;
+  padding-right: 1rem;
+}
+
+.left-quickbar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+}
+.guid {
+  margin: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  backdrop-filter: brightness(0.5) blur(0.25rem);
+
+  & > .guid-label {
+    user-select: none;
+    font-weight: 800;
+  }
+  & > .guid-value {
+    display: inline-flex;
+    flex-flow: row nowrap;
+    align-items: center;
+
+    gap: 0.25rem;
+    margin: -0.25rem;
+    margin-right: -0.5rem;
+    padding: 0.25rem;
+    padding-right: 0.5rem;
+
+    transition: all 0.2s ease;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    &:hover { background-color: var(--color-overlay-4); }
+    &:active { background-color: var(--color-overlay-8); }
+  }
+}
+.copy-guid-tooltip {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  gap: 0.5rem;
+  > span {
+    font-size: 1.5rem;
+    align-self: center;
+  }
+  > button {
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+.nugget-button {
+  padding: 0.5rem 1.5rem;
+  font-size: 1.5rem;
+  color: var(--color-white);
+  text-shadow: var(--text-shadow);
+
+  border: 2px solid var(--color-primary-contrast);
+
+  background-color: var(--color-primary-lightest);
+  > img, > svg {
+    opacity: 0.5;
+    transition: opacity 0.5s ease, scale 0.1s ease;
+  }
+  &:hover, &:focus-within {
+    background-color: var(--color-primary-darker);
+    > img, > svg { opacity: 0.5; }
+  }
+  &:active {
+    background-color: var(--color-primary-darkest);
+    > img, > svg { scale: 1.25; }
+  }
+
+  &.set-nugget {
+    background-color: var(--color-primary-darker);
+    > img, > svg { opacity: 1; }
+    &:hover, &:focus-within {
+      background-color: var(--color-primary-dark);
+    }
+  }
+}
