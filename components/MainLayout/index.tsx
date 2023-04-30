@@ -24,7 +24,10 @@ export default function MainLayout({ className, style, children }: React.PropsWi
         <div>
           <label>{"Other stuff"}</label>
           <Link href="/about">{"About RogueLibs"}</Link>
-          <Link href="https://github.com/SugarBarrel/RogueLibs-Web">{"The source code"}</Link>
+          <Link href="https://github.com/SugarBarrel/RogueLibs-Web-0">{"The source code"}</Link>
+          <br />
+          <Link href="https://roguelibs-beta.vercel.app/">{"RogueLibs Web (beta)"}</Link>
+          <Link href="https://github.com/SugarBarrel/roguelibs-web">{"The source code (beta)"}</Link>
         </div>
         <div>
           <label>{"Guides and Information"}</label>
