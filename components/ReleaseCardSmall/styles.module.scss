@@ -1,0 +1,73 @@
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  outline: solid 1px var(--color-secondary-darkest);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  width: 100px; height: 80px;
+
+  &:hover, &:focus-within {
+    outline: solid 1px var(--color-secondary);
+    .window {
+      outline: solid 1px var(--color-secondary);
+    }
+  }
+  &:focus-within {
+    & .window .banner {
+      filter: blur(2px) grayscale(0.5) brightness(0.5) saturate(0.5);
+    }
+    & .window .description, .quickbar, .authors {
+      opacity: 1;
+    }
+  }
+}
+
+.window {
+  position: relative;
+  width: 100%; height: 50px;
+  outline: solid 1px var(--color-secondary-darkest);
+  transition: all 0.2s ease;
+  overflow: hidden;
+
+  &:hover {
+    & .banner {
+      filter: blur(2px) grayscale(0.5) brightness(0.5) saturate(0.5);
+    }
+    & .description, .quickbar, .authors {
+      opacity: 1;
+    }
+  }
+}
+.banner {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  transform: translateY(-50%);
+  transition: all 0.5s ease;
+}
+
+.quickbar {
+  position: absolute;
+  bottom: 0; right: 0;
+  padding: 0.25rem;
+
+  opacity: 0;
+  transition: all 0.5s ease;
+  font-size: 0.8rem;
+}
+.quick-download {
+  padding: 0.1rem 0.15rem;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+.title {
+  padding-top: 0.25rem;
+  font-size: 0.7rem;
+  text-align: center;
+}

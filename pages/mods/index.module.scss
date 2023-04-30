@@ -4,3 +4,68 @@
   padding: 0.5rem;
   gap: 0.5rem;
 }
+
+.buttons {
+  position: fixed;
+  left: 235px;
+  display: flex;
+  padding: 0.5rem;
+  gap: 0.5rem;
+  border-radius: 1rem;
+  flex-flow: column-reverse nowrap;
+  justify-content: space-between;
+  background-color: var(--color-background);
+}
+
+.cardContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  background-color: var(--color-background);
+  padding: 0.5rem;
+  gap: 0.5rem;
+}
+
+.cardSmallContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
+  background-color: var(--color-background);
+  padding: 0.5rem;
+  gap: 0.5rem;
+}
+
+.rowContainer {
+  display: flex;
+  flex-flow: column nowrap;
+  background-color: var(--color-background);
+  padding: 0.5rem;
+  gap: 0.5rem;
+}
+
+.rowSmallContainer {
+  display: flex;
+  flex-flow: column nowrap;
+  background-color: var(--color-background);
+  padding: 0.5rem;
+  gap: 0.5rem;
+}
+
+.filterContainer {
+  position: fixed;
+  display: flex;
+  flex-flow: column nowrap;
+  background-color: var(--color-background);
+  padding: 0.5rem;
+  gap: 0.5rem;
+}
+
+.filterButtons {
+  position: fixed;
+  right: 235px;
+  display: flex;
+  padding: 0.5rem;
+  gap: 0.5rem;
+  border-radius: 1rem;
+  flex-flow: column-reverse nowrap;
+  justify-content: space-between;
+  background-color: var(--color-background);
+}

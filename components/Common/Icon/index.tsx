@@ -41,6 +41,10 @@ export const IconPaths = {
   door: "/icons/door.png",
   undo: "/icons/undo.png",
   add: "/icons/add.png",
+  view_row: "/icons/row.png",
+  view_card: "/icons/card.png",
+  view_card_small: "/icons/cardSmall.png",
+  view_row_small: "/icons/rowSmall.png",
 } as const;
 
 export type IconType = keyof typeof IconPaths;
